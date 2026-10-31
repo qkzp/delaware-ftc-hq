@@ -473,6 +473,8 @@
   margin-bottom: 18px;
 }
 .tc-calendar-month {
+  min-width: 0;
+  flex-wrap: wrap;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -678,6 +680,7 @@
 .tc-agenda-info {
   flex: 1;
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 .tc-agenda-info h3 {
   font-size: 16px;
@@ -712,6 +715,7 @@
 }
 .tc-agenda-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 7px;
 }
 .tc-season-month {
@@ -1043,7 +1047,9 @@
     flex-direction: row;
     align-items: center;
     width: 100%;
-    padding-left: 66px;
+    padding-left: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
   .tc-agenda-actions .btn {
     min-height: 44px;

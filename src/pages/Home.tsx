@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -172,10 +172,14 @@ export default function Home() {
           </button>
         </div>
         {upcoming.length ? (
-          <div className="field-season-track">
+          <div
+            className="field-season-track"
+            style={
+              { "--field-event-count": Math.min(upcoming.length, 4) } as CSSProperties
+            }
+          >
             <div className="field-now">
-              <span>YOU ARE HERE</span>
-              <strong>TODAY</strong>
+              <strong>Today</strong>
               <i aria-hidden="true" />
             </div>
             {upcoming.slice(0, 4).map((event) => (

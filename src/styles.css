@@ -259,6 +259,12 @@ time {
 .workspace-search:hover {
   border-color: #8c939d;
 }
+.workspace-search > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .workspace-search kbd {
   font: 13px var(--body);
   margin-left: auto;
@@ -328,6 +334,7 @@ time {
   justify-content: space-between;
   gap: 25px;
   height: 58px;
+  min-width: 0;
 }
 .workspace-tabs {
   display: flex;
@@ -336,6 +343,8 @@ time {
   gap: 5px;
   overflow-x: auto;
   scrollbar-width: none;
+  min-width: 0;
+  flex: 1;
 }
 .workspace-tabs::-webkit-scrollbar {
   display: none;
@@ -379,6 +388,7 @@ time {
   min-width: 15px;
 }
 .chrome-create {
+  flex-shrink: 0;
   min-height: 30px !important;
   padding: 6px 10px !important;
   font-size: 13px !important;
@@ -1158,6 +1168,10 @@ time {
   }
 }
 @media (max-width: 1100px) {
+  .masthead-divider,
+  .workspace-name {
+    display: none;
+  }
   .masthead-inner {
     gap: 15px;
     padding: 0 25px;
@@ -1576,7 +1590,7 @@ time {
   }
 }
 
-/* Make the real work easy to read; reserve mono for values that need it. */
+/* Shared typography and responsive layout. */
 .workspace-context {
   font-size: 13px;
 }
@@ -1612,6 +1626,10 @@ time {
   line-height: 1.05;
   text-transform: none;
 }
+.field-heading > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
 .field-workbench .field-heading p {
   font-size: 14px;
 }
@@ -1641,8 +1659,69 @@ time {
   text-transform: none;
 }
 @media (max-width: 620px) {
+  .field-workbench .field-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
   .field-workbench .field-heading h1 {
     font-size: 39px;
     letter-spacing: -1.2px;
+  }
+  .field-workbench .field-dateline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 7px 12px;
+    text-align: left;
+  }
+  .field-workbench .field-dateline > strong,
+  .field-workbench .field-dateline-state {
+    max-width: none;
+  }
+  .field-workbench .field-dateline-state {
+    margin-top: 0;
+    margin-left: auto;
+  }
+  .field-team-log > .field-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-width: 600px) {
+  .masthead-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    height: auto;
+    gap: 6px 12px;
+    padding: 9px 16px;
+  }
+  .masthead-inner .workspace-search {
+    width: 44px;
+    min-width: 44px;
+    margin-left: 0;
+    justify-self: end;
+  }
+  .role-switch {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    border-top: 1px solid #464b53;
+    padding: 3px 0 0;
+  }
+  .role-switch > span {
+    display: block;
+  }
+  .role-switch select {
+    flex: 1;
+    min-width: 0;
+    max-width: 180px;
+    width: auto;
+    margin-left: auto;
   }
 }
