@@ -427,7 +427,7 @@ export default function Home() {
             ))}
           </div>
           <div className="field-map-footer">
-            <span>CHECKLIST, NOT LIVE ROBOT TELEMETRY</span>
+            <span>Status from your task board and pit checklist.</span>
             <span aria-hidden="true">+</span>
           </div>
         </section>
