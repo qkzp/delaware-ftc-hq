@@ -2267,12 +2267,14 @@ fieldset {
   .sidebar {
     width: 252px;
     transform: translateX(-100%);
+    visibility: hidden;
     transition: transform 0.2s;
     padding: 25px 20px 0;
     z-index: 60;
   }
   .sidebar.is-open {
     transform: translateX(0);
+    visibility: visible;
   }
   .mobile-overlay.is-open {
     position: fixed;
