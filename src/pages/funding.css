@@ -5,11 +5,9 @@
   border-top: 3px solid var(--ink, #202624);
   border-bottom: 1px solid var(--line, #d6d8ce);
   margin: 24px 0;
-  counter-reset: funding-stat;
 }
 .funding-summary > .card {
   position: relative;
-  counter-increment: funding-stat;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -18,15 +16,6 @@
   border-radius: 0;
   padding: 23px 26px;
   background: none;
-}
-.funding-summary > .card::before {
-  content: counter(funding-stat, decimal-leading-zero);
-  position: absolute;
-  right: 16px;
-  top: 13px;
-  font: 11px var(--mono, Consolas, monospace);
-  letter-spacing: 0.05em;
-  color: var(--muted, #60665a);
 }
 .funding-summary > .card:first-child {
   padding-left: 0;
@@ -47,7 +36,7 @@
 }
 .funding-summary span:not(.funding-stat-icon) {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-top: 7px;
 }
@@ -72,7 +61,7 @@
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   margin: 18px 0 22px;
@@ -130,7 +119,7 @@
   padding: 9px 10px;
   color: #3b413b;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   max-width: 180px;
   min-height: 38px;
 }
@@ -171,7 +160,7 @@
   padding: 13px 14px;
   background: var(--ink, #202624);
   color: var(--paper, #faf9f5);
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -208,7 +197,7 @@
   text-underline-offset: 3px;
 }
 .funding-record-sub {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-top: 7px;
 }
@@ -217,7 +206,7 @@
   padding: 2px 5px;
   margin-left: 6px;
   vertical-align: middle;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   border: 1px solid var(--line, #d6d8ce);
   border-radius: 1px;
@@ -234,7 +223,7 @@
   background: var(--paper, #faf9f5);
   color: var(--muted, #60665a);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
 }
 .contact-pill.contacted {
@@ -260,7 +249,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
 }
 .funding-table-foot {
@@ -269,7 +258,7 @@
   align-items: center;
   gap: 15px;
   padding: 14px 0;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--muted, #60665a);
   border-top: 1px solid var(--line, #d6d8ce);
@@ -308,7 +297,7 @@
   margin: 0 0 14px;
 }
 .funding-column-title > span {
-  font: 12px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
 }
 .funding-board-card {
@@ -344,7 +333,7 @@
   margin: 14px 0 6px;
 }
 .funding-board-card p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--muted, #60665a);
   margin: 0;
@@ -357,7 +346,7 @@
   border-top: 1px solid var(--line, #d6d8ce);
   padding-top: 12px;
   margin-top: 15px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
 }
 .funding-access {
@@ -469,7 +458,7 @@
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
 }
@@ -498,12 +487,12 @@
 .funding-history p {
   display: flex;
   gap: 18px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
 }
 .funding-history time {
   min-width: 65px;
-  font-family: var(--mono, ui-monospace, Consolas, monospace);
+  font-family: var(--body, Arial, sans-serif);
 }
 .funding-filter-notice {
   display: flex;
@@ -513,7 +502,7 @@
   padding: 11px 14px;
   background: var(--surface, #f5f3ec);
   border-left: 3px solid var(--accent, #ce431e);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
 }
 .funding-source-note {
@@ -537,7 +526,7 @@
   color: #3b413b;
 }
 .funding-source-note p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   margin: 5px 0 0;
@@ -554,7 +543,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   white-space: nowrap;
   min-height: 38px;
@@ -562,11 +551,9 @@
 .grant-grid {
   display: block;
   border-top: 3px solid var(--ink, #202624);
-  counter-reset: grant-entry;
 }
 .grant-card {
   position: relative;
-  counter-increment: grant-entry;
   display: grid;
   grid-template-columns: minmax(260px, 1.45fr) minmax(180px, 0.8fr) minmax(
       240px,
@@ -574,23 +561,12 @@
     );
   grid-template-rows: auto auto auto auto auto;
   gap: 10px 32px;
-  padding: 27px 0 24px 52px !important;
+  padding: 27px 0 24px !important;
   border: 0 !important;
   border-bottom: 1px solid #bdc2b5 !important;
   border-radius: 0 !important;
   background: var(--paper, #faf9f5);
   min-width: 0;
-}
-.grant-card::before {
-  content: counter(grant-entry, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 29px;
-  width: 28px;
-  padding-bottom: 9px;
-  border-bottom: 2px solid var(--accent, #ce431e);
-  font: 13px var(--mono, Consolas, monospace);
-  color: #a73316;
 }
 .grant-topline {
   display: flex;
@@ -661,7 +637,7 @@
 }
 .grant-facts span {
   display: block;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   letter-spacing: 0.025em;
   color: var(--muted, #60665a);
   margin-bottom: 7px;
@@ -679,7 +655,7 @@
   justify-content: space-between;
   gap: 8px;
   align-self: end;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin: 0;
 }
@@ -700,7 +676,7 @@
 }
 .grant-footer .btn {
   padding-inline: 0;
-  font-size: 12px;
+  font-size: 13px;
 }
 .grant-source {
   grid-column: 1/-1;
@@ -710,7 +686,7 @@
   justify-content: space-between;
   gap: 15px;
   flex-wrap: wrap;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   margin: 7px 0 0;
@@ -775,7 +751,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.8;
   color: var(--muted, #60665a);
   margin: 0;
@@ -819,7 +795,7 @@
     gap: 0;
   }
   .funding-owner {
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 @media (max-width: 900px) {
@@ -827,7 +803,7 @@
     display: flex;
     flex-direction: column;
     gap: 14px;
-    padding: 25px 0 25px 45px !important;
+    padding: 25px 0 !important;
   }
   .grant-card h2 {
     order: 0;
@@ -872,7 +848,7 @@
     padding: 18px 20px;
   }
   .funding-summary span:not(.funding-stat-icon) {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.6;
   }
   .funding-summary strong {
@@ -891,13 +867,8 @@
   .funding-summary strong {
     font-size: 34px;
   }
-  .funding-summary > .card::before {
-    right: 8px;
-    top: 10px;
-    font-size: 11px;
-  }
   .funding-summary span:not(.funding-stat-icon) {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.6;
   }
   .funding-stat-button > svg {
@@ -943,7 +914,7 @@
     justify-content: center;
   }
   .funding-table-foot {
-    font-size: 11px;
+    font-size: 13px;
     align-items: flex-start;
   }
   .funding-table-foot span:last-child {
@@ -961,7 +932,7 @@
     padding: 16px;
   }
   .funding-card-bottom {
-    font-size: 12px;
+    font-size: 13px;
   }
   .funding-access {
     padding: 24px 0 !important;
@@ -972,25 +943,20 @@
   .grant-card h2 {
     font-size: 27px;
   }
-  .grant-card::before {
-    top: 28px;
-    width: 28px;
-    font-size: 12px;
-  }
   .grant-footer .btn,
   .funding-draft-actions .btn {
     min-height: 44px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .grant-source {
-    font-size: 12px;
+    font-size: 13px;
   }
   .grant-source a,
   .funding-verification a {
     min-height: 44px;
   }
   .funding-owner {
-    font-size: 12px;
+    font-size: 13px;
   }
   .funding-add-step {
     flex-wrap: wrap;

@@ -279,6 +279,9 @@ export default function CalendarPage() {
       `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}`,
     ),
   );
+  const upcomingEvents = events.filter((event) => event.date >= dateKey());
+  const visibleEvents =
+    view === "Month" ? monthEvents : view === "Agenda" ? upcomingEvents : events;
   const gridDays = useMemo(() => {
     const first = new Date(month);
     first.setDate(1 - first.getDay());
@@ -372,7 +375,7 @@ export default function CalendarPage() {
     const lines = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//MyFTCSpae//Team Calendar//EN",
+      "PRODID:-//MyFTCSpace//Team Calendar//EN",
       ...events.flatMap((e) => [
         "BEGIN:VEVENT",
         `UID:${e.id}@student-hq.local`,
@@ -395,7 +398,7 @@ export default function CalendarPage() {
       ]),
       "END:VCALENDAR",
     ];
-    download(lines.join("\r\n"), "myftcspae-calendar.ics", "text/calendar");
+    download(lines.join("\r\n"), "myftcspace-calendar.ics", "text/calendar");
     notify("Calendar exported. Team event times use the local team timezone.");
   };
   const inspectImport = async (file?: File) => {
@@ -486,12 +489,14 @@ export default function CalendarPage() {
           <h2>
             {view === "Season"
               ? data.seasonName
-              : month.toLocaleDateString("en-US", {
+              : view === "Agenda"
+                ? "Upcoming events"
+                : month.toLocaleDateString("en-US", {
                   month: "long",
                   year: "numeric",
                 })}
           </h2>
-          {view !== "Season" && (
+          {view === "Month" && (
             <>
               <button
                 className="icon-btn"
@@ -555,11 +560,8 @@ export default function CalendarPage() {
             <option key={t}>{t}</option>
           ))}
         </select>
-        <span className="muted" style={{ fontSize: 11 }}>
-          {view === "Season" ? events.length : monthEvents.length} event
-          {(view === "Season" ? events.length : monthEvents.length) === 1
-            ? ""
-            : "s"}{" "}
+        <span className="muted" style={{ fontSize: 13 }}>
+          {visibleEvents.length} event{visibleEvents.length === 1 ? "" : "s"}{" "}
           · Team-managed calendar
         </span>
       </div>
@@ -626,16 +628,25 @@ export default function CalendarPage() {
           </div>
         </div>
       ) : view === "Agenda" ? (
-        monthEvents.length ? (
+        upcomingEvents.length ? (
           <div className="tc-agenda-list">
-            {monthEvents.map((event) => (
+            {upcomingEvents.map((event) => (
               <article className="card tc-agenda-date" key={event.id}>
-                <div className="tc-date-tile">
-                  <span>{dateLabel(event.date, { weekday: "short" })}</span>
+                <time
+                  className="tc-date-tile"
+                  dateTime={event.date}
+                  aria-label={dateLabel(event.date, {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                >
+                  <span>{dateLabel(event.date, { month: "short" })}</span>
                   <strong>
                     {new Date(`${event.date}T12:00:00`).getDate()}
                   </strong>
-                </div>
+                  <small>{dateLabel(event.date, { weekday: "short" })}</small>
+                </time>
                 <div className="tc-agenda-info">
                   <Badge
                     tone={
@@ -701,17 +712,17 @@ export default function CalendarPage() {
           </div>
         ) : (
           <EmptyState
-            title="No events this month"
-            description="Add an event or import the team calendar."
+            title="No upcoming events"
+            description={
+              typeFilter === "All events"
+                ? "Add your next team date or import the team calendar."
+                : "Choose another event type or add a new team date."
+            }
             action={
               canManage ? (
                 <button
                   className="btn btn-primary"
-                  onClick={() =>
-                    create(
-                      `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, "0")}-01`,
-                    )
-                  }
+                  onClick={() => create()}
                 >
                   <Plus size={16} />
                   Add an event
@@ -1000,7 +1011,7 @@ export default function CalendarPage() {
               />
             </Field>
             <div className="inline" style={{ flexWrap: "wrap" }}>
-              <span className="muted" style={{ fontSize: 11 }}>
+              <span className="muted" style={{ fontSize: 13 }}>
                 Quick template:
               </span>
               {["Build night", "Design review", "Competition debrief"].map(
@@ -1094,7 +1105,7 @@ export default function CalendarPage() {
               onClick={() =>
                 download(
                   "title,date,time,endTime,type,location,owner,agenda\nExample team build night,2026-11-07,17:00,19:00,Build night,Team workshop,Alex (you),Build and test the next prototype\n",
-                  "myftcspae-events-template.csv",
+                  "myftcspace-events-template.csv",
                   "text/csv",
                 )
               }

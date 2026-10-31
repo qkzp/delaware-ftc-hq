@@ -209,7 +209,7 @@ time {
   white-space: nowrap;
 }
 .wordmark-type small {
-  font: 10px var(--body);
+  font: 13px var(--body);
   letter-spacing: 0.04em;
   color: #c8cfbe;
   white-space: nowrap;
@@ -227,7 +227,7 @@ time {
   background: none;
   border: 0;
   color: #c6c8cd;
-  font-size: 12px;
+  font-size: 13px;
   min-height: 44px;
   text-align: left;
   max-width: 225px;
@@ -260,7 +260,7 @@ time {
   border-color: #8c939d;
 }
 .workspace-search kbd {
-  font: 11px var(--body);
+  font: 13px var(--body);
   margin-left: auto;
   white-space: nowrap;
   color: #b2b7c1;
@@ -293,7 +293,7 @@ time {
   min-width: 135px;
 }
 .role-switch > span {
-  font: 10px var(--body);
+  font: 13px var(--body);
   color: #b0b6bf;
   letter-spacing: 0.9px;
 }
@@ -364,18 +364,12 @@ time {
   background: #202624;
   font-weight: 600;
 }
-.tab-index {
-  display: none;
-}
-.workspace-tab.is-active .tab-index {
-  color: #c5d0b9;
-}
 .workspace-tab.is-active:focus-visible {
   outline-offset: -5px;
   outline-color: #ed9a7b;
 }
 .nav-count {
-  font: 10px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
   background: #eceeeb;
   border: 1px solid #d6d8ce;
   color: #50555c;
@@ -431,7 +425,7 @@ time {
   text-decoration: underline;
 }
 .workspace-indicator {
-  font: 11px var(--body);
+  font: 13px var(--body);
   border: 1px solid #d0d3d8;
   padding: 4px 6px;
   color: #5e646c;
@@ -455,7 +449,7 @@ time {
   align-items: center;
   gap: 7px;
   white-space: nowrap;
-  font: 12px var(--body);
+  font: 13px var(--body);
   color: #636960;
 }
 .storage-dot {
@@ -489,11 +483,11 @@ time {
   border-top: 1px solid #d6d8ce;
   margin-top: 50px;
   padding: 20px 0 26px;
-  font-size: 10px;
+  font-size: 13px;
   color: #60665f;
 }
 .workspace-footer strong {
-  font: 600 10px var(--mono);
+  font: 600 13px var(--body, Arial, sans-serif);
   margin-right: 8px;
   color: #20242b;
 }
@@ -505,7 +499,7 @@ time {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 13px;
   color: #41474f;
 }
 .workspace-footer > button:hover {
@@ -526,19 +520,11 @@ time {
   gap: 12px;
   min-height: 23px;
 }
-.page-section-code {
-  font: 10px var(--mono);
-  border: 1px solid #bfc7b5;
-  color: #596550;
-  padding: 3px 6px;
-  background: #f2f2e9;
-  white-space: nowrap;
-}
 .page-header h1 {
   margin: 8px 0 9px;
 }
 .eyebrow {
-  font: 12px var(--body);
+  font: 13px var(--body);
   font-weight: 400;
   text-transform: uppercase;
   color: #6b7078;
@@ -568,7 +554,7 @@ time {
   min-height: 38px;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
   text-decoration: none;
@@ -609,7 +595,7 @@ time {
 }
 .btn-sm {
   min-height: 31px;
-  font-size: 11px;
+  font-size: 13px;
   padding: 6px 9px;
 }
 .icon-btn {
@@ -637,7 +623,7 @@ time {
   border: 0;
   background: none;
   color: #41474f;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
 }
@@ -682,7 +668,7 @@ time {
   height: 17px;
 }
 .count-badge {
-  font: 11px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
   color: #5d646e;
   background: #eceeeb;
   padding: 2px 5px;
@@ -704,7 +690,7 @@ time {
 }
 .muted {
   color: #60665f;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 .badge {
@@ -718,7 +704,7 @@ time {
   color: #555e68;
   max-width: 100%;
   padding: 3px 6px;
-  font: 10px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
   line-height: 1.4;
   white-space: nowrap;
 }
@@ -750,12 +736,12 @@ time {
   border-radius: 3px;
   background: #f5f3ec;
   color: #50565f;
-  font: 10px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
 }
 .avatar-small {
   width: 25px;
   height: 25px;
-  font-size: 9px;
+  font-size: 13px;
 }
 .progress {
   height: 4px;
@@ -777,12 +763,12 @@ time {
   min-width: 0;
 }
 .field > span {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #353b44;
 }
 .field-hint {
-  font-size: 11px;
+  font-size: 13px;
   color: #636960;
   line-height: 1.5;
 }
@@ -803,7 +789,7 @@ time {
   display: flex;
   align-items: flex-start;
   gap: 7px;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
   color: #636960;
 }
@@ -834,7 +820,7 @@ time {
   border-radius: 1px;
   background: none;
   color: #636960;
-  font-size: 12px;
+  font-size: 13px;
 }
 .filter-tabs > button.active {
   background: #ebeae0;
@@ -888,7 +874,7 @@ time {
   justify-content: space-between;
   gap: 15px;
   margin-top: 25px;
-  font-size: 11px;
+  font-size: 13px;
   color: #636960;
 }
 .page-footer > span {
@@ -956,14 +942,14 @@ time {
   color: #fff;
   border-left: 3px solid #d96541;
   border-radius: 2px;
-  font-size: 12px;
+  font-size: 13px;
   box-shadow: 0 4px 16px #20262420;
 }
 .toast > span {
   line-height: 1.6;
 }
 .toast > button {
-  font-size: 12px;
+  font-size: 13px;
   background: none;
   border: 0;
   color: #fff;
@@ -991,7 +977,7 @@ time {
   padding-left: 37px !important;
 }
 .search-label {
-  font: 10px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
   letter-spacing: 0.7px;
   text-transform: uppercase;
   color: #646b74;
@@ -1026,7 +1012,7 @@ time {
 }
 .search-result small {
   color: #646b74;
-  font-size: 11px;
+  font-size: 13px;
 }
 .notification-item {
   padding: 20px 0;
@@ -1040,7 +1026,7 @@ time {
 }
 .notification-item time {
   margin-left: auto;
-  font: 11px var(--mono);
+  font: 13px var(--body, Arial, sans-serif);
   color: #646b74;
 }
 .notification-item h3 {
@@ -1053,7 +1039,7 @@ time {
   margin-bottom: 8px;
 }
 .notification-item small {
-  font-size: 11px;
+  font-size: 13px;
   color: #646b74;
 }
 .settings-layout {
@@ -1082,7 +1068,7 @@ time {
   background: #f5f3ec;
   border-left: 2px solid #9fa6af;
   padding: 16px 18px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: #535b65;
 }
@@ -1111,7 +1097,7 @@ time {
   font-weight: 600;
 }
 .settings-action p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: #636960;
   margin: 7px 0 0;
@@ -1127,14 +1113,14 @@ time {
 .privacy-grid > div {
   border-top: 1px solid #d6d8ce;
   padding: 14px 0;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: #60665f;
 }
 .privacy-grid strong {
   display: block;
   color: #343b45;
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 5px;
 }
 .page-grid {
@@ -1157,7 +1143,7 @@ time {
   display: inline-flex;
   border: 1px solid #d6d8ce;
   padding: 3px 6px;
-  font-size: 11px;
+  font-size: 13px;
   border-radius: 2px;
 }
 @media (min-width: 1600px) {
@@ -1188,7 +1174,7 @@ time {
   }
   .workspace-name {
     max-width: 130px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .masthead-actions .chrome-icon:nth-child(2) {
     display: none;
@@ -1236,13 +1222,13 @@ time {
     gap: 4px;
   }
   .workspace-tab {
-    font-size: 11px;
+    font-size: 13px;
   }
   .navigation-inner {
     gap: 18px;
   }
   .chrome-create {
-    font-size: 10px !important;
+    font-size: 13px !important;
   }
   .settings-layout {
     grid-template-columns: 1fr;
@@ -1271,7 +1257,7 @@ time {
     font-size: 23px;
   }
   .wordmark-type small {
-    font-size: 7px;
+    font-size: 13px;
     letter-spacing: 0.2px;
   }
   .masthead-divider {
@@ -1317,7 +1303,7 @@ time {
     min-height: 49px;
   }
   .workspace-tab {
-    font-size: 12px;
+    font-size: 13px;
     min-height: 49px;
     flex-shrink: 0;
     padding-inline: 10px;
@@ -1326,7 +1312,7 @@ time {
     min-height: 44px !important;
     padding: 6px 8px !important;
     gap: 4px;
-    font-size: 10px !important;
+    font-size: 13px !important;
   }
   .chrome-create svg {
     width: 12px;
@@ -1348,15 +1334,15 @@ time {
     line-height: 1.5;
   }
   .workspace-context-left > span:nth-child(2) {
-    font-size: 10px;
+    font-size: 13px;
   }
   .workspace-context-left > button {
-    font-size: 10px;
+    font-size: 13px;
     min-height: 22px;
     padding: 0;
   }
   .workspace-indicator {
-    font-size: 8px;
+    font-size: 13px;
     padding: 3px 5px;
   }
   .context-separator {
@@ -1366,7 +1352,7 @@ time {
     display: none;
   }
   .storage-status {
-    font-size: 8px;
+    font-size: 13px;
     white-space: normal;
     line-height: 1.6;
     max-width: 98px;
@@ -1380,16 +1366,16 @@ time {
   .workspace-footer {
     margin-top: 35px;
     flex-wrap: wrap;
-    font-size: 9px;
+    font-size: 13px;
     gap: 12px;
     padding: 17px 0;
   }
   .workspace-footer > span:nth-child(2) {
-    font-size: 9px;
+    font-size: 13px;
     margin-left: auto;
   }
   .workspace-footer > button {
-    font-size: 10px;
+    font-size: 13px;
     min-height: 44px;
     padding-top: 2px;
   }
@@ -1407,7 +1393,7 @@ time {
     font-size: 13px;
   }
   .eyebrow {
-    font-size: 10px;
+    font-size: 13px;
   }
   .header-actions {
     padding-top: 0;
@@ -1416,13 +1402,13 @@ time {
   }
   .btn {
     min-height: 44px;
-    font-size: 12px;
+    font-size: 13px;
     padding: 10px 12px;
     white-space: normal;
   }
   .btn-sm {
     min-height: 44px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .icon-btn {
     min-width: 44px;
@@ -1432,10 +1418,10 @@ time {
     min-height: 44px;
   }
   .field > span {
-    font-size: 12px;
+    font-size: 13px;
   }
   .field-hint {
-    font-size: 11px;
+    font-size: 13px;
   }
   .form-grid {
     grid-template-columns: 1fr;
@@ -1457,7 +1443,7 @@ time {
   .filter-tabs > button {
     min-height: 40px;
     padding: 8px 11px;
-    font-size: 12px;
+    font-size: 13px;
   }
   .modal-backdrop {
     padding: 10px;
@@ -1489,7 +1475,7 @@ time {
     width: calc(100% - 28px);
     max-width: none;
     padding: 12px;
-    font-size: 12px;
+    font-size: 13px;
     gap: 9px;
   }
   .toast > button {
@@ -1509,10 +1495,10 @@ time {
     width: 100%;
   }
   .settings-action p {
-    font-size: 12px;
+    font-size: 13px;
   }
   .settings-info {
-    font-size: 12px;
+    font-size: 13px;
   }
   .empty-state {
     padding: 27px 16px;
@@ -1524,7 +1510,7 @@ time {
     grid-template-columns: 1fr;
   }
   .badge {
-    font-size: 10px;
+    font-size: 13px;
   }
   .search-result {
     min-height: 58px;
@@ -1533,20 +1519,20 @@ time {
     font-size: 14px;
   }
   .search-result small {
-    font-size: 12px;
+    font-size: 13px;
   }
   .privacy-note {
-    font-size: 11px;
+    font-size: 13px;
   }
   .card-header {
     gap: 10px;
   }
   .page-footer {
-    font-size: 10px;
+    font-size: 13px;
     flex-wrap: wrap;
   }
   .form-actions .btn {
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 @media (max-width: 360px) {
@@ -1598,14 +1584,14 @@ time {
   font-size: 13px;
 }
 .workspace-indicator {
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.02em;
 }
 .storage-status {
-  font-size: 12px;
+  font-size: 13px;
 }
 .eyebrow {
-  font: 12px/1.5 var(--body);
+  font: 13px/1.5 var(--body);
   letter-spacing: 0.06em;
 }
 .page-description {
@@ -1615,7 +1601,7 @@ time {
 .field-workbench .field-sheet-number,
 .field-workbench .field-kicker {
   font-family: var(--body);
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.03em;
 }
 .field-workbench .field-heading h1 {
@@ -1645,7 +1631,7 @@ time {
 }
 .field-workbench .field-assignment-tags,
 .field-workbench .field-assignment-spec small {
-  font-size: 12px;
+  font-size: 13px;
 }
 .field-workbench .field-map-head h2,
 .field-workbench .field-section-head h2 {

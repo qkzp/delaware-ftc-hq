@@ -387,7 +387,7 @@ export default function Home() {
                     </small>
                   </span>
                   <span className="field-stream-open">
-                    {String(open).padStart(2, "0")}
+                    {open}
                     <small>OPEN</small>
                   </span>
                   <ArrowDownRight size={17} />
@@ -654,7 +654,7 @@ export default function Home() {
                 <button
                   onClick={() => openRecord("sponsors", overdueSponsors[0].id)}
                 >
-                  <span>{String(overdueSponsors.length).padStart(2, "0")}</span>
+                  <span>{overdueSponsors.length}</span>
                   Sponsor follow-up{overdueSponsors.length > 1 ? "s" : ""} due
                   <ArrowUpRight size={14} />
                 </button>
@@ -663,7 +663,7 @@ export default function Home() {
                 <button
                   onClick={() => openRecord("grants", reviewGrants[0].id)}
                 >
-                  <span>{String(reviewGrants.length).padStart(2, "0")}</span>
+                  <span>{reviewGrants.length}</span>
                   Application{reviewGrants.length > 1 ? "s" : ""} to review
                   <ArrowUpRight size={14} />
                 </button>

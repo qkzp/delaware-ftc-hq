@@ -230,7 +230,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
       );
       return;
     }
-    downloadFile(`myftcspae-${dateKey()}.json`, JSON.stringify(data, null, 2));
+    downloadFile(`myftcspace-${dateKey()}.json`, JSON.stringify(data, null, 2));
     notify("Backup exported. Keep it in your team’s approved private storage.");
   };
   const importData = (text: string) => {

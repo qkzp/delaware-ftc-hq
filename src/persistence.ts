@@ -334,7 +334,7 @@ export const localRepository = {
   },
   write(data: AppData) {
     if (!validateData(data))
-      throw new Error("Changes are not a valid MyFTCSpae workspace.");
+      throw new Error("Changes are not a valid MyFTCSpace workspace.");
     const previous = localStorage.getItem(STORAGE_KEY);
     if (previous !== null) {
       try {
@@ -348,7 +348,7 @@ export const localRepository = {
   /** Explicit recovery only: retain the original bytes before replacing a bad snapshot. */
   recover(data: AppData) {
     if (!validateData(data))
-      throw new Error("Choose a valid MyFTCSpae backup.");
+      throw new Error("Choose a valid MyFTCSpace backup.");
     const previous = localStorage.getItem(STORAGE_KEY);
     if (previous !== null) {
       let invalid = false;

@@ -28,7 +28,7 @@
 }
 .tc-task-summary div > span:not(.tc-summary-icon) {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-top: 6px;
 }
@@ -38,7 +38,7 @@
 }
 .tc-summary-progress small {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-top: 9px;
 }
@@ -54,7 +54,7 @@
   display: inline-block;
   min-width: 20px;
   margin-left: 7px;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   text-align: center;
 }
@@ -122,11 +122,9 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   align-items: start;
-  counter-reset: work-lane;
 }
 .tc-board-column {
   position: relative;
-  counter-increment: work-lane;
   min-width: 0;
   background: var(--surface, #f5f3ec);
   border: 1px solid var(--line, #d6d8ce);
@@ -156,16 +154,8 @@
   text-transform: uppercase;
   margin: 0;
 }
-.tc-column-heading::before {
-  content: counter(work-lane, decimal-leading-zero);
-  align-self: flex-start;
-  padding: 2px 0 0;
-  margin-right: 1px;
-  font: 11px var(--mono, Consolas, monospace);
-  color: var(--muted, #60665a);
-}
 .tc-column-heading > span:last-of-type {
-  font: 12px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   margin-left: 2px;
   color: var(--muted, #60665a);
 }
@@ -237,7 +227,7 @@
   gap: 8px;
 }
 .tc-demo-mark {
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   text-transform: uppercase;
 }
@@ -270,7 +260,7 @@
 }
 .tc-task-condition {
   margin: 0 0 17px;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--muted, #60665a);
   overflow-wrap: anywhere;
@@ -283,7 +273,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .tc-card-badges > span {
   display: flex;
@@ -298,7 +288,7 @@
   margin-top: 14px;
   padding-top: 12px;
   color: var(--muted, #60665a);
-  font-size: 11px;
+  font-size: 13px;
 }
 .tc-task-card-footer > .inline {
   gap: 6px;
@@ -309,7 +299,7 @@
   margin-left: auto;
   min-height: 32px;
   padding: 5px 7px !important;
-  font-size: 11px;
+  font-size: 13px;
 }
 .tc-task-done .tc-task-title {
   color: var(--muted, #60665a);
@@ -317,13 +307,13 @@
 .tc-column-empty {
   padding: 28px 14px;
   color: var(--muted, #60665a);
-  font-size: 12px;
+  font-size: 13px;
   text-align: center;
   border: 1px dashed #c4c8ce;
   background: transparent;
 }
 .tc-blocked {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.5;
   border-left: 2px solid var(--accent, #ce431e);
   padding: 6px 9px;
@@ -336,7 +326,7 @@
   color: #a73316 !important;
 }
 .tc-page-footnote {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   margin: 20px 0;
@@ -395,17 +385,17 @@
 .tc-task-list-title span {
   display: block;
   color: var(--muted, #60665a);
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 5px;
 }
 .tc-list-date {
-  font: 12px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   min-width: 65px;
 }
 .tc-task-list .task-row > select {
   width: 120px;
-  font-size: 12px;
+  font-size: 13px;
   min-height: 36px;
 }
 .tc-dependencies {
@@ -450,10 +440,10 @@
   min-width: 0;
 }
 .tc-comment strong {
-  font-size: 12px;
+  font-size: 13px;
 }
 .tc-comment small {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-left: 10px;
 }
@@ -509,7 +499,7 @@
   align-items: center;
   gap: 18px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin-bottom: 18px;
 }
@@ -539,7 +529,7 @@
 .tc-weekdays span {
   padding: 12px 10px;
   text-align: left;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--paper, #faf9f5);
@@ -631,13 +621,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.5;
 }
 .tc-calendar-event small {
   display: block;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   margin-top: 3px;
 }
@@ -661,7 +651,7 @@
   align-items: flex-start;
   justify-content: center;
   width: 72px;
-  height: 73px;
+  min-height: 88px;
   background: none;
   border: 0;
   border-right: 1px solid var(--line, #d6d8ce);
@@ -675,10 +665,15 @@
   font-variant-numeric: tabular-nums;
 }
 .tc-date-tile span {
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   text-transform: uppercase;
   color: var(--muted, #60665a);
   margin-bottom: 8px;
+}
+.tc-date-tile small {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--muted, #60665a);
 }
 .tc-agenda-info {
   flex: 1;
@@ -694,7 +689,7 @@
   display: flex;
   gap: 17px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
 }
 .tc-agenda-details span {
@@ -735,7 +730,7 @@
 }
 .tc-season-label small {
   display: block;
-  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  font: 13px var(--body, Arial, sans-serif);
   color: var(--muted, #60665a);
   margin-top: 7px;
 }
@@ -778,7 +773,7 @@
   margin: 7px 0;
 }
 .tc-season-event p {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   margin: 0;
@@ -788,7 +783,7 @@
   align-items: center;
   gap: 18px;
   flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--muted, #60665a);
   margin: 5px 0 22px;
 }
@@ -818,7 +813,7 @@
   margin: 0;
 }
 .tc-event-source {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--muted, #60665a);
   overflow-wrap: anywhere;
@@ -849,7 +844,7 @@
     min-height: 150px;
   }
   .tc-calendar-event strong {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 @media (max-width: 1000px) {
@@ -882,7 +877,7 @@
     min-width: 190px;
   }
   .tc-task-condition {
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 @media (max-width: 700px) {
@@ -918,7 +913,7 @@
     font-size: 13px;
   }
   .tc-task-card-footer {
-    font-size: 12px;
+    font-size: 13px;
   }
   .tc-task-card-footer select,
   .tc-task-filters select,
@@ -1011,7 +1006,7 @@
     padding: 5px 3px;
   }
   .tc-calendar-event strong {
-    font-size: 11px;
+    font-size: 13px;
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1022,11 +1017,11 @@
   }
   .tc-weekdays span {
     text-align: center;
-    font-size: 11px;
+    font-size: 13px;
     padding: 12px 2px;
   }
   .tc-calendar-legend {
-    font-size: 11px;
+    font-size: 13px;
     gap: 12px;
   }
   .tc-agenda-date {
@@ -1035,7 +1030,7 @@
   }
   .tc-date-tile {
     width: 52px;
-    height: 60px;
+    min-height: 88px;
   }
   .tc-agenda-info h3 {
     font-size: 15px;

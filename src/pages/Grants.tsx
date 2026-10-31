@@ -696,7 +696,7 @@ export default function GrantsPage() {
             )}
             <p className="funding-disclosure">
               <LockKeyhole size={13} />
-              MyFTCSpae never submits an application. “Submitted” records an
+              MyFTCSpace never submits an application. “Submitted” records an
               action your team completed with the funder.
             </p>
             <div className="funding-verification">

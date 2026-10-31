@@ -574,6 +574,50 @@ test("records from a different team or season never enter the active workspace",
   });
 });
 
+test("the calendar opens with upcoming dates across months and keeps past dates in the season view", async () => {
+  const initial = createDemoData();
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
+  const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const key = (date) =>
+    `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  initial.events = [
+    { ...copy(initial.events[0]), id: "future-month", title: "Next month team planning", date: key(nextMonth) },
+    { ...copy(initial.events[0]), id: "past-build", title: "Past build archive", date: key(yesterday) },
+  ];
+  await fixture({ initial, page: pages.Calendar }, async (app) => {
+    assert.equal(byText(app.root, "button", "Agenda").props.className, "active");
+    assert.match(app.text, /Upcoming events/);
+    assert.match(app.text, /Next month team planning/);
+    assert.doesNotMatch(app.text, /Past build archive/);
+    assert.equal(
+      app.root.findAllByType("time").find((node) => node.props.dateTime === key(nextMonth))?.props["aria-label"],
+      nextMonth.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
+    );
+    await app.update(() => byText(app.root, "button", "Season").props.onClick());
+    assert.match(app.text, /Past build archive/);
+  });
+});
+
+test("old sample instructions are refreshed without replacing edited or real task content", async () => {
+  const initial = createDemoData();
+  const generic = "Share the result at the next build meeting and add a short note to the build log.";
+  initial.tasks[0].done = generic;
+  initial.tasks[0].description = "Work with a teammate. Ask a mentor if you need help or a safety check.";
+  initial.tasks[1].done = "Review our actual autonomous spreadsheet.";
+  initial.tasks[1].description = "Keep these notes from our team.";
+  initial.tasks[2].demo = false;
+  initial.tasks[2].done = generic;
+  await fixture({ initial }, async (app) => {
+    assert.match(app.context.data.tasks[0].done, /intake run/);
+    assert.match(app.context.data.tasks[0].description, /first three runs/);
+    assert.equal(app.context.data.tasks[1].done, initial.tasks[1].done);
+    assert.equal(app.context.data.tasks[1].description, initial.tasks[1].description);
+    assert.equal(app.context.data.tasks[2].done, generic);
+    assert.equal(localRepository.read().tasks[0].done, app.context.data.tasks[0].done);
+  });
+});
+
 test("the actual calendar form adds a competition to agenda and season views", async () => {
   await fixture({ page: pages.Calendar }, async (app) => {
     await app.update(() =>

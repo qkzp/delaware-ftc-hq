@@ -51,7 +51,7 @@ export function Workspace() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
   useEffect(() => {
-    document.title = `${pageLabels[page]} · MyFTCSpae`;
+    document.title = `${pageLabels[page]} · MyFTCSpace`;
   }, [page]);
   const navigate = (next: Page) => setPage(next);
   const myCount = data.tasks.filter(
@@ -72,7 +72,7 @@ export function Workspace() {
             <button
               className="wordmark"
               onClick={() => navigate("home")}
-              aria-label="MyFTCSpae home"
+              aria-label="MyFTCSpace home"
             >
               <svg
                 className="station-mark"
@@ -107,7 +107,7 @@ export function Workspace() {
                 />
               </svg>
               <span className="wordmark-type">
-                <strong>MyFTCSpae</strong>
+                <strong>MyFTCSpace</strong>
                 <small>DELAWARE · FTC</small>
               </span>
             </button>
@@ -241,7 +241,7 @@ export function Workspace() {
         </div>
         <footer className="workspace-footer">
           <span>
-            <strong>MyFTCSpae</strong> FTC team workspace
+            <strong>MyFTCSpace</strong> FTC team workspace
           </span>
           <span>Local workspace · No shared team sync</span>
           <button onClick={() => navigate("onboarding")}>

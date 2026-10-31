@@ -737,7 +737,7 @@ export default function SponsorsPage() {
                   {editing.draftStatus}
                 </Badge>
               </div>
-              <p>Prepare your message here. Nothing is sent from MyFTCSpae.</p>
+              <p>Prepare your message here. Nothing is sent from MyFTCSpace.</p>
               <Field label="Draft message">
                 <textarea
                   rows={7}
