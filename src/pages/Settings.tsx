@@ -7,7 +7,6 @@ import {
   FolderLock,
   RefreshCcw,
   ShieldCheck,
-  Sparkles,
   Users,
 } from "lucide-react";
 import { useHQ } from "../store";
@@ -35,9 +34,9 @@ export default function Settings() {
   return (
     <>
       <PageHeader
-        eyebrow="MAKE THIS SPACE YOURS"
-        title="Team & workspace"
-        description="Team details, permission previews, and a clear home for your data."
+        eyebrow="WORKSPACE / SETTINGS"
+        title="Workspace settings"
+        description="Team details, role previews, and data management."
       />
       <div className="settings-layout">
         <div className="stack">
@@ -48,7 +47,7 @@ export default function Settings() {
               <Badge>Team only</Badge>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
-              A few details help everyone know they’re in the right place.
+              Set the active team, county, and season label.
             </p>
             <form
               onSubmit={(e) => {
@@ -114,7 +113,7 @@ export default function Settings() {
           <section className="card settings-section">
             <div className="section-title">
               <Database size={21} />
-              <h2>Your data, in your hands</h2>
+              <h2>Data & backups</h2>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
               Changes save in this browser. Export a backup to move your
@@ -211,7 +210,7 @@ export default function Settings() {
                 disabled={role !== "admin"}
                 onClick={() => setConfirm("fresh")}
               >
-                <Sparkles size={15} />
+                <RefreshCcw size={15} />
                 Start fresh
               </button>
             </div>
@@ -235,7 +234,7 @@ export default function Settings() {
           <section className="card settings-section">
             <div className="section-title">
               <ShieldCheck size={21} />
-              <h2>Try a role</h2>
+              <h2>Role preview</h2>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
               Preview how the interface changes for each team role.

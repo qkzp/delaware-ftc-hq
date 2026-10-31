@@ -1,0 +1,30 @@
+import {
+  BookOpen,
+  CalendarDays,
+  CheckCheck,
+  Flag,
+  Home,
+  Sprout,
+  Users,
+} from "lucide-react";
+import type { Page } from "./types";
+export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
+  { page: "home", label: "Overview", icon: Home },
+  { page: "tasks", label: "Tasks", icon: CheckCheck },
+  { page: "calendar", label: "Schedule", icon: CalendarDays },
+  { page: "resources", label: "Robot & files", icon: BookOpen },
+  { page: "grants", label: "Grants", icon: Sprout },
+  { page: "sponsors", label: "Outreach", icon: Users },
+  { page: "pit", label: "Competition", icon: Flag },
+];
+export const pageLabels: Record<Page, string> = {
+  home: "Overview",
+  tasks: "Tasks",
+  calendar: "Schedule",
+  resources: "Robot & resources",
+  grants: "Grant register",
+  sponsors: "Sponsor outreach",
+  pit: "Competition checklist",
+  onboarding: "New member checklist",
+  settings: "Workspace settings",
+};

@@ -2,35 +2,16 @@ import { useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
-  CalendarDays,
   Check,
-  CheckCheck,
   ChevronRight,
-  Circle,
-  Clock3,
-  FileText,
-  Flag,
-  Lightbulb,
-  MapPin,
-  Megaphone,
   Plus,
-  Rocket,
-  Sparkles,
-  Target,
-  Wrench,
 } from "lucide-react";
 import { useHQ } from "../store";
-import {
-  Avatar,
-  Badge,
-  EmptyState,
-  Field,
-  Modal,
-  Progress,
-} from "../components/ui";
-import RobotIllustration from "../components/RobotIllustration";
+import { Field, Modal } from "../components/ui";
 import { PIT_ITEM_IDS } from "./Pit";
 import { dateKey, daysUntil, dueLabel, formatDate } from "../utils";
+import "./Home.css";
+
 export default function Home() {
   const {
     data,
@@ -41,500 +22,600 @@ export default function Home() {
     notify,
     storageError,
   } = useHQ();
-  const [taskFilter, setTaskFilter] = useState("My tasks");
+  const [scope, setScope] = useState<"mine" | "team">("mine");
   const [announcement, setAnnouncement] = useState(false);
-  const openTasks = data.tasks.filter((t) => t.status !== "Done");
-  const myTasks = openTasks.filter((t) => t.owner === "Alex (you)");
-  const tasks = (taskFilter === "My tasks" ? myTasks : openTasks).slice(0, 4);
+  const today = dateKey();
+  const openTasks = data.tasks.filter((task) => task.status !== "Done");
+  const myTasks = openTasks.filter((task) => task.owner === "Alex (you)");
+  const scopedTasks = scope === "mine" ? myTasks : openTasks;
+  const tasks = [...scopedTasks]
+    .sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999"))
+    .slice(0, 6);
   const upcoming = [...data.events]
-    .filter((e) => e.date >= dateKey())
+    .filter((event) => event.date >= today)
     .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-  const competition = upcoming.find((e) => e.type === "Competition");
-  const next = competition || upcoming[0];
+  const nextSession = upcoming[0];
+  const competition = upcoming.find((event) => event.type === "Competition");
+  const laterEvents = upcoming
+    .filter(
+      (event) => event.id !== nextSession?.id && event.id !== competition?.id,
+    )
+    .slice(0, 3);
   const visibleGrants = data.grants.filter(
-    (g) => canManage || g.visibility !== "private",
+    (grant) => canManage || grant.visibility !== "private",
   );
-  const completed = data.tasks.filter((t) => t.status === "Done").length;
-  const robotTasks = data.tasks.filter((t) =>
-    ["Mechanical", "Electrical", "Programming", "CAD"].includes(t.area),
+  const activeGrants = visibleGrants.filter(
+    (grant) => !["New", "Closed", "Not Awarded"].includes(grant.status),
   );
-  const robotDone = robotTasks.filter((t) => t.status === "Done").length;
+  const submittedGrants = activeGrants.filter((grant) =>
+    ["Submitted", "Awarded"].includes(grant.status),
+  ).length;
+  const completed = data.tasks.filter((task) => task.status === "Done").length;
+  const robotTasks = data.tasks.filter((task) =>
+    ["Mechanical", "Electrical", "Programming", "CAD"].includes(task.area),
+  );
+  const robotDone = robotTasks.filter((task) => task.status === "Done").length;
   const readyItems = PIT_ITEM_IDS.filter((id) =>
     data.pitChecklist.includes(id),
   ).length;
-  const overdue = data.sponsors.filter(
-    (s) =>
-      s.followUp &&
-      s.followUp < dateKey() &&
-      !["Declined", "Do Not Contact", "Committed"].includes(s.status),
+  const overdueSponsors = canManage
+    ? data.sponsors.filter(
+        (sponsor) =>
+          sponsor.followUp &&
+          sponsor.followUp <= today &&
+          !["Declined", "Do Not Contact", "Committed"].includes(sponsor.status),
+      )
+    : [];
+  const visibleResources = data.resources.filter(
+    (resource) =>
+      canManage || (resource.visibility !== "private" && resource.approved),
   );
-  const toggleTask = (id: string) => {
-    const task = data.tasks.find((t) => t.id === id);
+  const buildLog = visibleResources.find(
+    (resource) => resource.kind === "Build log",
+  );
+  const quickLinks = [
+    {
+      label: "Robot reference",
+      action: () => openRecord("resources", "robot-reference"),
+    },
+    {
+      label: "Build log",
+      action: () =>
+        buildLog ? openRecord("resources", buildLog.id) : setPage("resources"),
+    },
+    { label: "Season schedule", action: () => setPage("calendar") },
+  ];
+  const preparationGroups = [
+    { label: "Robot & inspection", prefix: "robot-" },
+    { label: "Batteries & essentials", prefix: "battery-" },
+    { label: "Pit & assignments", prefix: "pit-" },
+  ];
+
+  function completeTask(id: string) {
+    const task = data.tasks.find((item) => item.id === id);
     if (!task) return;
     if (!canManage && task.owner !== "Alex (you)") {
-      notify("You can complete tasks assigned to you.");
+      notify("You can update tasks assigned to you.");
       return;
     }
     if (
       task.dependencies.some(
-        (dep) => data.tasks.find((t) => t.id === dep)?.status !== "Done",
+        (id) => data.tasks.find((item) => item.id === id)?.status !== "Done",
       )
     ) {
-      notify("Finish the linked dependencies first.");
+      notify("Complete the linked dependencies before finishing this task.");
       return;
     }
     saveRecord("tasks", { ...task, status: "Done" });
-    notify("Nice work. One step closer!", () => saveRecord("tasks", task));
-  };
+    notify("Task completed.", () => saveRecord("tasks", task));
+  }
+
   return (
-    <>
-      <div className="home-heading">
+    <div className="overview">
+      <header className="overview-heading">
         <div>
-          <div className="eyebrow">YOUR WORKSPACE, YOUR NEXT CHAPTER</div>
-          <h1>
-            Good to see you, Alex <span className="greeting-spark">✳</span>
-          </h1>
-          <p className="page-description">
-            A little progress today. A stronger team tomorrow.
+          <div className="overview-label">TEAM OVERVIEW</div>
+          <h1>{data.teamName}</h1>
+          <p>
+            {data.county === "Statewide" ? "Delaware" : `${data.county} County`}{" "}
+            <span>/</span> {data.seasonName}
+            {data.teamNumber && data.teamNumber !== "DEMO"
+              ? ` / Team ${data.teamNumber}`
+              : ""}
           </p>
         </div>
-        <div className="today-label">
-          <CalendarDays size={16} />
-          {formatDate(dateKey(), {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })}
+        <div className="overview-date">
+          <span>{formatDate(today, { weekday: "long" })}</span>
+          <strong>
+            {formatDate(today, {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          </strong>
         </div>
-      </div>
-      <div className="home-top-grid">
-        <section className="welcome-card">
-          <div className="welcome-copy">
-            <div className="welcome-label">
-              <span />
-              LET’S MAKE IT HAPPEN
-            </div>
-            <h2>
-              Small steps.
-              <br />
-              Big things ahead.
-            </h2>
-            <p>
-              You don’t need to know everything.
-              <br />
-              Just know your next move.
-            </p>
-            <div className="welcome-actions">
-              <button
-                className="btn btn-primary"
-                onClick={() =>
-                  document
-                    .getElementById("next-steps")
-                    ?.scrollIntoView({
-                      behavior: matchMedia("(prefers-reduced-motion: reduce)")
-                        .matches
-                        ? "instant"
-                        : "smooth",
-                      block: "center",
-                    })
-                }
-              >
-                Find my next step <ArrowRight size={16} />
-              </button>
-              <button
-                className="welcome-rookie"
-                onClick={() => setPage("onboarding")}
-              >
-                <Sparkles size={15} /> I’m new here
-              </button>
-            </div>
-          </div>
-          <RobotIllustration />
-          <div className="hero-caption">
-            <span className="live-dot" /> MADE FOR BUILDING. BETTER TOGETHER.
-          </div>
-        </section>
-        <section className="next-event-card">
-          <div className="card-topline">
-            <span className="eyebrow">NEXT UP FOR THE TEAM</span>
-            <Flag size={17} />
-          </div>
-          {next ? (
-            <>
-              <div className="event-countdown">
-                <strong>{Math.max(0, daysUntil(next.date))}</strong>
-                <div>
-                  <span>days to go</span>
-                  <Badge tone="green">
-                    {next.demo ? "Demo event" : next.type}
-                  </Badge>
-                </div>
-                <div className="event-orbit">
-                  <Target size={43} strokeWidth={1.15} />
-                </div>
-              </div>
-              <h3>{next.title}</h3>
-              <div className="event-detail">
-                <CalendarDays size={14} />
-                {formatDate(next.date, {
-                  month: "long",
-                  day: "numeric",
-                })} · {next.time}
-              </div>
-              <div className="event-detail">
-                <MapPin size={14} />
-                {next.location}
-              </div>
-              <div className="event-ready">
-                <div>
-                  <span>Let’s get competition-ready</span>
-                  <strong>
-                    {Math.round(
-                      Math.min(100, (readyItems / PIT_ITEM_IDS.length) * 100),
-                    )}
-                    %
-                  </strong>
-                </div>
-                <Progress
-                  value={Math.min(
-                    100,
-                    (readyItems / PIT_ITEM_IDS.length) * 100,
-                  )}
-                />
-              </div>
-              <button className="event-cta" onClick={() => setPage("pit")}>
-                Open competition checklist <ArrowRight size={15} />
-              </button>
-            </>
-          ) : (
-            <EmptyState
-              title="Your next event starts here"
-              description="Add a build night or a competition to start planning."
-              action={
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => setPage("calendar")}
-                >
-                  Open team calendar
-                </button>
-              }
-            />
-          )}
-        </section>
-      </div>
-      <div className="home-main-grid">
-        <section className="card next-steps-card" id="next-steps">
-          <div className="card-header">
-            <div className="section-title">
-              <span className="section-icon">
-                <CheckCheck size={18} />
-              </span>
-              <h2>My next steps</h2>
-              <span className="count-badge">{myTasks.length}</span>
-            </div>
-            <button className="text-link" onClick={() => setPage("tasks")}>
-              View all <ArrowUpRight size={14} />
-            </button>
-          </div>
-          <div className="next-step-tabs" role="group" aria-label="Task view">
-            {["My tasks", "Team tasks"].map((t) => (
-              <button
-                key={t}
-                className={taskFilter === t ? "active" : ""}
-                onClick={() => setTaskFilter(t)}
-              >
-                {t}
-              </button>
-            ))}
-            <span className="task-summary">
-              <span className="live-dot" />
-              {completed} done this season
+      </header>
+
+      <section className="overview-session" aria-label="Next team event">
+        <div className="overview-session-label">NEXT EVENT</div>
+        {nextSession ? (
+          <>
+            <span className="overview-session-date">
+              {dueLabel(nextSession.date)}
+              {nextSession.time ? ` / ${nextSession.time}` : ""}
             </span>
-          </div>
-          <div className="home-task-list">
-            {tasks.length ? (
-              tasks.map((t) => (
-                <div className="home-task" key={t.id}>
-                  <button
-                    className="task-check"
-                    onClick={() => toggleTask(t.id)}
-                    aria-label={`Complete ${t.title}`}
-                  >
-                    <Check size={13} />
-                  </button>
-                  <div className="home-task-copy">
-                    <button onClick={() => openRecord("tasks", t.id)}>
-                      {t.title}
-                    </button>
-                    <div>
-                      <span
-                        className={`area-dot area-${t.area.toLowerCase()}`}
-                      />
-                      {t.area}
-                      <span className="meta-divider">·</span>
-                      {t.effort}
-                      <span className="meta-divider">·</span>
-                      {t.owner === "Alex (you)" ? "You" : t.owner}
-                    </div>
-                  </div>
-                  <div className="home-task-end">
-                    <Badge
-                      tone={
-                        t.priority === "High"
-                          ? "amber"
-                          : t.status === "In progress"
-                            ? "green"
-                            : "gray"
-                      }
-                    >
-                      {t.priority === "High" ? "High priority" : t.status}
-                    </Badge>
-                    <span className={t.due <= dateKey() ? "due-today" : ""}>
-                      <Clock3 size={12} />
-                      {dueLabel(t.due)}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <EmptyState
-                title="You’re all caught up"
-                description="Choose a team task or explore a new skill."
-                action={
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => setPage("onboarding")}
-                  >
-                    Find a first task
-                  </button>
-                }
-              />
-            )}
-          </div>
-          <button className="task-board-link" onClick={() => setPage("tasks")}>
-            <Plus size={15} /> Pick up a task <ChevronRight size={15} />
-          </button>
-        </section>
-        <section className="card week-card">
-          <div className="card-header">
-            <div className="section-title">
-              <CalendarDays size={18} />
-              <h2>Coming up</h2>
-            </div>
             <button
-              className="icon-btn"
-              aria-label="Open team calendar"
+              className="overview-session-title"
+              onClick={() => openRecord("calendar", nextSession.id)}
+            >
+              {nextSession.title}
+            </button>
+            {nextSession.demo && <span className="overview-demo">DEMO</span>}
+            <button
+              className="overview-inline-link"
+              onClick={() => openRecord("calendar", nextSession.id)}
+            >
+              Agenda <ArrowRight size={14} />
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="overview-session-empty">
+              No upcoming meeting or event.
+            </span>
+            <button
+              className="overview-inline-link"
               onClick={() => setPage("calendar")}
             >
-              <ArrowUpRight size={17} />
+              Set up the schedule <ArrowRight size={14} />
             </button>
-          </div>
-          <div className="upcoming-events">
-            {upcoming.slice(0, 3).map((e, i) => (
-              <button
-                className="upcoming-event"
-                key={e.id}
-                onClick={() => openRecord("calendar", e.id)}
-              >
-                <div
-                  className={`event-date ${i === 0 ? "event-date-first" : ""}`}
-                >
-                  <span>{formatDate(e.date, { month: "short" })}</span>
-                  <strong>{new Date(e.date + "T12:00:00").getDate()}</strong>
-                </div>
-                <div>
-                  <strong>{e.title}</strong>
-                  <span>
-                    {e.time} – {e.endTime}
-                  </span>
-                  <small>{e.demo ? "Demo schedule" : e.type}</small>
-                </div>
-                <ChevronRight size={15} />
-              </button>
-            ))}
-          </div>
-          <button
-            className="calendar-footer"
-            onClick={() => setPage("calendar")}
-          >
-            See the team calendar <ArrowRight size={15} />
-          </button>
-        </section>
-      </div>
-      <div className="home-bottom-grid">
-        <section className="card season-card">
-          <div className="card-header">
-            <div className="section-title">
-              <Rocket size={18} />
-              <h2>The season, moving forward</h2>
-            </div>
-            <Badge tone="gray">Team snapshot</Badge>
-          </div>
-          <div className="milestone-grid">
-            <button onClick={() => openRecord("resources", "robot-reference")}>
-              <span className="milestone-icon">
-                <Wrench size={18} />
-              </span>
-              <div>
-                <span>Robot milestones</span>
-                <strong>
-                  {robotDone}
-                  <small> / {robotTasks.length} tasks</small>
-                </strong>
-                <Progress
-                  value={
-                    robotTasks.length
-                      ? (robotDone / robotTasks.length) * 100
-                      : 0
-                  }
-                />
-                <small>Build. Test. Improve.</small>
-              </div>
-            </button>
-            <button onClick={() => setPage("tasks")}>
-              <span className="milestone-icon purple-icon">
-                <FileText size={18} />
-              </span>
-              <div>
-                <span>Portfolio progress</span>
-                <strong>
-                  {
-                    data.tasks.filter(
-                      (t) => t.area === "Portfolio" && t.status === "Done",
-                    ).length
-                  }
-                  <small>
-                    {" "}
-                    / {
-                      data.tasks.filter((t) => t.area === "Portfolio").length
-                    }{" "}
-                    tasks
-                  </small>
-                </strong>
-                <Progress
-                  value={
-                    data.tasks.filter((t) => t.area === "Portfolio").length
-                      ? (data.tasks.filter(
-                          (t) => t.area === "Portfolio" && t.status === "Done",
-                        ).length /
-                          data.tasks.filter((t) => t.area === "Portfolio")
-                            .length) *
-                        100
-                      : 0
-                  }
-                />
-                <small>Tell the story as you go.</small>
-              </div>
-            </button>
-            <button onClick={() => setPage("grants")}>
-              <span className="milestone-icon orange-icon">
-                <Flag size={18} />
-              </span>
-              <div>
-                <span>Funding applications</span>
-                <strong>
-                  {
-                    visibleGrants.filter(
-                      (g) => g.status === "Submitted" || g.status === "Awarded",
-                    ).length
-                  }
-                  <small>
-                    {" "}
-                    / {
-                      visibleGrants.filter((g) => g.status !== "New").length
-                    }{" "}
-                    submitted
-                  </small>
-                </strong>
-                <Progress
-                  value={
-                    visibleGrants.filter((g) => g.status !== "New").length
-                      ? (visibleGrants.filter(
-                          (g) =>
-                            g.status === "Submitted" || g.status === "Awarded",
-                        ).length /
-                          visibleGrants.filter((g) => g.status !== "New")
-                            .length) *
-                        100
-                      : 0
-                  }
-                />
-                <small>
-                  {canManage && overdue.length
-                    ? `${overdue.length} sponsor follow-up${overdue.length > 1 ? "s" : ""} need attention`
-                    : "A little follow-through goes far."}
-                </small>
-              </div>
-            </button>
-          </div>
-        </section>
-        <section className="rookie-card">
-          <div className="rookie-icon">
-            <Lightbulb size={23} />
-          </div>
-          <div>
-            <span className="eyebrow">NEW TO THE CREW?</span>
-            <h3>You belong here.</h3>
-            <p>
-              Find your people, learn one thing,
-              <br />
-              and make your first contribution.
-            </p>
-            <button className="text-link" onClick={() => setPage("onboarding")}>
-              Take your first five minutes <ArrowRight size={15} />
-            </button>
-          </div>
-        </section>
-      </div>
-      <section className="card updates-card">
-        <div className="card-header">
-          <div className="section-title">
-            <Megaphone size={18} />
-            <h2>Around the team</h2>
-          </div>
-          {canManage && (
-            <button className="text-link" onClick={() => setAnnouncement(true)}>
-              <Plus size={14} />
-              Post an update
-            </button>
-          )}
-        </div>
-        <div className="updates-grid">
-          {data.announcements.slice(0, 2).map((a) => (
-            <article className="team-update" key={a.id}>
-              <Avatar name={a.author} small />
-              <div>
-                <div className="update-meta">
-                  {a.author}
-                  <span>· {dueLabel(a.date)}</span>
-                  <Badge tone={a.type === "Decision" ? "purple" : "gray"}>
-                    {a.type}
-                  </Badge>
-                  {a.demo && <span className="demo-mini">Demo</span>}
-                </div>
-                <h3>{a.title}</h3>
-                <p>{a.body}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        {!data.announcements.length && (
-          <EmptyState
-            title="Keep the whole team in the loop"
-            description="Student leads and mentors can share decisions and useful updates here."
-          />
+          </>
         )}
       </section>
-      <footer className="page-footer">
+
+      <div className="overview-columns">
+        <div className="overview-main">
+          <section
+            className="overview-work"
+            aria-labelledby="overview-work-title"
+          >
+            <div className="overview-section-heading">
+              <div>
+                <h2 id="overview-work-title">Open work</h2>
+                <span className="overview-section-count">
+                  {scopedTasks.length}
+                </span>
+              </div>
+              <button
+                className="overview-inline-link"
+                onClick={() => setPage("tasks")}
+              >
+                Task board <ArrowUpRight size={14} />
+              </button>
+            </div>
+            <div className="overview-work-toolbar">
+              <div
+                className="overview-scope"
+                role="group"
+                aria-label="Task view"
+              >
+                <button
+                  aria-pressed={scope === "mine"}
+                  className={scope === "mine" ? "is-active" : ""}
+                  onClick={() => setScope("mine")}
+                >
+                  Assigned to me <span>{myTasks.length}</span>
+                </button>
+                <button
+                  aria-pressed={scope === "team"}
+                  className={scope === "team" ? "is-active" : ""}
+                  onClick={() => setScope("team")}
+                >
+                  All team work <span>{openTasks.length}</span>
+                </button>
+              </div>
+            </div>
+            {tasks.length ? (
+              <div
+                className="overview-work-table"
+                role="table"
+                aria-label="Open tasks"
+              >
+                <div className="overview-work-head" role="row">
+                  <span role="columnheader" className="overview-check-column">
+                    <span className="sr-only">Complete</span>
+                  </span>
+                  <span role="columnheader">TASK</span>
+                  <span role="columnheader">STATUS</span>
+                  <span role="columnheader">OWNER</span>
+                  <span role="columnheader">DUE</span>
+                </div>
+                {tasks.map((task) => (
+                  <div className="overview-work-row" key={task.id} role="row">
+                    <div role="cell" className="overview-check-column">
+                      <button
+                        className="overview-check"
+                        disabled={!canManage && task.owner !== "Alex (you)"}
+                        aria-label={`Complete ${task.title}`}
+                        onClick={() => completeTask(task.id)}
+                      >
+                        <span>
+                          <Check size={12} />
+                        </span>
+                      </button>
+                    </div>
+                    <div className="overview-work-name" role="cell">
+                      <button onClick={() => openRecord("tasks", task.id)}>
+                        {task.title}
+                      </button>
+                      <p>
+                        {task.area}
+                        <span> / </span>
+                        {task.effort}
+                        {task.priority === "High" && (
+                          <>
+                            <span> / </span>
+                            <b>High priority</b>
+                          </>
+                        )}
+                        {task.demo && (
+                          <>
+                            <span> / </span>
+                            <span className="overview-row-demo">Demo</span>
+                          </>
+                        )}
+                      </p>
+                      <span className="overview-done-condition">
+                        {task.done}
+                      </span>
+                    </div>
+                    <div className="overview-work-status" role="cell">
+                      <span
+                        className={
+                          task.status === "In progress"
+                            ? "overview-status-dot is-started"
+                            : "overview-status-dot"
+                        }
+                      />
+                      {task.status}
+                    </div>
+                    <div className="overview-work-owner" role="cell">
+                      {task.owner === "Alex (you)" ? "You" : task.owner}
+                    </div>
+                    <div
+                      className={`overview-work-due ${task.due && task.due <= today ? "is-due" : ""}`}
+                      role="cell"
+                    >
+                      {dueLabel(task.due)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="overview-empty">
+                <h3>
+                  {scope === "mine"
+                    ? "No open assignments"
+                    : "No open team tasks"}
+                </h3>
+                <p>
+                  {scope === "mine"
+                    ? "Choose an existing team task or use onboarding to create your first assignment."
+                    : "Add a task with an owner, a due date, and a clear finish line."}
+                </p>
+                <button
+                  className="overview-inline-link"
+                  onClick={() =>
+                    setPage(scope === "mine" ? "onboarding" : "tasks")
+                  }
+                >
+                  {scope === "mine"
+                    ? "Find a first assignment"
+                    : "Open task board"}
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+            )}
+            {scopedTasks.length > tasks.length && (
+              <button
+                className="overview-table-more"
+                onClick={() => setPage("tasks")}
+              >
+                View {scopedTasks.length - tasks.length} more open tasks{" "}
+                <ArrowRight size={14} />
+              </button>
+            )}
+          </section>
+
+          <section
+            className="overview-season"
+            aria-labelledby="overview-season-title"
+          >
+            <div className="overview-section-heading">
+              <div>
+                <h2 id="overview-season-title">Season status</h2>
+              </div>
+              <span className="overview-small-label">{data.seasonName}</span>
+            </div>
+            <div className="overview-metrics">
+              <button onClick={() => setPage("tasks")}>
+                <span>TEAM TASKS</span>
+                <strong>
+                  {completed}
+                  <small> / {data.tasks.length}</small>
+                </strong>
+                <div
+                  className="overview-meter"
+                  aria-label={`${completed} of ${data.tasks.length} team tasks complete`}
+                >
+                  <i
+                    style={{
+                      width: `${data.tasks.length ? (completed / data.tasks.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+                <small>completed</small>
+              </button>
+              <button
+                onClick={() => openRecord("resources", "robot-reference")}
+              >
+                <span>ROBOT WORK</span>
+                <strong>
+                  {robotDone}
+                  <small> / {robotTasks.length}</small>
+                </strong>
+                <div
+                  className="overview-meter"
+                  aria-label={`${robotDone} of ${robotTasks.length} robot tasks complete`}
+                >
+                  <i
+                    style={{
+                      width: `${robotTasks.length ? (robotDone / robotTasks.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+                <small>build tasks complete</small>
+              </button>
+              <button onClick={() => setPage("grants")}>
+                <span>APPLICATIONS</span>
+                <strong>
+                  {submittedGrants}
+                  <small> / {activeGrants.length}</small>
+                </strong>
+                <div
+                  className="overview-meter"
+                  aria-label={`${submittedGrants} of ${activeGrants.length} tracked applications submitted`}
+                >
+                  <i
+                    style={{
+                      width: `${activeGrants.length ? (submittedGrants / activeGrants.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+                <small>recorded as submitted</small>
+              </button>
+            </div>
+          </section>
+
+          <section
+            className="overview-team-log"
+            aria-labelledby="overview-log-title"
+          >
+            <div className="overview-section-heading">
+              <div>
+                <h2 id="overview-log-title">Team log</h2>
+                <span className="overview-section-count">
+                  {data.announcements.length}
+                </span>
+              </div>
+              {canManage && (
+                <button
+                  className="overview-inline-link"
+                  onClick={() => setAnnouncement(true)}
+                >
+                  <Plus size={14} />
+                  Post update
+                </button>
+              )}
+            </div>
+            {data.announcements.length ? (
+              data.announcements.slice(0, 3).map((update) => (
+                <article className="overview-log-entry" key={update.id}>
+                  <div className="overview-log-date">
+                    <time dateTime={update.date}>
+                      {formatDate(update.date)}
+                    </time>
+                    <span>{update.type}</span>
+                  </div>
+                  <div className="overview-log-body">
+                    <h3>{update.title}</h3>
+                    <p>{update.body}</p>
+                    <div>
+                      {update.author}
+                      {update.demo && (
+                        <span className="overview-demo">DEMO</span>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="overview-empty">
+                <p>
+                  No team updates yet. Decisions and meeting notes will appear
+                  here.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+
+        <aside className="overview-rail" aria-label="Events and team reference">
+          <section className="overview-competition">
+            <div className="overview-rail-title">NEXT COMPETITION</div>
+            {competition ? (
+              <>
+                <div className="overview-competition-date">
+                  <strong>
+                    {new Date(competition.date + "T12:00:00").getDate()}
+                  </strong>
+                  <div>
+                    <span>
+                      {formatDate(competition.date, { month: "long" })}
+                    </span>
+                    <small>
+                      {Math.max(0, daysUntil(competition.date))} DAYS AWAY
+                    </small>
+                  </div>
+                  {competition.demo && (
+                    <span className="overview-demo">DEMO</span>
+                  )}
+                </div>
+                <button
+                  className="overview-competition-name"
+                  onClick={() => openRecord("calendar", competition.id)}
+                >
+                  {competition.title}
+                  <ArrowUpRight size={15} />
+                </button>
+                <p>{competition.location}</p>
+                <span className="overview-event-time">
+                  {competition.time || "Time to be confirmed"}
+                  {competition.endTime ? ` – ${competition.endTime}` : ""}
+                </span>
+              </>
+            ) : (
+              <div className="overview-no-competition">
+                <p>No competition scheduled.</p>
+                <button
+                  className="overview-inline-link"
+                  onClick={() => setPage("calendar")}
+                >
+                  Add event details <ArrowRight size={14} />
+                </button>
+              </div>
+            )}
+            <div className="overview-preparation">
+              <div className="overview-preparation-heading">
+                <h3>Event preparation</h3>
+                <span>
+                  {readyItems}/{PIT_ITEM_IDS.length}
+                </span>
+              </div>
+              <div
+                className="overview-meter"
+                aria-label={`${readyItems} of ${PIT_ITEM_IDS.length} preparation items complete`}
+              >
+                <i
+                  style={{
+                    width: `${(readyItems / PIT_ITEM_IDS.length) * 100}%`,
+                  }}
+                />
+              </div>
+              {preparationGroups.map((group) => {
+                const ids = PIT_ITEM_IDS.filter((id) =>
+                  id.startsWith(group.prefix),
+                );
+                return (
+                  <button
+                    key={group.prefix}
+                    className="overview-prep-row"
+                    onClick={() => setPage("pit")}
+                  >
+                    <span>{group.label}</span>
+                    <span>
+                      {
+                        ids.filter((id) => data.pitChecklist.includes(id))
+                          .length
+                      }
+                      /{ids.length}
+                      <ChevronRight size={13} />
+                    </span>
+                  </button>
+                );
+              })}
+              <button
+                className="overview-rail-action"
+                onClick={() => setPage("pit")}
+              >
+                Open event checklist <ArrowRight size={14} />
+              </button>
+            </div>
+          </section>
+
+          {laterEvents.length > 0 && (
+            <section className="overview-schedule">
+              <div className="overview-rail-title">ON THE SCHEDULE</div>
+              {laterEvents.map((event) => (
+                <button
+                  className="overview-schedule-row"
+                  key={event.id}
+                  onClick={() => openRecord("calendar", event.id)}
+                >
+                  <span className="overview-schedule-date">
+                    {formatDate(event.date)}
+                  </span>
+                  <span>
+                    <strong>{event.title}</strong>
+                    <small>
+                      {event.time}
+                      {event.demo ? " / Demo" : ` / ${event.type}`}
+                    </small>
+                  </span>
+                  <ArrowUpRight size={14} />
+                </button>
+              ))}
+            </section>
+          )}
+
+          {overdueSponsors.length > 0 && (
+            <section className="overview-follow-ups">
+              <div className="overview-rail-title">FOLLOW-UP REQUIRED</div>
+              <button
+                onClick={() => openRecord("sponsors", overdueSponsors[0].id)}
+              >
+                <strong>{overdueSponsors.length}</strong>
+                <span>
+                  Sponsor follow-up{overdueSponsors.length > 1 ? "s" : ""} due
+                </span>
+                <ArrowUpRight size={15} />
+              </button>
+              <p>Outreach records are restricted to leads and mentors.</p>
+            </section>
+          )}
+
+          <section className="overview-reference">
+            <div className="overview-rail-title">TEAM REFERENCE</div>
+            {quickLinks.map((link) => (
+              <button key={link.label} onClick={link.action}>
+                {link.label}
+                <ArrowUpRight size={14} />
+              </button>
+            ))}
+          </section>
+          <section className="overview-onboarding">
+            <span>NEW TO FTC?</span>
+            <h3>Start with one assignment.</h3>
+            <p>Meet the team, find a guide, and pick up your first task.</p>
+            <button
+              className="overview-inline-link"
+              onClick={() => setPage("onboarding")}
+            >
+              Open onboarding <ArrowRight size={14} />
+            </button>
+          </section>
+        </aside>
+      </div>
+
+      <footer className="overview-footer">
+        <span>DELAWARE FTC / STUDENT HQ</span>
         <span>
-          <span className="tiny-mark">✳</span> Built by small steps. Powered by
-          your team.
-        </span>
-        <span>
-          <span className="live-dot" />{" "}
-          {storageError ? "Save needs attention" : "Saved on this device"}
+          {storageError
+            ? "SAVE REQUIRES ATTENTION"
+            : "SAVED ON THIS DEVICE / NO TEAM SYNC"}
         </span>
       </footer>
+
       {announcement && (
         <Modal
           title="Post a team update"
@@ -542,21 +623,27 @@ export default function Home() {
         >
           <form
             className="stack"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const f = new FormData(e.currentTarget);
+            onSubmit={(event) => {
+              event.preventDefault();
+              const form = new FormData(event.currentTarget);
+              const title = String(form.get("title") || "").trim();
+              const body = String(form.get("body") || "").trim();
+              if (!title || !body) {
+                notify("Add a title and update before posting.");
+                return;
+              }
               saveRecord("announcements", {
                 id: crypto.randomUUID(),
                 teamId: data.teamId,
                 seasonId: data.seasonId,
-                title: String(f.get("title")).trim(),
-                body: String(f.get("body")).trim(),
+                title,
+                body,
                 author: "Alex · student lead",
-                date: dateKey(),
-                type: f.get("type") as "Update" | "Decision",
+                date: today,
+                type: form.get("type") as "Update" | "Decision",
               });
               setAnnouncement(false);
-              notify("Update shared with your team.");
+              notify("Team update posted.");
             }}
           >
             <Field label="Title">
@@ -585,6 +672,6 @@ export default function Home() {
           </form>
         </Modal>
       )}
-    </>
+    </div>
   );
 }

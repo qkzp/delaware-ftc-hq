@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import {
   ArrowDownToLine,
   ArrowRight,
-  BookOpen,
   CheckCircle2,
   Code2,
   ExternalLink,
-  FileText,
   Flag,
   FolderOpen,
   Link,
@@ -15,7 +13,6 @@ import {
   Plus,
   Search,
   ShieldCheck,
-  Sparkles,
   Wrench,
   X,
 } from "lucide-react";
@@ -69,18 +66,6 @@ function displayDate(value: string) {
       })
     : "Not reviewed yet";
 }
-function KindIcon({ kind }: { kind: Resource["kind"] }) {
-  const Icon =
-    kind === "Code"
-      ? Code2
-      : kind === "CAD" || kind === "Wiring"
-        ? Wrench
-        : kind === "Build log"
-          ? FileText
-          : BookOpen;
-  return <Icon size={22} />;
-}
-
 export default function ResourcesPage() {
   const {
     data,
@@ -149,9 +134,9 @@ export default function ResourcesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="BUILD KNOWLEDGE, TOGETHER"
+        eyebrow="ROBOT / LIBRARY"
         title="Robot & resources"
-        description="The right guide, file, or lesson—right when you need it."
+        description="Build records, technical files, and reference material."
         actions={
           canManage && (
             <button
@@ -181,18 +166,6 @@ export default function ResourcesPage() {
         <RobotReference />
       ) : (
         <>
-          <div className="library-intro">
-            <span className="library-intro-icon">
-              <Sparkles size={21} />
-            </span>
-            <div>
-              <strong>A little knowledge goes a long way.</strong>
-              <p>
-                New to the team? Filter by Beginner. Looking for your robot’s
-                files? Try CAD, code, or build logs.
-              </p>
-            </div>
-          </div>
           <div className="filters library-filters">
             <label className="search-input">
               <Search size={17} />
@@ -250,7 +223,8 @@ export default function ResourcesPage() {
               {filtered.length} resource{filtered.length !== 1 ? "s" : ""}
             </span>
             <span>
-              <LockKeyhole size={13} /> Team knowledge stays with your team
+              <LockKeyhole size={13} /> Team library · approval required for
+              public use
             </span>
           </div>
           {filtered.length ? (
@@ -262,11 +236,6 @@ export default function ResourcesPage() {
                   onClick={() => setSelected(r)}
                 >
                   <div className="resource-card-top">
-                    <span
-                      className={`resource-icon resource-icon-${r.kind.toLowerCase().replace(" ", "-")}`}
-                    >
-                      <KindIcon kind={r.kind} />
-                    </span>
                     <Badge
                       tone={
                         r.level === "Beginner"
@@ -319,7 +288,7 @@ export default function ResourcesPage() {
             </div>
           ) : (
             <EmptyState
-              title="Let’s find your next useful resource"
+              title="No matching resources"
               description="Try another search or clear the filters to see the team library."
               action={
                 <button
@@ -547,7 +516,7 @@ function ResourceEditor({
   }
   return (
     <Modal
-      title={initial ? "Edit resource" : "Add to your team’s knowledge"}
+      title={initial ? "Edit resource" : "Add resource"}
       onClose={onClose}
       wide
     >
@@ -768,7 +737,7 @@ function RobotReference() {
         </span>
         <div>
           <div className="eyebrow">THE TEAM’S SHARED MEMORY</div>
-          <h2>Know the robot. Keep it running.</h2>
+          <h2>Robot quick reference</h2>
           <p className="muted">
             Setup, files, tests, and the lessons we don’t want to learn twice.
           </p>

@@ -126,7 +126,7 @@ export default function TasksPage() {
     saveRecord("tasks", { ...task, status });
     notify(
       status === "Done"
-        ? "Nice work! Task completed."
+        ? "Task completed."
         : `Task moved to ${status.toLowerCase()}.`,
     );
   };
@@ -183,7 +183,7 @@ export default function TasksPage() {
     notify(
       data.tasks.some((t) => t.id === record.id)
         ? "Task updated."
-        : "Task added. You have a clear next step.",
+        : "Task added.",
     );
     setEditing(null);
   };
@@ -191,9 +191,9 @@ export default function TasksPage() {
   return (
     <>
       <PageHeader
-        eyebrow="MAKE PROGRESS TOGETHER"
-        title="A little progress, every day."
-        description="Clear next steps. Shared ownership. A robot built together."
+        eyebrow="WORKSPACE / TASKS"
+        title="Tasks"
+        description="Assignments, blockers, and completed work."
         actions={
           canManage ? (
             <button className="btn btn-primary" onClick={create}>
@@ -238,7 +238,7 @@ export default function TasksPage() {
                 ).length
               }
             </strong>
-            <span>need a little attention</span>
+            <span>overdue tasks</span>
           </div>
         </div>
       </div>
@@ -319,8 +319,8 @@ export default function TasksPage() {
       </div>
       {!filtered.length ? (
         <EmptyState
-          title="A little breathing room."
-          description="No tasks match these filters. Try a different view, or add a clear next step for your team."
+          title="No matching tasks"
+          description="Change the filters or add a task."
           action={
             <button
               className="btn btn-secondary"
@@ -445,8 +445,8 @@ export default function TasksPage() {
                 {!filtered.some((t) => t.status === status) && (
                   <div className="tc-column-empty">
                     {status === "Done"
-                      ? "Your next small win goes here."
-                      : "All clear for now."}
+                      ? "No completed tasks."
+                      : "No tasks in this status."}
                   </div>
                 )}
               </div>
@@ -503,14 +503,14 @@ export default function TasksPage() {
         Team workspace ·{" "}
         {role === "student"
           ? "You can update your own tasks. Ask a student lead to reassign work."
-          : "A definition of done helps everyone know what a small win looks like."}
+          : "Every task includes an owner and a definition of done."}
       </p>
       {editing && (
         <Modal
           title={
             data.tasks.some((t) => t.id === editing.id)
               ? "Task details"
-              : "Create a clear next step"
+              : "New task"
           }
           onClose={() => setEditing(null)}
           wide

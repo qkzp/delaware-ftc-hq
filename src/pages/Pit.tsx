@@ -156,9 +156,9 @@ export default function PitPage() {
   return (
     <>
       <PageHeader
-        eyebrow="READY FOR THE BIG DAY"
-        title="Competition mode"
-        description="Your pit essentials. Easy to scan, even between matches."
+        eyebrow="EVENT / CHECKLIST"
+        title="Competition checklist"
+        description="Robot readiness, equipment, assignments, and event notes."
         actions={
           <button className="btn btn-secondary" onClick={exportRecap}>
             <Download size={16} /> Export recap
@@ -207,7 +207,7 @@ export default function PitPage() {
       ) : (
         <div className="card">
           <EmptyState
-            title="Your next competition starts here"
+            title="No upcoming competition"
             description="Ask a student lead to add the event and team assignments. You can prepare the checklist now."
             action={
               <button
@@ -224,8 +224,8 @@ export default function PitPage() {
         <section className="card pit-checklist">
           <div className="card-header">
             <div>
-              <h2>Ready, set, robot.</h2>
-              <p className="muted">Check once, worry less.</p>
+              <h2>Readiness checklist</h2>
+              <p className="muted">Complete before leaving for the event.</p>
             </div>
             <Badge tone={completed === allItems.length ? "green" : "gray"}>
               {completed} / {allItems.length} ready
@@ -267,10 +267,10 @@ export default function PitPage() {
               <span className="resource-icon">
                 <StickyNote size={21} />
               </span>
-              <h2>Catch it before you forget.</h2>
+              <h2>Record an observation</h2>
             </div>
             <p className="muted">
-              A quick observation now is a useful build note later.
+              Log a robot issue, match result, or scouting note.
             </p>
             <form
               className="stack"
@@ -373,7 +373,7 @@ export default function PitPage() {
         ) : (
           <div className="pit-no-notes">
             <StickyNote size={25} />
-            <p>No observations yet. Your first quick note will appear here.</p>
+            <p>No observations recorded.</p>
           </div>
         )}
       </section>

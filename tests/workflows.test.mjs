@@ -85,6 +85,7 @@ const pages = Object.fromEntries(
     ]),
   ),
 );
+const { Workspace } = await server.ssrLoadModule("/src/App.tsx");
 
 function memoryStorage(initial) {
   const values = new Map(
@@ -183,6 +184,77 @@ function fieldControl(root, label, type = "input") {
   assert.ok(field, `Field “${label}” should be rendered`);
   return field.findByType(type);
 }
+
+test("workspace tabs, exact-record search, and role changes keep the redesigned shell connected", async () => {
+  const initial = createDemoData();
+  initial.sponsors[0].name = "PRIVATE SHELL SPONSOR SENTINEL";
+  await fixture({ initial, page: Workspace }, async (app) => {
+    const mainNavigation = () =>
+      app.root.findByProps({ className: "workspace-tabs" });
+    const tab = (label) => byText(mainNavigation(), "button", label);
+    assert.equal(mainNavigation().type, "nav");
+    assert.equal(mainNavigation().props["aria-label"], "Main navigation");
+    assert.equal(
+      app.root.findAll(
+        (node) =>
+          node.type === "aside" &&
+          node.props.className?.split(" ").includes("sidebar"),
+      ).length,
+      0,
+      "The old sidebar is not part of the new navigation",
+    );
+
+    await app.update(() => tab("Tasks").props.onClick());
+    assert.equal(app.context.page, "tasks");
+    assert.equal(tab("Tasks").props["aria-current"], "page");
+    assert.ok(byText(app.root, "h1", "Tasks"));
+    await app.update(() => tab("Schedule").props.onClick());
+    assert.equal(app.context.page, "calendar");
+    assert.equal(tab("Schedule").props["aria-current"], "page");
+    assert.ok(byText(app.root, "h1", "Schedule"));
+
+    const task = ownTask(app.context.data);
+    await app.update(() =>
+      app.root
+        .findByProps({ "aria-label": "Search workspace (Control K)" })
+        .props.onClick(),
+    );
+    await app.update(() =>
+      app.root
+        .findByProps({ "aria-label": "Search workspace" })
+        .props.onChange({ target: { value: task.title } }),
+    );
+    const searchDialog = app.root.findByProps({ role: "dialog" });
+    const result = searchDialog
+      .findAllByType("button")
+      .find((button) =>
+        button
+          .findAllByType("span")
+          .some((span) => span.children.includes(task.title)),
+      );
+    assert.ok(result, "Search should offer the matching task");
+    await app.update(() => result.props.onClick());
+    assert.equal(app.context.page, "tasks");
+    assert.equal(fieldControl(app.root, "Task name").props.value, task.title);
+    assert.equal(app.context.focusRecord, null);
+
+    await app.update(() =>
+      app.root.findByProps({ "aria-label": "Close dialog" }).props.onClick(),
+    );
+    assert.equal(app.root.findAllByProps({ role: "dialog" }).length, 0);
+    await app.update(() =>
+      app.root
+        .findByProps({ "aria-label": "Demo permission preview" })
+        .props.onChange({ target: { value: "student" } }),
+    );
+    await app.update(() => tab("Outreach").props.onClick());
+    assert.equal(app.context.role, "student");
+    assert.equal(app.context.page, "sponsors");
+    assert.ok(byText(app.root, "h2", "Restricted records"));
+    assert.doesNotMatch(app.text, /PRIVATE SHELL SPONSOR SENTINEL/);
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
 
 test("a lead creates an actual task through the form, completes it, and reloads the saved result", async () => {
   let saved;

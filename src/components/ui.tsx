@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
-import { X, Sparkles } from "lucide-react";
+import { X } from "lucide-react";
 export function PageHeader({
   eyebrow,
   title,
@@ -92,9 +92,6 @@ export function EmptyState({
 }) {
   return (
     <div className="empty-state">
-      <span className="empty-icon">
-        <Sparkles size={24} />
-      </span>
       <h3>{title}</h3>
       <p>{description}</p>
       {action}

@@ -209,9 +209,9 @@ export default function GrantsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="FUND YOUR NEXT IDEA"
-        title="Grants & opportunities"
-        description="Find a good fit. Take it one step at a time."
+        eyebrow="FUNDING / GRANTS"
+        title="Grant register"
+        description="Eligibility checks, application steps, and submission records."
         actions={
           canManage ? (
             <button className="btn btn-primary" onClick={openNew}>
@@ -235,7 +235,7 @@ export default function GrantsPage() {
                 ).length
               }
             </strong>
-            <span>Opportunities to explore</span>
+            <span>Open opportunities</span>
           </div>
         </div>
         <div className="card">
@@ -250,7 +250,7 @@ export default function GrantsPage() {
                 ).length
               }
             </strong>
-            <span>Applications taking shape</span>
+            <span>Applications in progress</span>
           </div>
         </div>
         <div className="card">
@@ -272,7 +272,7 @@ export default function GrantsPage() {
       <div className="funding-source-note">
         <ShieldCheck size={19} />
         <div>
-          <strong>Good opportunities start with a reliable source.</strong>
+          <strong>Source verification</strong>
           <p>
             This is a team-managed directory, not a live grant feed. Check
             eligibility and deadlines directly with the funder before applying.
@@ -323,7 +323,7 @@ export default function GrantsPage() {
       {!records.length ? (
         <div className="card">
           <EmptyState
-            title="Your next opportunity is out there."
+            title="No matching opportunities"
             description="Try a wider filter, or add an opportunity from an official funder website."
             action={
               canManage ? (
@@ -339,9 +339,6 @@ export default function GrantsPage() {
           {records.map((g) => (
             <article className="card grant-card" key={g.id}>
               <div className="grant-topline">
-                <span className="grant-symbol">
-                  <CircleDollarSign size={21} />
-                </span>
                 <div className="inline">
                   {g.demo && <Badge tone="gray">Demo workflow</Badge>}
                   <Badge tone={statusTone(g.status)}>{g.status}</Badge>
@@ -616,7 +613,7 @@ export default function GrantsPage() {
             </fieldset>
             <section className="funding-application-steps">
               <div className="funding-section-header">
-                <h3>One step closer</h3>
+                <h3>Application checklist</h3>
                 <span className="muted">{progress(editing)}% complete</span>
               </div>
               <Progress value={progress(editing)} />

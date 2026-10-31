@@ -229,13 +229,13 @@ export default function SponsorsPage() {
     return (
       <>
         <PageHeader
-          eyebrow="BUILD COMMUNITY"
+          eyebrow="FUNDING / SPONSORS"
           title="Sponsor outreach"
-          description="Thoughtful relationships help your team go further."
+          description="Organization records, contact history, and follow-up dates."
         />
         <div className="card funding-access">
           <LockKeyhole size={32} />
-          <h2>Team relationships, handled with care.</h2>
+          <h2>Restricted records</h2>
           <p>
             Contact details, outreach notes, and message drafts are private to
             student leads and mentors. Ask your team lead for a fundraising
@@ -248,9 +248,9 @@ export default function SponsorsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="BUILD COMMUNITY"
+        eyebrow="FUNDING / SPONSORS"
         title="Sponsor outreach"
-        description="Turn a first conversation into a lasting team relationship."
+        description="Organization records, contact history, and follow-up dates."
         actions={
           <button className="btn btn-primary" onClick={openNew}>
             <Plus size={17} />
@@ -265,7 +265,7 @@ export default function SponsorsPage() {
           </span>
           <div>
             <strong>{data.sponsors.length}</strong>
-            <span>Organizations in your pipeline</span>
+            <span>Organization records</span>
           </div>
         </div>
         <button
@@ -278,7 +278,7 @@ export default function SponsorsPage() {
           </span>
           <div>
             <strong>{data.sponsors.filter(overdue).length}</strong>
-            <span>Follow-ups ready for a nudge</span>
+            <span>Follow-ups due</span>
           </div>
           <ArrowUpRight size={16} />
         </button>
@@ -366,7 +366,7 @@ export default function SponsorsPage() {
         )}
         {!records.length ? (
           <EmptyState
-            title="A good conversation starts here."
+            title="No matching organizations"
             description={
               data.sponsors.length
                 ? "Try another search or clear your filters."

@@ -1,6 +1,6 @@
 # Delaware FTC Student HQ
 
-A working, student-first season workspace built with React 19, TypeScript, Vite, and Lucide. The forest-green and soft-lime identity, custom robot illustration, and interface are original. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
+A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface uses a compact dark masthead, horizontal navigation, neutral typography, ruled data tables, and a restrained orange accent. There is no marketing hero, decorative robot illustration, pastel dashboard, or rounded card grid. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
 
 ## Run it
 
@@ -15,10 +15,10 @@ Open the Local URL printed by Vite. `npm run build` checks TypeScript and create
 
 ## Start with your team
 
-1. Explore the clearly labeled Circuit Breakers demo. The role selector at the lower left previews Student, Student lead, Mentor/coach, and Team admin experiences.
-2. In **Team & settings**, select **Team admin**, export a backup if needed, then select **Start fresh**. This removes sample records and retains sourced learning links.
+1. Explore the clearly labeled Circuit Breakers demo. The role selector at the top right previews Student, Student lead, Mentor/coach, and Team admin experiences.
+2. Open **Workspace settings** using the header settings button, select **Team admin**, export a backup if needed, then select **Start fresh**. This removes sample records and retains sourced learning links.
 3. Add your team name, county, season label, first build meeting, and a few tasks with clear finish lines. Add your real robot CAD/code links in **Robot & resources → Robot quick reference**.
-4. Let a new student open **I’m new here**, find a beginner guide, and claim a small first contribution.
+4. Let a new student open **New member checklist**, find a beginner guide, and claim a first assignment.
 5. Export backups to school-approved private storage regularly. Use a separate browser profile or import a team backup to work with another team. Records carry team and season IDs; this MVP operates on one active team/season at a time.
 
 ## What works
@@ -42,7 +42,7 @@ The principles shape the flows, not just the colors:
 | [Hick’s Law](https://lawsofux.com/hicks-law/)                      | The home screen emphasizes the next task and event. Main workspace navigation is separated from toolkit actions. Detailed editing, dependencies, and source fields appear when needed.                                    |
 | [Fitts’s Law](https://lawsofux.com/fittss-law/)                    | Main actions are near the work they affect. Mobile controls use 44px targets, with larger checkbox hit areas and spacing.                                                                                                 |
 | [Law of Proximity](https://lawsofux.com/law-of-proximity/)         | Owner, finish line, due date, and status travel together. Source/verification information stays next to the corresponding opportunity.                                                                                    |
-| Jakob’s Law / consistency                                          | Familiar sidebar navigation, board/list views, predictable search/filter controls, shared forms, and consistent primary/secondary actions reduce relearning.                                                              |
+| Jakob’s Law / consistency                                          | Persistent horizontal navigation, board/list views, predictable search/filter controls, shared forms, and consistent primary/secondary actions reduce relearning.                                                         |
 | [Goal-gradient effect](https://lawsofux.com/goal-gradient-effect/) | Rookie steps, actual task totals, application checklists, and pit readiness show real progress. No competitive student rankings.                                                                                          |
 | Recognition over recall                                            | Plain-language labels, visible definition-of-done text, resource links, persistent next actions, and a searchable workspace reduce memory demands.                                                                        |
 | Immediate feedback and recovery                                    | Local state changes immediately, status toasts confirm actions, deletions support undo, duplicate records are blocked, and import preview prevents accidental bad data.                                                   |
@@ -69,7 +69,7 @@ There is no live FIRST integration, grant feed, automatic reminder service, emai
 
 `src/types.ts` defines the team/season-scoped model. `src/persistence.ts` is the storage boundary: `read`, `write`, validation, and explicit recovery. Data uses browser `localStorage` under `delaware-ftc-hq:v1`. Invalid original snapshots are protected and explicit recovery preserves their bytes under `delaware-ftc-hq:v1:recovery`.
 
-**Role previews are interface demonstrations, not authentication or server authorization.** This local MVP is useful for non-sensitive planning on one device. Data is neither encrypted nor synced between teammates; someone with access to the browser profile or developer tools can inspect it. Do not store real student personal information or confidential financial/contact records until the shared backend is connected. The hosted site is owner-private, and the app itself never exposes a public team page or sends record data to an API. The two optional Google Fonts are external static font requests.
+**Role previews are interface demonstrations, not authentication or server authorization.** This local MVP is useful for non-sensitive planning on one device. Data is neither encrypted nor synced between teammates; someone with access to the browser profile or developer tools can inspect it. Do not store real student personal information or confidential financial/contact records until the shared backend is connected. The hosted app is public to anyone with its URL, while each visitor's records stay in their browser. The app itself never publishes team records or sends record data to an API. Typography uses native system fonts without an external font request.
 
 For shared school/team use, replace the local repository with an authenticated API while retaining the page model:
 

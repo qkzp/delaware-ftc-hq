@@ -25,11 +25,11 @@ const types: TeamEvent["type"][] = [
   "Meeting",
 ];
 const colors: Record<string, { color: string; bg: string }> = {
-  "Build night": { color: "#739951", bg: "#edf4e4" },
-  Competition: { color: "#a183bd", bg: "#f0ebf6" },
-  Outreach: { color: "#6f9da9", bg: "#eaf2f4" },
-  Deadline: { color: "#c49b56", bg: "#fbf3e2" },
-  Meeting: { color: "#7c9590", bg: "#edf3f0" },
+  "Build night": { color: "#60656d", bg: "#f4f4f2" },
+  Competition: { color: "#191d23", bg: "#f4f4f2" },
+  Outreach: { color: "#60656d", bg: "#f4f4f2" },
+  Deadline: { color: "#bd4728", bg: "#ffffff" },
+  Meeting: { color: "#60656d", bg: "#f4f4f2" },
 };
 const dateKey = (d = new Date()) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -48,8 +48,8 @@ const timeLabel = (time: string) =>
 const safeUrl = (value: string) => /^https?:\/\//i.test(value);
 const eventStyle = (type: string) =>
   ({
-    "--event-color": colors[type]?.color || "#7c9590",
-    "--event-bg": colors[type]?.bg || "#edf3f0",
+    "--event-color": colors[type]?.color || "#60656d",
+    "--event-bg": colors[type]?.bg || "#f4f4f2",
   }) as React.CSSProperties;
 
 function csvRows(text: string): string[][] {
@@ -355,7 +355,7 @@ export default function CalendarPage() {
   const rsvp = (event: TeamEvent) => {
     saveRecord("events", { ...event, rsvp: !event.rsvp });
     if (selected?.id === event.id) setSelected({ ...event, rsvp: !event.rsvp });
-    notify(event.rsvp ? "RSVP removed." : "You’re going! Your RSVP is saved.");
+    notify(event.rsvp ? "RSVP removed." : "RSVP saved.");
   };
   const download = (text: string, name: string, type: string) => {
     const a = document.createElement("a");
@@ -447,9 +447,9 @@ export default function CalendarPage() {
   return (
     <>
       <PageHeader
-        eyebrow="YOUR SEASON, IN SYNC"
-        title="Good things on the horizon."
-        description="Build nights, big moments, and the small steps in between."
+        eyebrow="WORKSPACE / SCHEDULE"
+        title="Schedule"
+        description="Meetings, competitions, outreach, and team deadlines."
         actions={
           <div className="inline">
             <button
@@ -703,8 +703,8 @@ export default function CalendarPage() {
           </div>
         ) : (
           <EmptyState
-            title="A little space to plan."
-            description="There are no events in this month. Add a build night, competition, or team deadline."
+            title="No events this month"
+            description="Add an event or import the team calendar."
             action={
               canManage ? (
                 <button
@@ -777,8 +777,8 @@ export default function CalendarPage() {
         </div>
       ) : (
         <EmptyState
-          title="Your season starts with a plan."
-          description="Add your first event, or import the team’s calendar. All dates stay editable."
+          title="No scheduled events"
+          description="Add an event or import the team calendar."
           action={
             canManage ? (
               <button className="btn btn-primary" onClick={() => create()}>
@@ -821,7 +821,7 @@ export default function CalendarPage() {
             </span>
           </div>
           <div className="tc-event-detail-block">
-            <h3>What we’re here to do</h3>
+            <h3>Agenda</h3>
             <p>
               {selected.agenda ||
                 "No agenda yet. A team lead can add the goals and plan for this event."}
@@ -901,7 +901,7 @@ export default function CalendarPage() {
           title={
             data.events.some((e) => e.id === editing.id)
               ? "Edit team event"
-              : "Make a little room for progress"
+              : "Add event"
           }
           onClose={() => setEditing(null)}
           wide
@@ -1018,7 +1018,7 @@ export default function CalendarPage() {
                             ? "1. Check-in: what is blocked? (5 min)\n2. Build and code in subteams (60 min)\n3. Test together and log results (20 min)\n4. Clean up and assign next steps (10 min)"
                             : t === "Design review"
                               ? "1. State the problem and constraints (5 min)\n2. Compare designs and test evidence (15 min)\n3. Decide and record why (10 min)\n4. Assign the next prototype and test (5 min)"
-                              : "1. Celebrate a small win from everyone\n2. Review match observations and robot issues\n3. Record what worked and what to change\n4. Choose three improvements and assign owners",
+                              : "1. Review the event goals\n2. Review match observations and robot issues\n3. Record what worked and what to change\n4. Choose three improvements and assign owners",
                       })
                     }
                   >
@@ -1085,10 +1085,7 @@ export default function CalendarPage() {
         </Modal>
       )}
       {importing && (
-        <Modal
-          title="Bring your team calendar along"
-          onClose={() => setImporting(false)}
-        >
+        <Modal title="Import team calendar" onClose={() => setImporting(false)}>
           <div className="tc-import-panel">
             <p>
               Import a team-provided CSV or ICS file. You’ll review the events
