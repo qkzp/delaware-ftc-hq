@@ -1,0 +1,833 @@
+import test, { after } from "node:test";
+import assert from "node:assert/strict";
+import { fileURLToPath } from "node:url";
+import React from "react";
+import TestRenderer, { act } from "react-test-renderer";
+import { createServer } from "vite";
+
+// These tests exercise real React components and context mutations without a browser.
+// They deliberately do not claim to verify layout, focus behavior, or actual device input.
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+const listeners = new Map();
+const on = (name, handler) => {
+  const handlers = listeners.get(name) || new Set();
+  handlers.add(handler);
+  listeners.set(name, handlers);
+};
+const off = (name, handler) => listeners.get(name)?.delete(handler);
+const location = { hash: "#home" };
+const media = () => ({
+  matches: false,
+  media: "",
+  addEventListener() {},
+  removeEventListener() {},
+  addListener() {},
+  removeListener() {},
+});
+Object.defineProperties(globalThis, {
+  location: { value: location, configurable: true },
+  matchMedia: { value: media, configurable: true },
+  window: {
+    value: {
+      location,
+      addEventListener: on,
+      removeEventListener: off,
+      scrollTo() {},
+      matchMedia: media,
+    },
+    configurable: true,
+  },
+  document: {
+    value: {
+      body: { style: { overflow: "" } },
+      activeElement: { focus() {} },
+      addEventListener: on,
+      removeEventListener: off,
+      getElementById: () => ({ scrollIntoView() {} }),
+      createElement: () => ({ href: "", download: "", click() {} }),
+    },
+    configurable: true,
+  },
+  navigator: {
+    value: { onLine: true, clipboard: { writeText: async () => {} } },
+    configurable: true,
+  },
+});
+const server = await createServer({
+  root: fileURLToPath(new URL("..", import.meta.url)),
+  logLevel: "silent",
+  server: { middlewareMode: true, watch: null, hmr: false },
+  appType: "custom",
+});
+after(async () => {
+  await server.close();
+});
+const { HQProvider, useHQ } = await server.ssrLoadModule("/src/store.tsx");
+const { createDemoData } = await server.ssrLoadModule("/src/seed.ts");
+const { validateData, localRepository, STORAGE_KEY } =
+  await server.ssrLoadModule("/src/persistence.ts");
+const pageNames = [
+  "Home",
+  "Tasks",
+  "Calendar",
+  "Sponsors",
+  "Grants",
+  "Resources",
+  "Onboarding",
+  "Pit",
+  "Settings",
+];
+const pages = Object.fromEntries(
+  await Promise.all(
+    pageNames.map(async (name) => [
+      name,
+      (await server.ssrLoadModule(`/src/pages/${name}.tsx`)).default,
+    ]),
+  ),
+);
+
+function memoryStorage(initial) {
+  const values = new Map(
+    initial ? [[STORAGE_KEY, JSON.stringify(initial)]] : [],
+  );
+  const storage = {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, String(value)),
+    removeItem: (key) => values.delete(key),
+    clear: () => values.clear(),
+  };
+  Object.defineProperty(globalThis, "localStorage", {
+    value: storage,
+    configurable: true,
+  });
+  return storage;
+}
+async function mount({ initial = createDemoData(), page, role = "lead" } = {}) {
+  memoryStorage(initial);
+  location.hash = "#home";
+  let current, renderer;
+  function Probe() {
+    current = useHQ();
+    return page ? React.createElement(page) : null;
+  }
+  // React 19 deprecates this renderer; filter only that expected one-time warning.
+  const previousError = console.error;
+  console.error = (...args) => {
+    if (
+      typeof args[0] === "string" &&
+      args[0].startsWith("react-test-renderer is deprecated.")
+    )
+      return;
+    previousError(...args);
+  };
+  try {
+    await act(async () => {
+      renderer = TestRenderer.create(
+        React.createElement(HQProvider, null, React.createElement(Probe)),
+      );
+    });
+  } finally {
+    console.error = previousError;
+  }
+  if (role !== "lead")
+    await act(async () => {
+      current.setRole(role);
+    });
+  return {
+    get context() {
+      return current;
+    },
+    get root() {
+      return renderer.root;
+    },
+    get text() {
+      return JSON.stringify(renderer.toJSON());
+    },
+    async update(callback) {
+      await act(async () => {
+        await callback(current);
+      });
+    },
+    async close() {
+      await act(async () => renderer.unmount());
+    },
+  };
+}
+async function fixture(options, callback) {
+  const app = await mount(options);
+  try {
+    await callback(app);
+  } finally {
+    await app.close();
+  }
+}
+const copy = (value) => JSON.parse(JSON.stringify(value));
+const ownTask = (data) => data.tasks.find((t) => t.owner === "Alex (you)");
+const otherTask = (data) => data.tasks.find((t) => t.owner !== "Alex (you)");
+const byText = (root, type, text) =>
+  root
+    .findAllByType(type)
+    .find((node) =>
+      node.children.some(
+        (child) => typeof child === "string" && child === text,
+      ),
+    );
+function fieldControl(root, label, type = "input") {
+  const field = root
+    .findAll(
+      (node) => node.type === "label" && node.props.className === "field",
+    )
+    .find((node) =>
+      node.findAllByType("span").some((span) => span.children.includes(label)),
+    );
+  assert.ok(field, `Field “${label}” should be rendered`);
+  return field.findByType(type);
+}
+
+test("a lead creates an actual task through the form, completes it, and reloads the saved result", async () => {
+  let saved;
+  await fixture({ page: pages.Tasks }, async (app) => {
+    await app.update(() =>
+      byText(app.root, "button", "New task").props.onClick(),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Task name").props.onChange({
+        target: { value: "Run a repeatable intake test" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(
+        app.root,
+        "What does done look like?",
+        "textarea",
+      ).props.onChange({
+        target: { value: "Ten runs recorded in the shared build log." },
+      }),
+    );
+    await app.update(() =>
+      app.root.findAllByType("form")[0].props.onSubmit({ preventDefault() {} }),
+    );
+    const task = app.context.data.tasks.find(
+      (t) => t.title === "Run a repeatable intake test",
+    );
+    assert.ok(task);
+    assert.equal(task.demo, false);
+    assert.equal(task.owner, "Alex (you)");
+    assert.equal(task.done, "Ten runs recorded in the shared build log.");
+    const status = app.root
+      .findAllByType("select")
+      .find((s) => s.props["aria-label"] === `Status for ${task.title}`);
+    assert.ok(status);
+    await app.update(() =>
+      status.props.onChange({ target: { value: "Done" } }),
+    );
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === task.id).status,
+      "Done",
+    );
+    saved = localRepository.read();
+    assert.equal(validateData(saved), true);
+  });
+  await fixture({ initial: saved }, async (app) =>
+    assert.equal(
+      app.context.data.tasks.find(
+        (t) => t.title === "Run a repeatable intake test",
+      ).status,
+      "Done",
+    ),
+  );
+});
+
+test("students can update their tasks and RSVP, while other ownership and event changes are refused", async () => {
+  await fixture({ role: "student" }, async (app) => {
+    const mine = copy(ownTask(app.context.data)),
+      other = copy(otherTask(app.context.data)),
+      event = copy(app.context.data.events[0]);
+    await app.update((ctx) =>
+      ctx.saveRecord("tasks", { ...mine, status: "Done" }),
+    );
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === mine.id).status,
+      "Done",
+    );
+    await app.update((ctx) =>
+      ctx.saveRecord("tasks", { ...other, title: "Unauthorized edit" }),
+    );
+    assert.deepEqual(
+      app.context.data.tasks.find((t) => t.id === other.id),
+      other,
+    );
+    assert.match(app.context.notice.message, /student lead|assigned/i);
+    await app.update((ctx) =>
+      ctx.saveRecord("tasks", {
+        ...other,
+        owner: "Alex (you)",
+        status: "Done",
+      }),
+    );
+    assert.deepEqual(
+      app.context.data.tasks.find((t) => t.id === other.id),
+      other,
+    );
+    await app.update((ctx) =>
+      ctx.saveRecord("sponsors", {
+        ...ctx.data.sponsors[0],
+        contacted: true,
+        notes: "Unauthorized notes",
+      }),
+    );
+    assert.notEqual(app.context.data.sponsors[0].notes, "Unauthorized notes");
+    await app.update((ctx) =>
+      ctx.saveRecord("events", { ...event, rsvp: true }),
+    );
+    assert.equal(
+      app.context.data.events.find((e) => e.id === event.id).rsvp,
+      true,
+    );
+    await app.update((ctx) =>
+      ctx.saveRecord("events", {
+        ...ctx.data.events.find((e) => e.id === event.id),
+        title: "Unauthorized event edit",
+        rsvp: false,
+      }),
+    );
+    assert.equal(
+      app.context.data.events.find((e) => e.id === event.id).title,
+      event.title,
+    );
+    assert.equal(
+      app.context.data.events.find((e) => e.id === event.id).rsvp,
+      true,
+    );
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("lead approval attempts are blocked and a mentor can approve drafts and public-use resources", async () => {
+  await fixture({}, async (app) => {
+    const sponsor = copy(app.context.data.sponsors[0]);
+    const resource = {
+      ...copy(app.context.data.resources[0]),
+      id: "review-resource",
+      title: "Team-approved robot close-up",
+      visibility: "public",
+      approved: false,
+      demo: false,
+    };
+    await app.update((ctx) => ctx.saveRecord("resources", resource));
+    await app.update((ctx) =>
+      ctx.saveRecord("resources", { ...resource, approved: true }),
+    );
+    assert.equal(
+      app.context.data.resources.find((r) => r.id === resource.id).approved,
+      false,
+    );
+    assert.match(app.context.notice.message, /mentor|admin/i);
+    await app.update((ctx) =>
+      ctx.saveRecord("sponsors", { ...sponsor, draftStatus: "Approved" }),
+    );
+    assert.equal(
+      app.context.data.sponsors.find((s) => s.id === sponsor.id).draftStatus,
+      "Draft",
+    );
+    await app.update((ctx) => ctx.setRole("mentor"));
+    await app.update((ctx) =>
+      ctx.saveRecord("resources", { ...resource, approved: true }),
+    );
+    await app.update((ctx) =>
+      ctx.saveRecord("sponsors", { ...sponsor, draftStatus: "Approved" }),
+    );
+    assert.equal(
+      app.context.data.resources.find((r) => r.id === resource.id).approved,
+      true,
+    );
+    assert.equal(
+      app.context.data.sponsors.find((s) => s.id === sponsor.id).draftStatus,
+      "Approved",
+    );
+    await app.update((ctx) => ctx.setRole("lead"));
+    await app.update((ctx) =>
+      ctx.saveRecord("sponsors", {
+        ...ctx.data.sponsors.find((s) => s.id === sponsor.id),
+        draft: "A changed message must be reviewed again.",
+      }),
+    );
+    assert.equal(
+      app.context.data.sponsors.find((s) => s.id === sponsor.id).draft,
+      sponsor.draft,
+    );
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("new tasks, competitions, sponsor follow-ups, and submitted grants survive CRUD and JSON round trips", async () => {
+  await fixture({}, async (app) => {
+    const source = app.context.data;
+    const records = {
+      tasks: {
+        ...copy(source.tasks[0]),
+        id: "integration-task",
+        demo: false,
+        title: "Student-created build task",
+        status: "To do",
+        comments: [],
+      },
+      events: {
+        ...copy(source.events[0]),
+        id: "integration-event",
+        demo: false,
+        title: "Team competition",
+        type: "Competition",
+        date: "2026-11-14",
+        time: "09:00",
+        endTime: "16:00",
+        source: "Manually entered by team",
+      },
+      sponsors: {
+        ...copy(source.sponsors[0]),
+        id: "integration-sponsor",
+        demo: false,
+        name: "Team-entered prospect",
+        contacted: false,
+        status: "Researching",
+        followUp: "2026-11-07",
+        source: "https://example.org/about",
+        website: "https://example.org",
+        history: [],
+      },
+      grants: {
+        ...copy(source.grants[0]),
+        id: "integration-grant",
+        demo: false,
+        name: "Team-entered funding application",
+        source: "https://example.org/funding",
+        deadline: "2026-11-21",
+        internalDeadline: "2026-11-14",
+        eligibility:
+          "Confirm the published FTC and Delaware requirements with this funder.",
+        confirmed: false,
+        status: "In Progress",
+        steps: [
+          {
+            id: "integration-step",
+            title: "Coach reviews application",
+            done: false,
+          },
+        ],
+      },
+    };
+    for (const [collection, record] of Object.entries(records))
+      await app.update((ctx) => ctx.saveRecord(collection, record));
+    for (const [collection, record] of Object.entries(records))
+      assert.ok(
+        app.context.data[collection].some((item) => item.id === record.id),
+      );
+    await app.update((ctx) =>
+      ctx.saveRecord("sponsors", {
+        ...ctx.data.sponsors.find((s) => s.id === "integration-sponsor"),
+        contacted: true,
+        status: "Contacted",
+        history: [
+          {
+            date: "2026-10-31",
+            text: "Coach sent the approved introduction manually.",
+          },
+        ],
+      }),
+    );
+    await app.update((ctx) =>
+      ctx.saveRecord("grants", {
+        ...ctx.data.grants.find((g) => g.id === "integration-grant"),
+        status: "Submitted",
+        steps: [
+          {
+            id: "integration-step",
+            title: "Coach reviews application",
+            done: true,
+          },
+        ],
+      }),
+    );
+    const saved = localRepository.read();
+    assert.equal(validateData(saved), true);
+    assert.deepEqual(saved, copy(app.context.data));
+    assert.equal(
+      saved.sponsors.find((s) => s.id === "integration-sponsor").contacted,
+      true,
+    );
+    assert.equal(
+      saved.grants.find((g) => g.id === "integration-grant").status,
+      "Submitted",
+    );
+    for (const [collection, record] of Object.entries(records)) {
+      await app.update((ctx) => ctx.removeRecord(collection, record.id));
+      assert.equal(
+        app.context.data[collection].some((item) => item.id === record.id),
+        false,
+      );
+      const undo = app.context.notice.action;
+      assert.equal(typeof undo, "function");
+      await app.update(() => undo());
+      assert.equal(
+        app.context.data[collection].filter((item) => item.id === record.id)
+          .length,
+        1,
+      );
+    }
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("records from a different team or season never enter the active workspace", async () => {
+  await fixture({}, async (app) => {
+    for (const boundary of [
+      { teamId: "another-team" },
+      { seasonId: "another-season" },
+    ]) {
+      const record = {
+        ...copy(app.context.data.tasks[0]),
+        ...boundary,
+        id: "cross-boundary",
+      };
+      await app.update((ctx) => ctx.saveRecord("tasks", record));
+      assert.equal(
+        app.context.data.tasks.some((t) => t.id === record.id),
+        false,
+      );
+      assert.match(app.context.notice.message, /another team or season/i);
+    }
+  });
+});
+
+test("the actual calendar form adds a competition to agenda and season views", async () => {
+  await fixture({ page: pages.Calendar }, async (app) => {
+    await app.update(() =>
+      byText(app.root, "button", "New event").props.onClick(),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Event title").props.onChange({
+        target: { value: "Our team practice competition" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Event type", "select").props.onChange({
+        target: { value: "Competition" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Date").props.onChange({
+        target: { value: "2026-11-14" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Location").props.onChange({
+        target: { value: "Team workshop" },
+      }),
+    );
+    await app.update(() =>
+      app.root.findByType("form").props.onSubmit({ preventDefault() {} }),
+    );
+    assert.ok(
+      app.context.data.events.find(
+        (e) =>
+          e.title === "Our team practice competition" &&
+          e.type === "Competition",
+      ),
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Agenda").props.onClick(),
+    );
+    assert.match(app.text, /Our team practice competition/);
+    await app.update(() =>
+      byText(app.root, "button", "Season").props.onClick(),
+    );
+    assert.match(app.text, /Our team practice competition/);
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("a lead adds a sponsor, marks it contacted, and finds an overdue follow-up through the real controls", async () => {
+  await fixture({ page: pages.Sponsors }, async (app) => {
+    await app.update(() =>
+      byText(app.root, "button", "Add sponsor").props.onClick(),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Organization name").props.onChange({
+        target: { value: "Our team-entered sponsor prospect" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Source URL").props.onChange({
+        target: { value: "https://example.org/community" },
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Next follow-up").props.onChange({
+        target: { value: "2026-10-01" },
+      }),
+    );
+    await app.update(() =>
+      app.root.findByType("form").props.onSubmit({ preventDefault() {} }),
+    );
+    let sponsor = app.context.data.sponsors.find(
+      (s) => s.name === "Our team-entered sponsor prospect",
+    );
+    assert.ok(sponsor);
+    assert.equal(sponsor.demo, false);
+    assert.equal(sponsor.visibility, "private");
+    assert.equal(sponsor.contacted, false);
+    const contacted = app.root
+      .findAllByType("button")
+      .find((b) => b.props["aria-label"] === `Mark ${sponsor.name} contacted`);
+    await app.update(() => contacted.props.onClick());
+    sponsor = app.context.data.sponsors.find((s) => s.id === sponsor.id);
+    assert.equal(sponsor.contacted, true);
+    assert.equal(sponsor.status, "Contacted");
+    assert.equal(sponsor.followUp, "2026-10-01");
+    assert.ok(sponsor.history.some((h) => h.text.includes("contacted")));
+    const followUpFilter = app.root
+      .findAllByType("button")
+      .find((b) => b.props.className?.includes("funding-stat-button"));
+    await app.update(() => followUpFilter.props.onClick());
+    assert.match(app.text, /Our team-entered sponsor prospect/);
+    assert.equal(
+      app.root
+        .findAllByType("button")
+        .find((b) => b.props.className?.includes("funding-stat-button")).props[
+        "aria-pressed"
+      ],
+      true,
+    );
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("a lead records a grant source, eligibility, deadline, owner, checklist step, and manual submission through the form", async () => {
+  await fixture({ page: pages.Grants }, async (app) => {
+    await app.update(() =>
+      byText(app.root, "button", "Add opportunity").props.onClick(),
+    );
+    const fields = [
+      ["Opportunity / funder name", "Our team-entered application"],
+      ["Official funder / source URL", "https://example.org/funding"],
+      ["Official application deadline", "2026-11-21"],
+      ["Team’s internal deadline", "2026-11-14"],
+      ["Assigned owner", "Jordan"],
+    ];
+    for (const [label, value] of fields)
+      await app.update(() =>
+        fieldControl(app.root, label).props.onChange({ target: { value } }),
+      );
+    await app.update(() =>
+      fieldControl(app.root, "Eligibility summary", "textarea").props.onChange({
+        target: {
+          value:
+            "Verify FIRST Tech Challenge and Delaware team eligibility with the funder.",
+        },
+      }),
+    );
+    await app.update(() =>
+      app.root
+        .findAllByType("input")
+        .find((i) => i.props["aria-label"] === "New application step")
+        .props.onChange({
+          target: { value: "Jordan prepares the team project summary" },
+        }),
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Add step").props.onClick(),
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Mark submitted").props.onClick(),
+    );
+    await app.update(() =>
+      app.root.findByType("form").props.onSubmit({ preventDefault() {} }),
+    );
+    const grant = app.context.data.grants.find(
+      (g) => g.name === "Our team-entered application",
+    );
+    assert.ok(grant);
+    assert.equal(grant.source, "https://example.org/funding");
+    assert.equal(grant.deadline, "2026-11-21");
+    assert.equal(grant.owner, "Jordan");
+    assert.equal(grant.confirmed, false);
+    assert.equal(grant.status, "Submitted");
+    assert.ok(
+      grant.steps.some(
+        (s) => s.title === "Jordan prepares the team project summary",
+      ),
+    );
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("the task completion control explains an unfinished dependency before allowing completion", async () => {
+  const initial = createDemoData();
+  initial.tasks[0].dependencies = [initial.tasks[1].id];
+  await fixture({ initial, page: pages.Tasks }, async (app) => {
+    const target = app.context.data.tasks[0];
+    const complete = () =>
+      app.root
+        .findAllByType("select")
+        .find((s) => s.props["aria-label"] === `Status for ${target.title}`)
+        .props.onChange({ target: { value: "Done" } });
+    await app.update(complete);
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === target.id).status,
+      "In progress",
+    );
+    assert.match(app.context.notice.message, /dependencies/i);
+    await app.update((ctx) =>
+      ctx.saveRecord("tasks", {
+        ...ctx.data.tasks.find((t) => t.id === target.dependencies[0]),
+        status: "Done",
+      }),
+    );
+    await app.update(complete);
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === target.id).status,
+      "Done",
+    );
+  });
+});
+
+test("record navigation opens the exact task or calendar event and preserves student edit permissions", async () => {
+  const initial = createDemoData();
+  initial.resources.push({
+    ...copy(initial.resources[0]),
+    id: "private-picker-resource",
+    title: "PRIVATE PICKER SENTINEL",
+    visibility: "private",
+  });
+  initial.resources.push({
+    ...copy(initial.resources[0]),
+    id: "unapproved-picker-resource",
+    title: "UNAPPROVED PICKER SENTINEL",
+    visibility: "team",
+    approved: false,
+  });
+  await fixture(
+    { initial, page: pages.Tasks, role: "student" },
+    async (app) => {
+      const task = otherTask(app.context.data);
+      await app.update((ctx) => ctx.openRecord("tasks", task.id));
+      assert.equal(app.context.page, "tasks");
+      assert.equal(app.context.focusRecord, null);
+      assert.equal(fieldControl(app.root, "Task name").props.value, task.title);
+      assert.equal(fieldControl(app.root, "Task name").props.disabled, true);
+      const mine = ownTask(app.context.data);
+      await app.update((ctx) => ctx.openRecord("tasks", mine.id));
+      assert.equal(fieldControl(app.root, "Task name").props.value, mine.title);
+      assert.equal(fieldControl(app.root, "Task name").props.disabled, false);
+      assert.equal(app.context.focusRecord, null);
+      assert.doesNotMatch(
+        app.text,
+        /PRIVATE PICKER SENTINEL|UNAPPROVED PICKER SENTINEL/,
+      );
+      if (mine.resourceId) {
+        await app.update(() =>
+          byText(app.root, "button", "Open linked resource").props.onClick(),
+        );
+        assert.equal(app.context.page, "resources");
+        assert.deepEqual(app.context.focusRecord, {
+          page: "resources",
+          id: mine.resourceId,
+        });
+      }
+    },
+  );
+  await fixture({ page: pages.Calendar, role: "student" }, async (app) => {
+    const event = app.context.data.events.find((e) => e.type === "Competition");
+    await app.update((ctx) => ctx.openRecord("calendar", event.id));
+    assert.equal(app.context.page, "calendar");
+    assert.equal(app.context.focusRecord, null);
+    const dialog = app.root.findByProps({ role: "dialog" });
+    assert.ok(
+      dialog.findAllByType("h2").some((h) => h.children.includes(event.title)),
+    );
+    assert.equal(byText(dialog, "button", "Edit event"), undefined);
+    assert.ok(byText(dialog, "button", "I’m going"));
+  });
+});
+
+test("every core page renders with the real seeded store in student and lead previews", async () => {
+  for (const role of ["student", "lead"])
+    for (const [name, page] of Object.entries(pages)) {
+      await fixture({ page, role }, async (app) => {
+        assert.ok(
+          app.root.findAllByType("h1").length,
+          `${name} (${role}) should have a page heading`,
+        );
+        assert.equal(validateData(app.context.data), true);
+        assert.equal(app.context.storageError, "");
+      });
+    }
+});
+
+test("student page rendering does not disclose private sponsors, grants, or resources", async () => {
+  const initial = createDemoData();
+  initial.sponsors[0] = {
+    ...initial.sponsors[0],
+    name: "PRIVATE SPONSOR SENTINEL",
+    contact: "PRIVATE CONTACT SENTINEL",
+    notes: "PRIVATE OUTREACH SENTINEL",
+    visibility: "private",
+  };
+  initial.grants[0] = {
+    ...initial.grants[0],
+    name: "PRIVATE GRANT SENTINEL",
+    eligibility: "PRIVATE FINANCE SENTINEL",
+    visibility: "private",
+  };
+  initial.resources[0] = {
+    ...initial.resources[0],
+    title: "PRIVATE RESOURCE SENTINEL",
+    content: "PRIVATE DOCUMENT SENTINEL",
+    visibility: "private",
+    approved: true,
+  };
+  initial.resources[1] = {
+    ...initial.resources[1],
+    title: "UNAPPROVED RESOURCE SENTINEL",
+    content: "UNAPPROVED NOTES SENTINEL",
+    visibility: "team",
+    approved: false,
+  };
+  for (const name of ["Sponsors", "Grants", "Resources", "Home"])
+    await fixture(
+      { initial, page: pages[name], role: "student" },
+      async (app) => {
+        assert.doesNotMatch(
+          app.text,
+          /PRIVATE (?:SPONSOR|CONTACT|OUTREACH|GRANT|FINANCE|RESOURCE|DOCUMENT) SENTINEL/,
+        );
+        assert.doesNotMatch(app.text, /UNAPPROVED (?:RESOURCE|NOTES) SENTINEL/);
+      },
+    );
+});
+
+test("an empty fresh workspace keeps all core pages usable", async () => {
+  const initial = createDemoData();
+  for (const name of [
+    "tasks",
+    "events",
+    "sponsors",
+    "grants",
+    "resources",
+    "announcements",
+    "onboarding",
+    "pitChecklist",
+    "pitNotes",
+    "skills",
+  ])
+    initial[name] = [];
+  for (const [name, page] of Object.entries(pages))
+    await fixture({ initial, page }, async (app) => {
+      assert.ok(
+        app.root.findAllByType("h1").length,
+        `${name} should render an empty workspace`,
+      );
+      assert.equal(validateData(app.context.data), true);
+      assert.equal(app.context.storageError, "");
+    });
+});
