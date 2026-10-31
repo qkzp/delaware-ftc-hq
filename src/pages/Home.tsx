@@ -1,16 +1,29 @@
 import { useState } from "react";
 import {
+  ArrowDownRight,
   ArrowRight,
   ArrowUpRight,
   Check,
-  ChevronRight,
+  Crosshair,
+  FileText,
+  Play,
   Plus,
+  Wrench,
 } from "lucide-react";
 import { useHQ } from "../store";
 import { Field, Modal } from "../components/ui";
+import { FocusSession } from "../components/FocusSession";
 import { PIT_ITEM_IDS } from "./Pit";
 import { dateKey, daysUntil, dueLabel, formatDate } from "../utils";
+import type { Task } from "../types";
 import "./Home.css";
+
+const workstreams = [
+  { area: "Mechanical", label: "Mechanisms", index: "01", code: "MECH" },
+  { area: "Programming", label: "Control & code", index: "02", code: "CODE" },
+  { area: "Electrical", label: "Power & wiring", index: "03", code: "ELEC" },
+];
+const priorityOrder = { High: 0, Medium: 1, Low: 2 };
 
 export default function Home() {
   const {
@@ -23,49 +36,40 @@ export default function Home() {
     storageError,
   } = useHQ();
   const [scope, setScope] = useState<"mine" | "team">("mine");
+  const [area, setArea] = useState("All work");
+  const [pinnedTaskId, setPinnedTaskId] = useState<string | null>(null);
+  const [sessionTaskId, setSessionTaskId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState(false);
   const today = dateKey();
   const openTasks = data.tasks.filter((task) => task.status !== "Done");
   const myTasks = openTasks.filter((task) => task.owner === "Alex (you)");
-  const scopedTasks = scope === "mine" ? myTasks : openTasks;
-  const tasks = [...scopedTasks]
-    .sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999"))
-    .slice(0, 6);
+  const blockedTasks = (task: Task) =>
+    task.dependencies.filter(
+      (id) => data.tasks.find((item) => item.id === id)?.status !== "Done",
+    );
+  const canWork = (task: Task) => canManage || task.owner === "Alex (you)";
+  const orderedTasks = (scope === "mine" ? myTasks : openTasks)
+    .filter((task) => area === "All work" || task.area === area)
+    .sort(
+      (a, b) =>
+        Number(blockedTasks(a).length > 0) -
+          Number(blockedTasks(b).length > 0) ||
+        (a.due || "9999").localeCompare(b.due || "9999") ||
+        priorityOrder[a.priority] - priorityOrder[b.priority],
+    );
+  const nextTask =
+    orderedTasks.find((task) => task.id === pinnedTaskId) ||
+    orderedTasks.find(canWork) ||
+    orderedTasks[0];
+  const queue = orderedTasks.slice(0, 5);
   const upcoming = [...data.events]
     .filter((event) => event.date >= today)
     .sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-  const nextSession = upcoming[0];
   const competition = upcoming.find((event) => event.type === "Competition");
-  const laterEvents = upcoming
-    .filter(
-      (event) => event.id !== nextSession?.id && event.id !== competition?.id,
-    )
-    .slice(0, 3);
-  const visibleGrants = data.grants.filter(
-    (grant) => canManage || grant.visibility !== "private",
-  );
-  const activeGrants = visibleGrants.filter(
-    (grant) => !["New", "Closed", "Not Awarded"].includes(grant.status),
-  );
-  const submittedGrants = activeGrants.filter((grant) =>
-    ["Submitted", "Awarded"].includes(grant.status),
-  ).length;
-  const completed = data.tasks.filter((task) => task.status === "Done").length;
-  const robotTasks = data.tasks.filter((task) =>
-    ["Mechanical", "Electrical", "Programming", "CAD"].includes(task.area),
-  );
-  const robotDone = robotTasks.filter((task) => task.status === "Done").length;
   const readyItems = PIT_ITEM_IDS.filter((id) =>
     data.pitChecklist.includes(id),
   ).length;
-  const overdueSponsors = canManage
-    ? data.sponsors.filter(
-        (sponsor) =>
-          sponsor.followUp &&
-          sponsor.followUp <= today &&
-          !["Declined", "Do Not Contact", "Committed"].includes(sponsor.status),
-      )
-    : [];
+  const completed = data.tasks.filter((task) => task.status === "Done").length;
   const visibleResources = data.resources.filter(
     (resource) =>
       canManage || (resource.visibility !== "private" && resource.approved),
@@ -73,549 +77,707 @@ export default function Home() {
   const buildLog = visibleResources.find(
     (resource) => resource.kind === "Build log",
   );
-  const quickLinks = [
-    {
-      label: "Robot reference",
-      action: () => openRecord("resources", "robot-reference"),
-    },
-    {
-      label: "Build log",
-      action: () =>
-        buildLog ? openRecord("resources", buildLog.id) : setPage("resources"),
-    },
-    { label: "Season schedule", action: () => setPage("calendar") },
-  ];
-  const preparationGroups = [
-    { label: "Robot & inspection", prefix: "robot-" },
-    { label: "Batteries & essentials", prefix: "battery-" },
-    { label: "Pit & assignments", prefix: "pit-" },
-  ];
+  const cad = visibleResources.find((resource) => resource.kind === "CAD");
+  const code = visibleResources.find((resource) => resource.kind === "Code");
+  const visibleGrants = data.grants.filter(
+    (grant) => canManage || grant.visibility !== "private",
+  );
+  const reviewGrants = visibleGrants.filter(
+    (grant) => grant.status === "Needs Mentor Review",
+  );
+  const overdueSponsors = canManage
+    ? data.sponsors.filter(
+        (sponsor) =>
+          sponsor.followUp &&
+          sponsor.followUp <= today &&
+          !["Committed", "Declined", "Do Not Contact"].includes(sponsor.status),
+      )
+    : [];
+  const taskAreas = Array.from(
+    new Set(openTasks.map((task) => task.area)),
+  ).sort();
 
-  function completeTask(id: string) {
-    const task = data.tasks.find((item) => item.id === id);
-    if (!task) return;
-    if (!canManage && task.owner !== "Alex (you)") {
+  function completeTask(task: Task) {
+    if (!canWork(task)) {
       notify("You can update tasks assigned to you.");
       return;
     }
-    if (
-      task.dependencies.some(
-        (id) => data.tasks.find((item) => item.id === id)?.status !== "Done",
-      )
-    ) {
-      notify("Complete the linked dependencies before finishing this task.");
+    if (blockedTasks(task).length) {
+      notify("Complete this task’s linked dependencies first.");
       return;
     }
     saveRecord("tasks", { ...task, status: "Done" });
-    notify("Task completed.", () => saveRecord("tasks", task));
+    notify("Task completed. Your work is recorded.", () =>
+      saveRecord("tasks", task),
+    );
+  }
+  function selectWorkstream(workArea: string) {
+    setArea((current) => (current === workArea ? "All work" : workArea));
+    setScope("team");
+    setPinnedTaskId(null);
+  }
+  function bringToBench(task: Task) {
+    setPinnedTaskId(task.id);
+    document.getElementById("field-next-task")?.scrollIntoView({
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+      block: "center",
+    });
   }
 
   return (
-    <div className="overview">
-      <header className="overview-heading">
+    <div className="field-workbench">
+      <header className="field-heading">
         <div>
-          <div className="overview-label">TEAM OVERVIEW</div>
-          <h1>{data.teamName}</h1>
+          <div className="field-kicker">
+            <span className="field-registration" aria-hidden="true">
+              +
+            </span>{" "}
+            TEAM OPERATIONS / {data.seasonName}
+          </div>
+          <h1>
+            THE WORKBENCH<span className="field-title-stop">.</span>
+          </h1>
           <p>
-            {data.county === "Statewide" ? "Delaware" : `${data.county} County`}{" "}
-            <span>/</span> {data.seasonName}
+            {data.teamName} <span>/</span>{" "}
+            {data.county === "Statewide"
+              ? "Delaware"
+              : `${data.county} County, DE`}
             {data.teamNumber && data.teamNumber !== "DEMO"
               ? ` / Team ${data.teamNumber}`
               : ""}
           </p>
         </div>
-        <div className="overview-date">
+        <div className="field-dateline">
           <span>{formatDate(today, { weekday: "long" })}</span>
           <strong>
             {formatDate(today, {
-              month: "long",
-              day: "numeric",
+              month: "short",
+              day: "2-digit",
               year: "numeric",
             })}
           </strong>
+          <span className="field-dateline-state">
+            <i />
+            {storageError ? "SAVE NEEDS ATTENTION" : "LOCAL WORKSPACE"}
+          </span>
         </div>
       </header>
 
-      <section className="overview-session" aria-label="Next team event">
-        <div className="overview-session-label">NEXT EVENT</div>
-        {nextSession ? (
-          <>
-            <span className="overview-session-date">
-              {dueLabel(nextSession.date)}
-              {nextSession.time ? ` / ${nextSession.time}` : ""}
-            </span>
-            <button
-              className="overview-session-title"
-              onClick={() => openRecord("calendar", nextSession.id)}
-            >
-              {nextSession.title}
-            </button>
-            {nextSession.demo && <span className="overview-demo">DEMO</span>}
-            <button
-              className="overview-inline-link"
-              onClick={() => openRecord("calendar", nextSession.id)}
-            >
-              Agenda <ArrowRight size={14} />
-            </button>
-          </>
+      <section className="field-season" aria-labelledby="field-season-title">
+        <div className="field-season-heading">
+          <h2 id="field-season-title">SEASON LINE</h2>
+          <span>Next {Math.min(upcoming.length, 4)} team events</span>
+          <button
+            onClick={() => setPage("calendar")}
+            aria-label="Open full season schedule"
+          >
+            <ArrowUpRight size={16} />
+          </button>
+        </div>
+        {upcoming.length ? (
+          <div className="field-season-track">
+            <div className="field-now">
+              <span>YOU ARE HERE</span>
+              <strong>TODAY</strong>
+              <i aria-hidden="true" />
+            </div>
+            {upcoming.slice(0, 4).map((event) => (
+              <button
+                key={event.id}
+                className={`field-season-event ${event.type === "Competition" ? "is-competition" : ""}`}
+                onClick={() => openRecord("calendar", event.id)}
+              >
+                <div>
+                  <time dateTime={event.date}>
+                    {formatDate(event.date, { month: "short", day: "numeric" })}
+                  </time>
+                  {event.demo && <span className="field-demo">DEMO</span>}
+                </div>
+                <span className="field-track-node" aria-hidden="true" />
+                <strong>{event.title}</strong>
+                <small>
+                  {event.time || "Time not set"} <span> / </span> {event.type}
+                </small>
+              </button>
+            ))}
+          </div>
         ) : (
-          <>
-            <span className="overview-session-empty">
-              No upcoming meeting or event.
-            </span>
+          <div className="field-season-empty">
+            <p>No events on the season line yet.</p>
             <button
-              className="overview-inline-link"
+              className="field-text-button"
               onClick={() => setPage("calendar")}
             >
-              Set up the schedule <ArrowRight size={14} />
+              Add the next team meeting <ArrowRight size={14} />
             </button>
-          </>
+          </div>
         )}
       </section>
 
-      <div className="overview-columns">
-        <div className="overview-main">
-          <section
-            className="overview-work"
-            aria-labelledby="overview-work-title"
-          >
-            <div className="overview-section-heading">
-              <div>
-                <h2 id="overview-work-title">Open work</h2>
-                <span className="overview-section-count">
-                  {scopedTasks.length}
+      <div className="field-stage">
+        <section
+          className="field-assignment"
+          id="field-next-task"
+          aria-labelledby="field-assignment-title"
+        >
+          <div className="field-sheet-top">
+            <span>
+              <i />
+              NEXT ASSIGNMENT
+            </span>
+            <span className="field-sheet-number">01 / WORK ORDER</span>
+          </div>
+          {nextTask ? (
+            <>
+              <div className="field-assignment-tags">
+                <span>{nextTask.area}</span>
+                {nextTask.demo && (
+                  <span className="field-demo">SAMPLE TASK</span>
+                )}
+                <span className="field-priority">
+                  {nextTask.priority} priority
                 </span>
               </div>
-              <button
-                className="overview-inline-link"
-                onClick={() => setPage("tasks")}
-              >
-                Task board <ArrowUpRight size={14} />
-              </button>
-            </div>
-            <div className="overview-work-toolbar">
-              <div
-                className="overview-scope"
-                role="group"
-                aria-label="Task view"
-              >
-                <button
-                  aria-pressed={scope === "mine"}
-                  className={scope === "mine" ? "is-active" : ""}
-                  onClick={() => setScope("mine")}
-                >
-                  Assigned to me <span>{myTasks.length}</span>
-                </button>
-                <button
-                  aria-pressed={scope === "team"}
-                  className={scope === "team" ? "is-active" : ""}
-                  onClick={() => setScope("team")}
-                >
-                  All team work <span>{openTasks.length}</span>
-                </button>
+              <h2 id="field-assignment-title">{nextTask.title}</h2>
+              <div className="field-assignment-spec">
+                <span>
+                  <small>ASSIGNED TO</small>
+                  <strong>
+                    {nextTask.owner === "Alex (you)"
+                      ? "You / Alex"
+                      : nextTask.owner}
+                  </strong>
+                </span>
+                <span>
+                  <small>DUE</small>
+                  <strong
+                    className={
+                      nextTask.due && nextTask.due <= today ? "field-due" : ""
+                    }
+                  >
+                    {dueLabel(nextTask.due)}
+                  </strong>
+                </span>
+                <span>
+                  <small>ESTIMATE</small>
+                  <strong>{nextTask.effort || "Not estimated"}</strong>
+                </span>
+                <span>
+                  <small>STATUS</small>
+                  <strong>{nextTask.status}</strong>
+                </span>
               </div>
-            </div>
-            {tasks.length ? (
-              <div
-                className="overview-work-table"
-                role="table"
-                aria-label="Open tasks"
-              >
-                <div className="overview-work-head" role="row">
-                  <span role="columnheader" className="overview-check-column">
-                    <span className="sr-only">Complete</span>
-                  </span>
-                  <span role="columnheader">TASK</span>
-                  <span role="columnheader">STATUS</span>
-                  <span role="columnheader">OWNER</span>
-                  <span role="columnheader">DUE</span>
+              <div className="field-finish-line">
+                <span className="field-check-outline" aria-hidden="true">
+                  <Check size={13} />
+                </span>
+                <div>
+                  <h3>THE FINISH LINE</h3>
+                  <p>
+                    {nextTask.done ||
+                      "Ask the task owner to define the result before you start."}
+                  </p>
                 </div>
-                {tasks.map((task) => (
-                  <div className="overview-work-row" key={task.id} role="row">
-                    <div role="cell" className="overview-check-column">
-                      <button
-                        className="overview-check"
-                        disabled={!canManage && task.owner !== "Alex (you)"}
-                        aria-label={`Complete ${task.title}`}
-                        onClick={() => completeTask(task.id)}
-                      >
-                        <span>
-                          <Check size={12} />
-                        </span>
-                      </button>
-                    </div>
-                    <div className="overview-work-name" role="cell">
-                      <button onClick={() => openRecord("tasks", task.id)}>
-                        {task.title}
-                      </button>
-                      <p>
-                        {task.area}
-                        <span> / </span>
-                        {task.effort}
-                        {task.priority === "High" && (
-                          <>
-                            <span> / </span>
-                            <b>High priority</b>
-                          </>
-                        )}
-                        {task.demo && (
-                          <>
-                            <span> / </span>
-                            <span className="overview-row-demo">Demo</span>
-                          </>
-                        )}
-                      </p>
-                      <span className="overview-done-condition">
-                        {task.done}
-                      </span>
-                    </div>
-                    <div className="overview-work-status" role="cell">
-                      <span
-                        className={
-                          task.status === "In progress"
-                            ? "overview-status-dot is-started"
-                            : "overview-status-dot"
-                        }
-                      />
-                      {task.status}
-                    </div>
-                    <div className="overview-work-owner" role="cell">
-                      {task.owner === "Alex (you)" ? "You" : task.owner}
-                    </div>
-                    <div
-                      className={`overview-work-due ${task.due && task.due <= today ? "is-due" : ""}`}
-                      role="cell"
-                    >
-                      {dueLabel(task.due)}
-                    </div>
-                  </div>
-                ))}
               </div>
-            ) : (
-              <div className="overview-empty">
-                <h3>
-                  {scope === "mine"
-                    ? "No open assignments"
-                    : "No open team tasks"}
-                </h3>
-                <p>
-                  {scope === "mine"
-                    ? "Choose an existing team task or use onboarding to create your first assignment."
-                    : "Add a task with an owner, a due date, and a clear finish line."}
-                </p>
+              {blockedTasks(nextTask).length > 0 && (
+                <div className="field-blocker">
+                  WAITING ON {blockedTasks(nextTask).length} LINKED TASK
+                  {blockedTasks(nextTask).length > 1 ? "S" : ""}. Open the work
+                  order to check the dependency.
+                </div>
+              )}
+              <div className="field-assignment-actions">
                 <button
-                  className="overview-inline-link"
-                  onClick={() =>
-                    setPage(scope === "mine" ? "onboarding" : "tasks")
+                  className="field-start-button"
+                  disabled={
+                    !canWork(nextTask) || blockedTasks(nextTask).length > 0
                   }
+                  onClick={() => setSessionTaskId(nextTask.id)}
                 >
-                  {scope === "mine"
-                    ? "Find a first assignment"
-                    : "Open task board"}
-                  <ArrowRight size={14} />
+                  <Play size={14} fill="currentColor" />
+                  Start work session <ArrowUpRight size={17} />
+                </button>
+                <button
+                  className="field-text-button"
+                  onClick={() => openRecord("tasks", nextTask.id)}
+                >
+                  Open work order <ArrowRight size={14} />
                 </button>
               </div>
-            )}
-            {scopedTasks.length > tasks.length && (
-              <button
-                className="overview-table-more"
-                onClick={() => setPage("tasks")}
-              >
-                View {scopedTasks.length - tasks.length} more open tasks{" "}
-                <ArrowRight size={14} />
-              </button>
-            )}
-          </section>
-
-          <section
-            className="overview-season"
-            aria-labelledby="overview-season-title"
-          >
-            <div className="overview-section-heading">
-              <div>
-                <h2 id="overview-season-title">Season status</h2>
-              </div>
-              <span className="overview-small-label">{data.seasonName}</span>
-            </div>
-            <div className="overview-metrics">
-              <button onClick={() => setPage("tasks")}>
-                <span>TEAM TASKS</span>
-                <strong>
-                  {completed}
-                  <small> / {data.tasks.length}</small>
-                </strong>
-                <div
-                  className="overview-meter"
-                  aria-label={`${completed} of ${data.tasks.length} team tasks complete`}
-                >
-                  <i
-                    style={{
-                      width: `${data.tasks.length ? (completed / data.tasks.length) * 100 : 0}%`,
-                    }}
-                  />
-                </div>
-                <small>completed</small>
-              </button>
-              <button
-                onClick={() => openRecord("resources", "robot-reference")}
-              >
-                <span>ROBOT WORK</span>
-                <strong>
-                  {robotDone}
-                  <small> / {robotTasks.length}</small>
-                </strong>
-                <div
-                  className="overview-meter"
-                  aria-label={`${robotDone} of ${robotTasks.length} robot tasks complete`}
-                >
-                  <i
-                    style={{
-                      width: `${robotTasks.length ? (robotDone / robotTasks.length) * 100 : 0}%`,
-                    }}
-                  />
-                </div>
-                <small>build tasks complete</small>
-              </button>
-              <button onClick={() => setPage("grants")}>
-                <span>APPLICATIONS</span>
-                <strong>
-                  {submittedGrants}
-                  <small> / {activeGrants.length}</small>
-                </strong>
-                <div
-                  className="overview-meter"
-                  aria-label={`${submittedGrants} of ${activeGrants.length} tracked applications submitted`}
-                >
-                  <i
-                    style={{
-                      width: `${activeGrants.length ? (submittedGrants / activeGrants.length) * 100 : 0}%`,
-                    }}
-                  />
-                </div>
-                <small>recorded as submitted</small>
-              </button>
-            </div>
-          </section>
-
-          <section
-            className="overview-team-log"
-            aria-labelledby="overview-log-title"
-          >
-            <div className="overview-section-heading">
-              <div>
-                <h2 id="overview-log-title">Team log</h2>
-                <span className="overview-section-count">
-                  {data.announcements.length}
+              {!canWork(nextTask) && (
+                <p className="field-assignment-permission">
+                  Ask a student lead to assign this work to you before starting
+                  a session.
+                </p>
+              )}
+              <div className="field-sheet-foot">
+                <span>WORK → TEST → LEAVE A NOTE</span>
+                <span>
+                  TEAM ONLY <span aria-hidden="true">↗</span>
                 </span>
               </div>
-              {canManage && (
+            </>
+          ) : (
+            <div className="field-assignment-empty">
+              <Crosshair size={28} />
+              <h2 id="field-assignment-title">Clear bench.</h2>
+              <p>
+                {area !== "All work"
+                  ? `No open ${area.toLowerCase()} tasks in this view.`
+                  : "No open assignments in this view. Pick up a team task or start the new member checklist."}
+              </p>
+              <div>
                 <button
-                  className="overview-inline-link"
-                  onClick={() => setAnnouncement(true)}
+                  className="field-start-button"
+                  onClick={() => {
+                    setScope("team");
+                    setArea("All work");
+                  }}
                 >
-                  <Plus size={14} />
-                  Post update
+                  View team work <ArrowRight size={15} />
+                </button>
+                <button
+                  className="field-text-button"
+                  onClick={() => setPage("onboarding")}
+                >
+                  First assignment <ArrowUpRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <section className="field-system-map" aria-labelledby="field-map-title">
+          <div className="field-map-head">
+            <div>
+              <span className="field-section-index">02 / BUILD STATUS</span>
+              <h2 id="field-map-title">ROBOT → FIELD</h2>
+            </div>
+            <span className="field-map-cross" aria-hidden="true">
+              +
+            </span>
+          </div>
+          <p className="field-map-explainer">
+            Workstream status from your task board.
+            <br />
+            Select a line to filter the work queue.
+          </p>
+          <div className="field-circuit">
+            {workstreams.map((stream) => {
+              const tasks = data.tasks.filter(
+                (task) => task.area === stream.area,
+              );
+              const done = tasks.filter(
+                (task) => task.status === "Done",
+              ).length;
+              const open = tasks.length - done;
+              return (
+                <button
+                  key={stream.area}
+                  className={`field-stream ${area === stream.area ? "is-selected" : ""}`}
+                  onClick={() => selectWorkstream(stream.area)}
+                  aria-pressed={area === stream.area}
+                  aria-label={`Filter ${stream.area} workstream`}
+                >
+                  <span className="field-stream-terminal" aria-hidden="true" />
+                  <span className="field-stream-code">{stream.code}</span>
+                  <span className="field-stream-name">
+                    <strong>{stream.label}</strong>
+                    <small>
+                      {tasks.length
+                        ? `${done}/${tasks.length} tasks complete`
+                        : "No tasks tracked yet"}
+                    </small>
+                  </span>
+                  <span className="field-stream-open">
+                    {String(open).padStart(2, "0")}
+                    <small>OPEN</small>
+                  </span>
+                  <ArrowDownRight size={17} />
+                </button>
+              );
+            })}
+          </div>
+          <div className="field-map-output">
+            <span className="field-terminal-out" aria-hidden="true" />
+            <div>
+              <span>EVENT KIT</span>
+              <strong>
+                {String(readyItems).padStart(2, "0")}
+                <small> / {PIT_ITEM_IDS.length} checked</small>
+              </strong>
+            </div>
+            <button
+              onClick={() => setPage("pit")}
+              aria-label="Open competition preparation checklist"
+            >
+              <ArrowUpRight size={19} />
+            </button>
+          </div>
+          <div
+            className="field-pit-ticks"
+            aria-label={`${readyItems} of ${PIT_ITEM_IDS.length} competition preparation items checked`}
+          >
+            {PIT_ITEM_IDS.map((id) => (
+              <span
+                key={id}
+                className={data.pitChecklist.includes(id) ? "is-packed" : ""}
+              />
+            ))}
+          </div>
+          <div className="field-map-footer">
+            <span>CHECKLIST, NOT LIVE ROBOT TELEMETRY</span>
+            <span aria-hidden="true">+</span>
+          </div>
+        </section>
+      </div>
+
+      <div className="field-lower-layout">
+        <section className="field-queue" aria-labelledby="field-queue-title">
+          <div className="field-section-head">
+            <div>
+              <span className="field-section-index">03 / OPEN WORK</span>
+              <h2 id="field-queue-title">
+                On the bench<span>{orderedTasks.length}</span>
+              </h2>
+            </div>
+            <button
+              className="field-text-button"
+              onClick={() => setPage("tasks")}
+            >
+              Full task board <ArrowUpRight size={15} />
+            </button>
+          </div>
+          <div className="field-queue-toolbar">
+            <div className="field-scope" role="group" aria-label="Task view">
+              <button
+                className={scope === "mine" ? "is-active" : ""}
+                aria-pressed={scope === "mine"}
+                onClick={() => {
+                  setScope("mine");
+                  setPinnedTaskId(null);
+                }}
+              >
+                For me <span>{myTasks.length}</span>
+              </button>
+              <button
+                className={scope === "team" ? "is-active" : ""}
+                aria-pressed={scope === "team"}
+                onClick={() => {
+                  setScope("team");
+                  setPinnedTaskId(null);
+                }}
+              >
+                Team <span>{openTasks.length}</span>
+              </button>
+            </div>
+            <label>
+              <span className="sr-only">Filter workstream</span>
+              <select
+                value={area}
+                onChange={(event) => {
+                  setArea(event.target.value);
+                  setPinnedTaskId(null);
+                }}
+                aria-label="Filter workstream"
+              >
+                <option>All work</option>
+                {taskAreas.map((workArea) => (
+                  <option key={workArea}>{workArea}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          {queue.length ? (
+            <div
+              className="field-queue-table"
+              role="table"
+              aria-label="Open tasks"
+            >
+              <div className="field-queue-heading" role="row">
+                <span role="columnheader">DONE</span>
+                <span role="columnheader">ASSIGNMENT</span>
+                <span role="columnheader">STATUS</span>
+                <span role="columnheader">DUE</span>
+                <span role="columnheader" className="sr-only">
+                  Select
+                </span>
+              </div>
+              {queue.map((task) => (
+                <div
+                  className={`field-queue-row ${nextTask?.id === task.id ? "is-on-bench" : ""}`}
+                  role="row"
+                  key={task.id}
+                >
+                  <div role="cell">
+                    <button
+                      className="field-complete-button"
+                      disabled={!canWork(task)}
+                      aria-label={`Complete ${task.title}`}
+                      onClick={() => completeTask(task)}
+                    >
+                      <span>
+                        <Check size={12} />
+                      </span>
+                    </button>
+                  </div>
+                  <div className="field-queue-task" role="cell">
+                    <button onClick={() => openRecord("tasks", task.id)}>
+                      {task.title}
+                    </button>
+                    <p>
+                      {task.area} <span>/</span> {task.effort || "No estimate"}{" "}
+                      <span>/</span>{" "}
+                      {task.owner === "Alex (you)" ? "You" : task.owner}
+                      {task.demo && (
+                        <span className="field-row-demo">Demo</span>
+                      )}
+                    </p>
+                  </div>
+                  <div role="cell" className="field-queue-status">
+                    <i
+                      className={
+                        task.status === "In progress" ? "is-started" : ""
+                      }
+                    />
+                    {blockedTasks(task).length ? "Blocked" : task.status}
+                  </div>
+                  <div
+                    role="cell"
+                    className={`field-queue-due ${task.due && task.due <= today ? "field-due" : ""}`}
+                  >
+                    {dueLabel(task.due)}
+                  </div>
+                  <div role="cell">
+                    <button
+                      className="field-pin-button"
+                      aria-label={`Bring ${task.title} to the workbench`}
+                      onClick={() => bringToBench(task)}
+                      title="Bring to workbench"
+                    >
+                      <Crosshair size={15} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="field-queue-empty">
+              <h3>No work in this view.</h3>
+              <p>Choose another workstream or check all team assignments.</p>
+              <button
+                className="field-text-button"
+                onClick={() => {
+                  setArea("All work");
+                  setScope("team");
+                }}
+              >
+                Clear filters <ArrowRight size={14} />
+              </button>
+            </div>
+          )}
+          <div className="field-queue-foot">
+            <span>
+              {completed} of {data.tasks.length} team tasks complete
+            </span>
+            <button onClick={() => setPage("tasks")}>
+              View all{" "}
+              {orderedTasks.length > queue.length
+                ? `${orderedTasks.length} assignments`
+                : "tasks"}
+              <ArrowRight size={14} />
+            </button>
+          </div>
+        </section>
+
+        <aside
+          className="field-event-notes"
+          aria-label="Competition and follow-ups"
+        >
+          <div className="field-section-head">
+            <div>
+              <span className="field-section-index">04 / NEXT FIELD TEST</span>
+              <h2>
+                {competition
+                  ? `${Math.max(0, daysUntil(competition.date))} days out`
+                  : "Set the next date"}
+              </h2>
+            </div>
+            <span className="field-note-marker" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+          {competition ? (
+            <>
+              <button
+                className="field-event-title"
+                onClick={() => openRecord("calendar", competition.id)}
+              >
+                {competition.title}
+                <ArrowUpRight size={15} />
+              </button>
+              <p>
+                {formatDate(competition.date, {
+                  month: "long",
+                  day: "numeric",
+                })}{" "}
+                / {competition.time || "Time pending"}
+              </p>
+              <p className="field-event-location">
+                {competition.location || "Location to be confirmed"}
+              </p>
+              {competition.demo && (
+                <span className="field-demo">DEMO EVENT</span>
+              )}
+              <button
+                className="field-event-action"
+                onClick={() => setPage("pit")}
+              >
+                Prepare the pit checklist <ArrowRight size={15} />
+              </button>
+            </>
+          ) : (
+            <>
+              <p>
+                Add a competition or practice event to connect the team’s work
+                to a date.
+              </p>
+              <button
+                className="field-text-button"
+                onClick={() => setPage("calendar")}
+              >
+                Open team schedule <ArrowRight size={14} />
+              </button>
+            </>
+          )}
+          {(overdueSponsors.length > 0 || reviewGrants.length > 0) && (
+            <div className="field-follow-ups">
+              <span className="field-section-index">HANDOFFS TO MAKE</span>
+              {overdueSponsors.length > 0 && (
+                <button
+                  onClick={() => openRecord("sponsors", overdueSponsors[0].id)}
+                >
+                  <span>{String(overdueSponsors.length).padStart(2, "0")}</span>
+                  Sponsor follow-up{overdueSponsors.length > 1 ? "s" : ""} due
+                  <ArrowUpRight size={14} />
+                </button>
+              )}
+              {reviewGrants.length > 0 && (
+                <button
+                  onClick={() => openRecord("grants", reviewGrants[0].id)}
+                >
+                  <span>{String(reviewGrants.length).padStart(2, "0")}</span>
+                  Application{reviewGrants.length > 1 ? "s" : ""} to review
+                  <ArrowUpRight size={14} />
                 </button>
               )}
             </div>
-            {data.announcements.length ? (
-              data.announcements.slice(0, 3).map((update) => (
-                <article className="overview-log-entry" key={update.id}>
-                  <div className="overview-log-date">
-                    <time dateTime={update.date}>
-                      {formatDate(update.date)}
-                    </time>
-                    <span>{update.type}</span>
-                  </div>
-                  <div className="overview-log-body">
-                    <h3>{update.title}</h3>
-                    <p>{update.body}</p>
-                    <div>
-                      {update.author}
-                      {update.demo && (
-                        <span className="overview-demo">DEMO</span>
-                      )}
-                    </div>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <div className="overview-empty">
-                <p>
-                  No team updates yet. Decisions and meeting notes will appear
-                  here.
-                </p>
-              </div>
-            )}
-          </section>
-        </div>
-
-        <aside className="overview-rail" aria-label="Events and team reference">
-          <section className="overview-competition">
-            <div className="overview-rail-title">NEXT COMPETITION</div>
-            {competition ? (
-              <>
-                <div className="overview-competition-date">
-                  <strong>
-                    {new Date(competition.date + "T12:00:00").getDate()}
-                  </strong>
-                  <div>
-                    <span>
-                      {formatDate(competition.date, { month: "long" })}
-                    </span>
-                    <small>
-                      {Math.max(0, daysUntil(competition.date))} DAYS AWAY
-                    </small>
-                  </div>
-                  {competition.demo && (
-                    <span className="overview-demo">DEMO</span>
-                  )}
-                </div>
-                <button
-                  className="overview-competition-name"
-                  onClick={() => openRecord("calendar", competition.id)}
-                >
-                  {competition.title}
-                  <ArrowUpRight size={15} />
-                </button>
-                <p>{competition.location}</p>
-                <span className="overview-event-time">
-                  {competition.time || "Time to be confirmed"}
-                  {competition.endTime ? ` – ${competition.endTime}` : ""}
-                </span>
-              </>
-            ) : (
-              <div className="overview-no-competition">
-                <p>No competition scheduled.</p>
-                <button
-                  className="overview-inline-link"
-                  onClick={() => setPage("calendar")}
-                >
-                  Add event details <ArrowRight size={14} />
-                </button>
-              </div>
-            )}
-            <div className="overview-preparation">
-              <div className="overview-preparation-heading">
-                <h3>Event preparation</h3>
-                <span>
-                  {readyItems}/{PIT_ITEM_IDS.length}
-                </span>
-              </div>
-              <div
-                className="overview-meter"
-                aria-label={`${readyItems} of ${PIT_ITEM_IDS.length} preparation items complete`}
-              >
-                <i
-                  style={{
-                    width: `${(readyItems / PIT_ITEM_IDS.length) * 100}%`,
-                  }}
-                />
-              </div>
-              {preparationGroups.map((group) => {
-                const ids = PIT_ITEM_IDS.filter((id) =>
-                  id.startsWith(group.prefix),
-                );
-                return (
-                  <button
-                    key={group.prefix}
-                    className="overview-prep-row"
-                    onClick={() => setPage("pit")}
-                  >
-                    <span>{group.label}</span>
-                    <span>
-                      {
-                        ids.filter((id) => data.pitChecklist.includes(id))
-                          .length
-                      }
-                      /{ids.length}
-                      <ChevronRight size={13} />
-                    </span>
-                  </button>
-                );
-              })}
-              <button
-                className="overview-rail-action"
-                onClick={() => setPage("pit")}
-              >
-                Open event checklist <ArrowRight size={14} />
-              </button>
-            </div>
-          </section>
-
-          {laterEvents.length > 0 && (
-            <section className="overview-schedule">
-              <div className="overview-rail-title">ON THE SCHEDULE</div>
-              {laterEvents.map((event) => (
-                <button
-                  className="overview-schedule-row"
-                  key={event.id}
-                  onClick={() => openRecord("calendar", event.id)}
-                >
-                  <span className="overview-schedule-date">
-                    {formatDate(event.date)}
-                  </span>
-                  <span>
-                    <strong>{event.title}</strong>
-                    <small>
-                      {event.time}
-                      {event.demo ? " / Demo" : ` / ${event.type}`}
-                    </small>
-                  </span>
-                  <ArrowUpRight size={14} />
-                </button>
-              ))}
-            </section>
           )}
-
-          {overdueSponsors.length > 0 && (
-            <section className="overview-follow-ups">
-              <div className="overview-rail-title">FOLLOW-UP REQUIRED</div>
-              <button
-                onClick={() => openRecord("sponsors", overdueSponsors[0].id)}
-              >
-                <strong>{overdueSponsors.length}</strong>
-                <span>
-                  Sponsor follow-up{overdueSponsors.length > 1 ? "s" : ""} due
-                </span>
-                <ArrowUpRight size={15} />
-              </button>
-              <p>Outreach records are restricted to leads and mentors.</p>
-            </section>
-          )}
-
-          <section className="overview-reference">
-            <div className="overview-rail-title">TEAM REFERENCE</div>
-            {quickLinks.map((link) => (
-              <button key={link.label} onClick={link.action}>
-                {link.label}
-                <ArrowUpRight size={14} />
-              </button>
-            ))}
-          </section>
-          <section className="overview-onboarding">
-            <span>NEW TO FTC?</span>
-            <h3>Start with one assignment.</h3>
-            <p>Meet the team, find a guide, and pick up your first task.</p>
-            <button
-              className="overview-inline-link"
-              onClick={() => setPage("onboarding")}
-            >
-              Open onboarding <ArrowRight size={14} />
-            </button>
-          </section>
         </aside>
       </div>
 
-      <footer className="overview-footer">
-        <span>DELAWARE FTC / STUDENT HQ</span>
-        <span>
-          {storageError
-            ? "SAVE REQUIRES ATTENTION"
-            : "SAVED ON THIS DEVICE / NO TEAM SYNC"}
-        </span>
-      </footer>
+      <section
+        className="field-bench-access"
+        aria-label="Robot documentation shortcuts"
+      >
+        <div>
+          <Wrench size={19} />
+          <span>BENCH ACCESS</span>
+        </div>
+        {[
+          {
+            label: "Robot reference",
+            detail: "Setup / wiring / repair",
+            action: () => openRecord("resources", "robot-reference"),
+          },
+          {
+            label: "CAD & design",
+            detail: cad?.title || "Add your design files",
+            action: () =>
+              cad ? openRecord("resources", cad.id) : setPage("resources"),
+          },
+          {
+            label: "Source & build log",
+            detail: buildLog?.title || code?.title || "Document the work",
+            action: () =>
+              buildLog
+                ? openRecord("resources", buildLog.id)
+                : code
+                  ? openRecord("resources", code.id)
+                  : setPage("resources"),
+          },
+        ].map((link) => (
+          <button key={link.label} onClick={link.action}>
+            <strong>{link.label}</strong>
+            <span>{link.detail}</span>
+            <ArrowUpRight size={17} />
+          </button>
+        ))}
+      </section>
 
+      <section className="field-team-log" aria-labelledby="field-log-title">
+        <div className="field-section-head">
+          <div>
+            <span className="field-section-index">05 / TEAM MEMORY</span>
+            <h2 id="field-log-title">Notes that stay with the robot.</h2>
+          </div>
+          {canManage && (
+            <button
+              className="field-text-button"
+              onClick={() => setAnnouncement(true)}
+            >
+              <Plus size={14} />
+              Post update
+            </button>
+          )}
+        </div>
+        <div className="field-log-entries">
+          {data.announcements.length ? (
+            data.announcements.slice(0, 2).map((update) => (
+              <article className="field-log-entry" key={update.id}>
+                <div className="field-log-meta">
+                  <span>{update.type}</span>
+                  <time dateTime={update.date}>{formatDate(update.date)}</time>
+                  {update.demo && <span className="field-demo">DEMO</span>}
+                </div>
+                <h3>{update.title}</h3>
+                <p>{update.body}</p>
+                <footer>
+                  <FileText size={13} />
+                  {update.author}
+                </footer>
+              </article>
+            ))
+          ) : (
+            <p className="field-log-empty">
+              No team notes yet. Record a decision, test result, or the context
+              behind a change.
+            </p>
+          )}
+        </div>
+      </section>
+
+      <div className="field-new-member">
+        <span className="field-registration" aria-hidden="true">
+          +
+        </span>
+        <div>
+          <strong>First time in the workshop?</strong>
+          <span>A beginner guide, a teammate, and one real assignment.</span>
+        </div>
+        <button onClick={() => setPage("onboarding")}>
+          New member checklist <ArrowRight size={16} />
+        </button>
+      </div>
+
+      {sessionTaskId && (
+        <FocusSession
+          taskId={sessionTaskId}
+          onClose={() => setSessionTaskId(null)}
+        />
+      )}
       {announcement && (
         <Modal
           title="Post a team update"

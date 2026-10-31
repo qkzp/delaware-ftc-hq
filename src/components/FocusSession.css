@@ -1,0 +1,386 @@
+.focus-session {
+  color: #202624;
+  font-family: var(--body, Arial, sans-serif);
+}
+.focus-session-index {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #d6d8ce;
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+  letter-spacing: 0.7px;
+}
+.focus-session-heading {
+  padding: 22px 0 18px;
+}
+.focus-session-heading h3 {
+  font: 600 34px/1.05 var(--display, "Arial Narrow", sans-serif);
+  text-transform: uppercase;
+  letter-spacing: -0.3px;
+  margin: 0 0 15px;
+  max-width: 650px;
+}
+.focus-session-heading p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+}
+.focus-session-heading p span + span:before {
+  content: "/";
+  display: inline-block;
+  padding: 0 11px;
+  color: #888e82;
+}
+.focus-label {
+  display: block;
+  font: 11px var(--mono, Consolas, monospace);
+  letter-spacing: 0.9px;
+  color: #62695f;
+}
+.focus-finish-line {
+  position: relative;
+  padding: 18px 21px;
+  border: 1px solid #b7bdb0;
+  border-left: 3px solid #ce431e;
+  background: #f5f3ec;
+}
+.focus-finish-line:after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid #aeb4a6;
+  border-right: 1px solid #aeb4a6;
+}
+.focus-finish-line p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 8px 0 0;
+  max-width: 650px;
+}
+.focus-readonly {
+  font-size: 13px;
+  line-height: 1.6;
+  border-left: 2px solid #7b8274;
+  padding: 12px 15px;
+  margin: 18px 0 0;
+  background: #f5f3ec;
+  color: #515b4c;
+}
+.focus-timer-section {
+  padding: 22px 0 20px;
+  border-bottom: 1px solid #d6d8ce;
+}
+.focus-timer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.focus-timer-top > label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+}
+.focus-timer-top select {
+  width: auto;
+  min-width: 90px;
+  min-height: 32px;
+  padding: 6px 8px;
+  font-size: 12px;
+  border-color: #b9beaf;
+  background: #faf9f5;
+}
+.focus-timer-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 19px 0 17px;
+}
+.focus-timer-face output {
+  font: 400 86px/0.98 var(--display, "Arial Narrow", sans-serif);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+  color: #202624;
+}
+.focus-timer-face > span {
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+  letter-spacing: 0.8px;
+  margin-top: 12px;
+}
+.focus-timer-face output[data-running="true"] {
+  color: #a73316;
+}
+.focus-timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.focus-timer-disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: #62695f;
+  line-height: 1.5;
+  margin: 14px 0 0;
+}
+.focus-reference {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 17px 0;
+  border-bottom: 1px solid #d6d8ce;
+}
+.focus-reference > span {
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+  letter-spacing: 0.6px;
+}
+.focus-reference > button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 0;
+  padding: 7px 0;
+  text-align: left;
+  font-size: 12px;
+  color: #343e2d;
+}
+.focus-reference > button:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.focus-instructions {
+  padding: 17px 0;
+  border-bottom: 1px solid #d6d8ce;
+}
+.focus-instructions summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #62695f;
+}
+.focus-instructions p {
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: #505b48;
+  margin: 15px 0 0;
+}
+.focus-build-note {
+  padding: 22px 0 18px;
+}
+.focus-build-note textarea {
+  background: #faf9f5;
+  min-height: 115px;
+  border-color: #b9beaf;
+}
+.focus-note-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 12px;
+}
+.focus-note-action > span {
+  font: 11px var(--mono, Consolas, monospace);
+  letter-spacing: 0.7px;
+  color: #62695f;
+}
+.focus-session-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 18px;
+  border-top: 1px solid #d6d8ce;
+}
+.focus-session-footer > span {
+  font: 11px var(--mono, Consolas, monospace);
+  color: #62695f;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+.focus-blockers {
+  padding: 18px 0 0;
+}
+.focus-blockers > .focus-label {
+  color: #a73316;
+}
+.focus-blockers ul {
+  padding-left: 19px;
+  font-size: 13px;
+  color: #424e3a;
+  line-height: 1.6;
+  margin: 9px 0 6px;
+}
+.focus-blockers p {
+  font-size: 11px;
+  color: #62695f;
+  line-height: 1.6;
+  margin: 0;
+}
+.focus-discard {
+  padding: 14px 16px;
+  border: 1px solid #b3765e;
+  border-left: 3px solid #a73316;
+  margin-bottom: 18px;
+}
+.focus-discard p {
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+.focus-discard > div {
+  display: flex;
+  gap: 8px;
+}
+.focus-receipt {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid #d6d8ce;
+}
+.focus-receipt > svg {
+  color: #4c5d43;
+}
+.focus-receipt h4 {
+  font: 600 29px/1 var(--display, "Arial Narrow", sans-serif);
+  text-transform: uppercase;
+  margin: 0 0 9px;
+}
+.focus-receipt p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #62695f;
+  margin: 0;
+}
+.focus-receipt > div {
+  flex: 1;
+}
+.focus-missing h3 {
+  font-size: 20px;
+}
+.focus-missing p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #62695f;
+}
+@media (max-width: 600px) {
+  .focus-session-index {
+    font-size: 11px;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .focus-session-heading h3 {
+    font-size: 31px;
+    line-height: 1.08;
+  }
+  .focus-session-heading p {
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  .focus-finish-line {
+    padding: 16px 17px;
+  }
+  .focus-finish-line p {
+    font-size: 14px;
+  }
+  .focus-timer-top > .focus-label {
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .focus-timer-top {
+    gap: 12px;
+  }
+  .focus-timer-top > label > span {
+    display: none;
+  }
+  .focus-timer-top select {
+    min-height: 44px;
+    font-size: 14px;
+    padding: 9px;
+  }
+  .focus-timer-face output {
+    font-size: 83px;
+  }
+  .focus-timer-face > span {
+    font-size: 11px;
+  }
+  .focus-timer-controls > .btn {
+    min-height: 44px;
+  }
+  .focus-timer-disclaimer {
+    font-size: 11px;
+    max-width: 270px;
+    margin: 14px auto 0;
+  }
+  .focus-reference {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+    padding-bottom: 10px;
+  }
+  .focus-reference > button {
+    font-size: 13px;
+    min-height: 44px;
+  }
+  .focus-note-action {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .focus-note-action > .btn {
+    width: 100%;
+  }
+  .focus-note-action > span {
+    font-size: 11px;
+  }
+  .focus-session-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .focus-session-footer > .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .focus-session-footer > span {
+    font-size: 11px;
+  }
+  .focus-discard > div {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .focus-discard .btn {
+    min-height: 44px;
+  }
+  .focus-receipt {
+    flex-wrap: wrap;
+  }
+  .focus-receipt > .btn {
+    width: 100%;
+  }
+  .focus-build-note textarea {
+    font-size: 16px;
+  }
+  .focus-readonly {
+    font-size: 13px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .focus-session * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

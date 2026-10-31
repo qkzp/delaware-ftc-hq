@@ -86,6 +86,9 @@ const pages = Object.fromEntries(
   ),
 );
 const { Workspace } = await server.ssrLoadModule("/src/App.tsx");
+const { FocusSession } = await server.ssrLoadModule(
+  "/src/components/FocusSession.tsx",
+);
 
 function memoryStorage(initial) {
   const values = new Map(
@@ -170,7 +173,7 @@ const byText = (root, type, text) =>
     .findAllByType(type)
     .find((node) =>
       node.children.some(
-        (child) => typeof child === "string" && child === text,
+        (child) => typeof child === "string" && child.trim() === text,
       ),
     );
 function fieldControl(root, label, type = "input") {
@@ -902,4 +905,461 @@ test("an empty fresh workspace keeps all core pages usable", async () => {
       assert.equal(validateData(app.context.data), true);
       assert.equal(app.context.storageError, "");
     });
+});
+
+test("a build session logs real task notes without losing another teammate's update", async () => {
+  const initial = createDemoData();
+  const selected = ownTask(initial);
+  const SessionPage = () =>
+    React.createElement(FocusSession, { taskId: selected.id, onClose() {} });
+  let saved;
+  await fixture({ initial, page: SessionPage }, async (app) => {
+    const beforeStatus = app.context.data.tasks.find(
+      (t) => t.id === selected.id,
+    ).status;
+    assert.match(
+      app.text,
+      new RegExp(selected.done.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Build note", "textarea").props.onChange({
+        target: {
+          value:
+            "Adjusted roller clearance. Ten test runs passed; recheck the left bracket next.",
+        },
+      }),
+    );
+    await app.update((ctx) => {
+      const current = ctx.data.tasks.find((t) => t.id === selected.id);
+      ctx.saveRecord("tasks", {
+        ...current,
+        comments: [
+          ...current.comments,
+          {
+            text: "Teammate added the measurement sheet.",
+            author: "Jordan",
+            date: new Date().toISOString(),
+          },
+        ],
+      });
+    });
+    await app.update(() =>
+      app.root.findByType("form").props.onSubmit({ preventDefault() {} }),
+    );
+    const current = app.context.data.tasks.find((t) => t.id === selected.id);
+    assert.equal(
+      current.comments.at(-2).text,
+      "Teammate added the measurement sheet.",
+    );
+    assert.match(current.comments.at(-1).text, /Ten test runs passed/);
+    assert.equal(current.comments.at(-1).author, "Alex (you)");
+    assert.equal(
+      current.status,
+      beforeStatus,
+      "Saving a note does not complete the assignment",
+    );
+    assert.equal(
+      fieldControl(app.root, "Build note", "textarea").props.value,
+      "",
+    );
+    saved = localRepository.read();
+    assert.equal(validateData(saved), true);
+  });
+  await fixture({ initial: saved, page: SessionPage }, async (app) => {
+    assert.match(
+      app.context.data.tasks.find((t) => t.id === selected.id).comments.at(-1)
+        .text,
+      /Ten test runs passed/,
+    );
+    assert.equal(
+      app.root
+        .findByProps({ "aria-label": "Time remaining" })
+        .children.join(""),
+      "20:00",
+      "The optional timer is local to each session",
+    );
+  });
+});
+
+test("focus completion enforces dependencies and undo preserves newer build notes", async () => {
+  const initial = createDemoData();
+  const selected = ownTask(initial);
+  const dependency = initial.tasks.find(
+    (t) => t.id !== selected.id && t.status !== "Done",
+  );
+  selected.dependencies = [dependency.id];
+  const SessionPage = () =>
+    React.createElement(FocusSession, { taskId: selected.id, onClose() {} });
+  await fixture({ initial, page: SessionPage }, async (app) => {
+    await app.update(() =>
+      byText(app.root, "button", "Finish task").props.onClick(),
+    );
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === selected.id).status,
+      selected.status,
+    );
+    assert.match(app.context.notice.message, /dependencies/i);
+    await app.update((ctx) =>
+      ctx.saveRecord("tasks", {
+        ...ctx.data.tasks.find((t) => t.id === dependency.id),
+        status: "Done",
+      }),
+    );
+    await app.update(() =>
+      fieldControl(app.root, "Build note", "textarea").props.onChange({
+        target: { value: "Retested after the dependency was complete." },
+      }),
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Save note & finish task").props.onClick(),
+    );
+    const finished = app.context.data.tasks.find((t) => t.id === selected.id);
+    assert.equal(finished.status, "Done");
+    assert.equal(
+      finished.comments.at(-1).text,
+      "Retested after the dependency was complete.",
+    );
+    const undo = app.context.notice.action;
+    assert.equal(typeof undo, "function");
+    await app.update((ctx) => {
+      const current = ctx.data.tasks.find((t) => t.id === selected.id);
+      ctx.saveRecord("tasks", {
+        ...current,
+        comments: [
+          ...current.comments,
+          {
+            text: "Next teammate confirmed the result.",
+            author: "Jordan",
+            date: new Date().toISOString(),
+          },
+        ],
+      });
+    });
+    await app.update(() => undo());
+    const restored = app.context.data.tasks.find((t) => t.id === selected.id);
+    assert.equal(restored.status, selected.status);
+    assert.equal(
+      restored.comments.at(-1).text,
+      "Next teammate confirmed the result.",
+    );
+    assert.equal(
+      restored.comments.at(-2).text,
+      "Retested after the dependency was complete.",
+    );
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("a student can view another assignment but cannot change it through a build session", async () => {
+  const initial = createDemoData();
+  const selected = otherTask(initial);
+  const original = copy(selected);
+  const SessionPage = () =>
+    React.createElement(FocusSession, { taskId: selected.id, onClose() {} });
+  await fixture(
+    { initial, page: SessionPage, role: "student" },
+    async (app) => {
+      assert.equal(
+        byText(app.root, "button", "Start focus timer").props.disabled,
+        true,
+      );
+      assert.equal(
+        byText(app.root, "button", "Finish task").props.disabled,
+        true,
+      );
+      assert.equal(
+        fieldControl(app.root, "Build note", "textarea").props.disabled,
+        true,
+      );
+      // Invoke handlers directly as well as checking disabled controls: permissions live in the mutation path.
+      await app.update(() =>
+        byText(app.root, "button", "Start focus timer").props.onClick(),
+      );
+      await app.update(() =>
+        fieldControl(app.root, "Build note", "textarea").props.onChange({
+          target: { value: "Unauthorized build note" },
+        }),
+      );
+      await app.update(() =>
+        app.root.findByType("form").props.onSubmit({ preventDefault() {} }),
+      );
+      await app.update(() =>
+        byText(app.root, "button", "Save note & finish task").props.onClick(),
+      );
+      assert.deepEqual(
+        app.context.data.tasks.find((t) => t.id === selected.id),
+        original,
+      );
+      assert.equal(
+        app.root.findByProps({ "aria-label": "Time remaining" }).props[
+          "data-running"
+        ],
+        false,
+      );
+    },
+  );
+});
+
+test("focus timer start, pause, and reset preserve explicit task completion", async () => {
+  const initial = createDemoData();
+  const selected = initial.tasks.find(
+    (t) => t.owner === "Alex (you)" && t.status === "To do",
+  );
+  const SessionPage = () =>
+    React.createElement(FocusSession, { taskId: selected.id, onClose() {} });
+  await fixture(
+    { initial, page: SessionPage, role: "student" },
+    async (app) => {
+      await app.update(() =>
+        app.root
+          .findByProps({ "aria-label": "Focus duration" })
+          .props.onChange({ target: { value: "10" } }),
+      );
+      assert.equal(
+        app.root
+          .findByProps({ "aria-label": "Time remaining" })
+          .children.join(""),
+        "10:00",
+      );
+      await app.update(() =>
+        byText(app.root, "button", "Start focus timer").props.onClick(),
+      );
+      assert.equal(
+        app.context.data.tasks.find((t) => t.id === selected.id).status,
+        "In progress",
+      );
+      assert.equal(
+        app.root.findByProps({ "aria-label": "Time remaining" }).props[
+          "data-running"
+        ],
+        true,
+      );
+      assert.equal(
+        app.root.findByProps({ "aria-label": "Focus duration" }).props.disabled,
+        true,
+      );
+      await app.update(() =>
+        byText(app.root, "button", "Pause timer").props.onClick(),
+      );
+      assert.equal(
+        app.root.findByProps({ "aria-label": "Time remaining" }).props[
+          "data-running"
+        ],
+        false,
+      );
+      await app.update(() =>
+        byText(app.root, "button", "Reset timer").props.onClick(),
+      );
+      assert.equal(
+        app.root
+          .findByProps({ "aria-label": "Time remaining" })
+          .children.join(""),
+        "10:00",
+      );
+      assert.equal(
+        app.context.data.tasks.find((t) => t.id === selected.id).status,
+        "In progress",
+        "Timer controls never mark the task done",
+      );
+      assert.equal(
+        app.context.data.tasks.find((t) => t.id === selected.id).comments
+          .length,
+        selected.comments.length,
+      );
+    },
+  );
+});
+
+test("closing a build session protects an unsaved note", async () => {
+  const initial = createDemoData();
+  const selected = ownTask(initial);
+  let closes = 0;
+  const SessionPage = () =>
+    React.createElement(FocusSession, {
+      taskId: selected.id,
+      onClose() {
+        closes++;
+      },
+    });
+  await fixture({ initial, page: SessionPage }, async (app) => {
+    await app.update(() =>
+      fieldControl(app.root, "Build note", "textarea").props.onChange({
+        target: { value: "Unsaved measurement" },
+      }),
+    );
+    await app.update(() =>
+      app.root.findByProps({ "aria-label": "Close dialog" }).props.onClick(),
+    );
+    assert.equal(closes, 0);
+    assert.match(app.text, /Your build note has not been saved/);
+    await app.update(() =>
+      byText(app.root, "button", "Keep editing").props.onClick(),
+    );
+    assert.equal(
+      fieldControl(app.root, "Build note", "textarea").props.value,
+      "Unsaved measurement",
+    );
+    await app.update(() =>
+      app.root.findByProps({ "aria-label": "Close dialog" }).props.onClick(),
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Discard note & close").props.onClick(),
+    );
+    assert.equal(closes, 1);
+    assert.equal(
+      app.context.data.tasks.find((t) => t.id === selected.id).comments.length,
+      selected.comments.length,
+    );
+  });
+});
+
+test("workstream selection filters the queue, pins a real task, and opens its build session", async () => {
+  const initial = createDemoData();
+  const programmingTask = initial.tasks.find(
+    (task) => task.area === "Programming" && task.status !== "Done",
+  );
+  const secondTask = {
+    ...copy(programmingTask),
+    id: "workbench-second-code-task",
+    title: "Test robot pose after autonomous",
+    owner: "Alex (you)",
+    priority: "Low",
+    dependencies: [],
+  };
+  initial.tasks.push(secondTask);
+  await fixture({ initial, page: pages.Home }, async (app) => {
+    const programmingMapButton = app.root.findByProps({
+      "aria-label": "Filter Programming workstream",
+    });
+    assert.ok(
+      programmingMapButton,
+      "The control/code workstream is selectable",
+    );
+    await app.update(() => programmingMapButton.props.onClick());
+    assert.equal(
+      app.root.findByProps({ "aria-label": "Filter workstream" }).props.value,
+      "Programming",
+    );
+    const taskTitles = new Set(initial.tasks.map((task) => task.title));
+    const queue = app.root.findByProps({
+      role: "table",
+      "aria-label": "Open tasks",
+    });
+    const visibleTaskTitles = queue
+      .findAllByType("button")
+      .map((button) =>
+        button.children.filter((child) => typeof child === "string").join(""),
+      )
+      .filter((title) => taskTitles.has(title));
+    assert.deepEqual(
+      new Set(visibleTaskTitles),
+      new Set([programmingTask.title, secondTask.title]),
+    );
+    await app.update(() =>
+      app.root
+        .findByProps({
+          "aria-label": `Bring ${secondTask.title} to the workbench`,
+        })
+        .props.onClick(),
+    );
+    assert.equal(
+      app.root.findByProps({ id: "field-assignment-title" }).children.join(""),
+      secondTask.title,
+    );
+    await app.update(() =>
+      byText(app.root, "button", "Start work session").props.onClick(),
+    );
+    assert.ok(
+      byText(app.root, "h3", secondTask.title),
+      "The build session opens the pinned task plan",
+    );
+    assert.match(app.text, /FINISH LINE/);
+    assert.equal(
+      app.root
+        .findByProps({ "aria-label": "Time remaining" })
+        .children.join(""),
+      "20:00",
+    );
+    await app.update(() =>
+      app.root.findByProps({ "aria-label": "Close dialog" }).props.onClick(),
+    );
+    assert.equal(
+      app.root.findAllByProps({ "aria-label": "Time remaining" }).length,
+      0,
+    );
+
+    const nextEvent = initial.events[0];
+    const seasonLine = app.root.findByProps({
+      "aria-labelledby": "field-season-title",
+    });
+    const eventButton = seasonLine
+      .findAllByType("button")
+      .find((button) =>
+        button
+          .findAllByType("strong")
+          .some((label) => label.children.includes(nextEvent.title)),
+      );
+    assert.ok(eventButton, "An actual team event appears on the season line");
+    await app.update(() => eventButton.props.onClick());
+    assert.equal(app.context.page, "calendar");
+    assert.deepEqual(app.context.focusRecord, {
+      page: "calendar",
+      id: nextEvent.id,
+    });
+    assert.equal(validateData(localRepository.read()), true);
+  });
+});
+
+test("student workbench keeps other-owner work read-only and hides private funding handoffs", async () => {
+  const initial = createDemoData();
+  const selected = otherTask(initial);
+  selected.area = "Electrical";
+  selected.status = "To do";
+  initial.grants.forEach((grant) => {
+    grant.visibility = "private";
+    grant.status = "Needs Mentor Review";
+  });
+  initial.sponsors.forEach((sponsor) => {
+    sponsor.visibility = "private";
+    sponsor.followUp = "2000-01-01";
+    sponsor.status = "Follow-up Due";
+  });
+  const before = copy(initial);
+  await fixture({ initial, page: pages.Home, role: "student" }, async (app) => {
+    assert.doesNotMatch(
+      app.text,
+      /HANDOFFS TO MAKE|Sponsor follow-ups? due|Applications? to review/,
+    );
+    const electricalMapButton = app.root.findByProps({
+      "aria-label": "Filter Electrical workstream",
+    });
+    assert.ok(electricalMapButton);
+    await app.update(() => electricalMapButton.props.onClick());
+    await app.update(() =>
+      app.root
+        .findByProps({
+          "aria-label": `Bring ${selected.title} to the workbench`,
+        })
+        .props.onClick(),
+    );
+    assert.equal(
+      app.root.findByProps({ id: "field-assignment-title" }).children.join(""),
+      selected.title,
+    );
+    assert.equal(
+      byText(app.root, "button", "Start work session").props.disabled,
+      true,
+    );
+    const complete = app.root.findByProps({
+      "aria-label": `Complete ${selected.title}`,
+    });
+    assert.equal(complete.props.disabled, true);
+    await app.update(() => complete.props.onClick());
+    assert.match(app.context.notice.message, /assigned to you/);
+    assert.deepEqual(app.context.data, before);
+    assert.doesNotMatch(
+      app.text,
+      /HANDOFFS TO MAKE|Sponsor follow-ups? due|Applications? to review/,
+    );
+  });
 });

@@ -2,11 +2,11 @@
   display: flex;
   align-items: center;
   gap: 40px;
-  padding: 18px 0 22px;
+  padding: 23px 0;
   margin-bottom: 26px;
-  border-top: 2px solid #191d23;
-  border-bottom: 1px solid #d9dce0;
-  background: #fff;
+  border-top: 3px solid var(--ink, #202624);
+  border-bottom: 1px solid var(--line, #d6d8ce);
+  background: var(--paper, #faf9f5);
 }
 .tc-task-summary > div:not(.tc-summary-progress) {
   display: flex;
@@ -19,15 +19,17 @@
 }
 .tc-task-summary strong {
   display: block;
-  font-size: 25px;
-  line-height: 1.2;
-  font-weight: 500;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 .tc-task-summary div > span:not(.tc-summary-icon) {
   display: block;
   font-size: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-top: 6px;
 }
 .tc-summary-progress {
@@ -37,7 +39,7 @@
 .tc-summary-progress small {
   display: block;
   font-size: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-top: 9px;
 }
 .tc-task-toolbar {
@@ -46,20 +48,20 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 18px;
-  border-bottom: 1px solid #d9dce0;
+  border-bottom: 1px solid var(--line, #d6d8ce);
 }
 .tc-tab-count {
   display: inline-block;
   min-width: 20px;
   margin-left: 7px;
   font: 11px var(--mono, ui-monospace, Consolas, monospace);
-  color: #60656d;
+  color: var(--muted, #60665a);
   text-align: center;
 }
 .tc-view-switch {
   display: flex;
   gap: 1px;
-  border: 1px solid #d9dce0;
+  border: 1px solid var(--line, #d6d8ce);
   margin-bottom: 8px;
 }
 .tc-view-switch button {
@@ -69,12 +71,12 @@
   height: 34px;
   border: 0;
   border-radius: 0;
-  background: #fff;
-  color: #60656d;
+  background: var(--paper, #faf9f5);
+  color: var(--muted, #60665a);
 }
 .tc-view-switch button.active {
-  background: #191d23;
-  color: #fff;
+  background: var(--ink, #202624);
+  color: var(--paper, #faf9f5);
 }
 .tc-task-filters {
   display: flex;
@@ -92,13 +94,13 @@
   max-width: 430px;
   min-height: 40px;
   padding: 0 12px;
-  border: 1px solid #d9dce0;
+  border: 1px solid var(--line, #d6d8ce);
   border-radius: 3px;
-  color: #60656d;
-  background: #fff;
+  color: var(--muted, #60665a);
+  background: var(--paper, #faf9f5);
 }
 .tc-filter-search:focus-within {
-  outline: 2px solid #bd4728;
+  outline: 2px solid var(--accent, #ce431e);
   outline-offset: 2px;
 }
 .tc-filter-search input {
@@ -120,31 +122,52 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   align-items: start;
+  counter-reset: work-lane;
 }
 .tc-board-column {
+  position: relative;
+  counter-increment: work-lane;
   min-width: 0;
-  background: #f4f4f2;
-  border: 1px solid #d9dce0;
-  border-radius: 2px;
-  padding: 14px 12px;
+  background: var(--surface, #f5f3ec);
+  border: 1px solid var(--line, #d6d8ce);
+  border-top: 3px solid var(--ink, #202624);
+  border-radius: 0;
+  padding: 16px 13px;
+}
+.tc-board-column:nth-child(2) {
+  border-top-color: var(--accent, #ce431e);
+}
+.tc-board-column:nth-child(3) {
+  border-top-color: #7b8273;
 }
 .tc-column-heading {
   display: flex;
   gap: 9px;
   align-items: center;
-  padding: 0 1px 13px;
-  border-bottom: 1px solid #d9dce0;
+  padding: 0 1px 15px;
+  border-bottom: 1px solid var(--line, #d6d8ce);
   margin-bottom: 12px;
 }
 .tc-column-heading h2 {
-  font-size: 13px;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 25px;
   font-weight: 600;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
   margin: 0;
+}
+.tc-column-heading::before {
+  content: counter(work-lane, decimal-leading-zero);
+  align-self: flex-start;
+  padding: 2px 0 0;
+  margin-right: 1px;
+  font: 11px var(--mono, Consolas, monospace);
+  color: var(--muted, #60665a);
 }
 .tc-column-heading > span:last-of-type {
   font: 12px var(--mono, ui-monospace, Consolas, monospace);
   margin-left: 2px;
-  color: #60656d;
+  color: var(--muted, #60665a);
 }
 .tc-column-heading .icon-btn {
   margin-left: auto;
@@ -165,31 +188,47 @@
   border-radius: 1px;
 }
 .tc-status-dot.progress {
-  background: #bd4728;
+  background: var(--accent, #ce431e);
 }
 .tc-status-dot.done {
-  background: #191d23;
+  background: var(--ink, #202624);
 }
 .tc-column-cards {
   display: grid;
   gap: 10px;
 }
 .tc-task-card {
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #d9dce0;
-  border-left: 3px solid #8e949d;
-  border-radius: 2px;
+  position: relative;
+  padding: 19px 16px 15px;
+  background: var(--paper, #faf9f5);
+  border: 1px solid var(--line, #d6d8ce);
+  border-left: 3px solid #939986;
+  border-radius: 0;
   box-shadow: none;
+  transition:
+    border-color 140ms ease,
+    transform 140ms ease;
+}
+.tc-task-card::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid #bcc2b3;
+  border-top: 1px solid #bcc2b3;
+  pointer-events: none;
 }
 .tc-board-column:nth-child(2) .tc-task-card {
-  border-left-color: #bd4728;
+  border-left-color: var(--accent, #ce431e);
 }
 .tc-board-column:nth-child(3) .tc-task-card {
-  border-left-color: #191d23;
+  border-left-color: var(--ink, #202624);
 }
 .tc-task-card:hover {
-  border-color: #9298a0;
+  border-color: #9da48f;
+  transform: translateY(-1px);
 }
 .tc-task-card-top {
   display: flex;
@@ -198,8 +237,8 @@
   gap: 8px;
 }
 .tc-demo-mark {
-  font: 10px var(--mono, ui-monospace, Consolas, monospace);
-  color: #60656d;
+  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  color: var(--muted, #60665a);
   text-transform: uppercase;
 }
 .tc-task-title {
@@ -210,12 +249,12 @@
   width: 100%;
   text-align: left;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.5;
   border: 0;
   background: none;
-  color: #191d23;
+  color: var(--ink, #202624);
   padding: 13px 0 7px;
   cursor: pointer;
 }
@@ -223,7 +262,7 @@
   flex: none;
   opacity: 0;
   margin-top: 3px;
-  color: #bd4728;
+  color: var(--accent, #ce431e);
 }
 .tc-task-title:hover svg,
 .tc-task-title:focus-visible svg {
@@ -233,7 +272,7 @@
   margin: 0 0 17px;
   font-size: 12px;
   line-height: 1.6;
-  color: #60656d;
+  color: var(--muted, #60665a);
   overflow-wrap: anywhere;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -258,7 +297,7 @@
   border-top: 1px solid #e6e7e9;
   margin-top: 14px;
   padding-top: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   font-size: 11px;
 }
 .tc-task-card-footer > .inline {
@@ -273,11 +312,11 @@
   font-size: 11px;
 }
 .tc-task-done .tc-task-title {
-  color: #60656d;
+  color: var(--muted, #60665a);
 }
 .tc-column-empty {
   padding: 28px 14px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   font-size: 12px;
   text-align: center;
   border: 1px dashed #c4c8ce;
@@ -286,26 +325,26 @@
 .tc-blocked {
   font-size: 12px;
   line-height: 1.5;
-  border-left: 2px solid #bd4728;
+  border-left: 2px solid var(--accent, #ce431e);
   padding: 6px 9px;
   margin-bottom: 12px;
   color: #9b3520;
-  background: #fff;
+  background: var(--paper, #faf9f5);
 }
 .tc-overdue,
 .tc-delete {
-  color: #a23820 !important;
+  color: #a73316 !important;
 }
 .tc-page-footnote {
   font-size: 12px;
   line-height: 1.7;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin: 20px 0;
 }
 .tc-task-list {
   border: 0 !important;
-  border-top: 1px solid #191d23 !important;
-  border-bottom: 1px solid #d9dce0 !important;
+  border-top: 1px solid var(--ink, #202624) !important;
+  border-bottom: 1px solid var(--line, #d6d8ce) !important;
   border-radius: 0 !important;
 }
 .tc-task-list .task-row {
@@ -326,17 +365,17 @@
   min-height: 34px;
   background: none;
   border: 0;
-  color: #60656d;
+  color: var(--muted, #60665a);
   cursor: pointer;
 }
 .tc-check.checked {
-  color: #191d23;
+  color: var(--ink, #202624);
   background: #eceef0;
   border-radius: 2px;
 }
 .tc-check:disabled {
   opacity: 1;
-  color: #60656d;
+  color: var(--muted, #60665a);
 }
 .tc-task-list-title {
   flex: 1;
@@ -344,7 +383,7 @@
   text-align: left;
   border: 0;
   background: none;
-  color: #191d23;
+  color: var(--ink, #202624);
   padding: 0;
 }
 .tc-task-list-title strong {
@@ -355,13 +394,13 @@
 }
 .tc-task-list-title span {
   display: block;
-  color: #60656d;
+  color: var(--muted, #60665a);
   font-size: 12px;
   margin-top: 5px;
 }
 .tc-list-date {
   font: 12px var(--mono, ui-monospace, Consolas, monospace);
-  color: #60656d;
+  color: var(--muted, #60665a);
   min-width: 65px;
 }
 .tc-task-list .task-row > select {
@@ -370,7 +409,7 @@
   min-height: 36px;
 }
 .tc-dependencies {
-  border-top: 1px solid #d9dce0;
+  border-top: 1px solid var(--line, #d6d8ce);
   padding-top: 16px;
 }
 .tc-dependencies summary {
@@ -389,10 +428,10 @@
 .tc-dependency input {
   width: 17px;
   min-height: 17px !important;
-  accent-color: #191d23;
+  accent-color: var(--ink, #202624);
 }
 .tc-comment-section {
-  border-top: 1px solid #d9dce0;
+  border-top: 1px solid var(--line, #d6d8ce);
   margin-top: 24px;
   padding-top: 20px;
 }
@@ -415,7 +454,7 @@
 }
 .tc-comment small {
   font-size: 11px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-left: 10px;
 }
 .tc-comment p {
@@ -449,19 +488,21 @@
   gap: 7px;
 }
 .tc-calendar-month h2 {
-  font-size: 22px;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 36px;
   min-width: 210px;
   margin: 0 12px 0 0;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 .tc-calendar-month .icon-btn {
   width: 34px;
   height: 34px;
   min-height: 34px;
-  border: 1px solid #d9dce0;
+  border: 1px solid var(--line, #d6d8ce);
   border-radius: 2px;
-  background: #fff;
+  background: var(--paper, #faf9f5);
 }
 .tc-calendar-legend {
   display: flex;
@@ -469,7 +510,7 @@
   gap: 18px;
   flex-wrap: wrap;
   font-size: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-bottom: 18px;
 }
 .tc-calendar-legend span {
@@ -480,19 +521,20 @@
 .tc-calendar-legend i {
   width: 6px;
   height: 6px;
-  background: #60656d;
+  background: var(--muted, #60665a);
   border-radius: 0;
 }
 .tc-calendar {
-  border: 1px solid #c7cbd0;
+  border: 1px solid #bdc2b5;
+  border-top: 3px solid var(--ink, #202624);
   border-radius: 0;
-  background: #fff;
+  background: var(--paper, #faf9f5);
   overflow: hidden;
 }
 .tc-weekdays {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  background: #f4f4f2;
+  background: var(--ink, #202624);
 }
 .tc-weekdays span {
   padding: 12px 10px;
@@ -500,7 +542,7 @@
   font: 11px var(--mono, ui-monospace, Consolas, monospace);
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #60656d;
+  color: var(--paper, #faf9f5);
 }
 .tc-calendar-grid {
   display: grid;
@@ -511,17 +553,18 @@
   min-width: 0;
   position: relative;
   padding: 8px;
-  border-right: 1px solid #d9dce0;
-  border-top: 1px solid #d9dce0;
+  border-right: 1px solid var(--line, #d6d8ce);
+  border-top: 1px solid var(--line, #d6d8ce);
 }
 .tc-calendar-cell:nth-child(7n) {
   border-right: 0;
 }
 .tc-calendar-cell.outside {
-  background: #f7f7f6;
+  background: #efeee7;
 }
 .tc-calendar-cell.today {
-  background: #fff;
+  background: var(--paper, #faf9f5);
+  box-shadow: inset 0 3px var(--accent, #ce431e);
 }
 .tc-day-heading {
   display: flex;
@@ -535,16 +578,19 @@
   place-items: center;
   width: 26px;
   height: 26px;
-  font: 12px var(--mono, ui-monospace, Consolas, monospace);
-  color: #383e46;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 23px;
+  font-weight: 500;
+  color: #3b413b;
 }
 .outside .tc-day-number {
-  color: #777e87;
+  color: #62695c;
 }
 .today .tc-day-number {
-  background: #191d23;
-  color: #fff;
-  border-radius: 1px;
+  background: none;
+  color: #a73316;
+  border-radius: 0;
+  font-weight: 600;
 }
 .tc-add-day {
   display: grid;
@@ -554,7 +600,7 @@
   border: 0;
   border-radius: 0;
   background: none;
-  color: #60656d;
+  color: var(--muted, #60665a);
   opacity: 0;
 }
 .tc-calendar-cell:hover .tc-add-day,
@@ -567,44 +613,45 @@
   min-height: 40px;
   padding: 7px 6px;
   margin: 4px 0;
-  border: 0;
-  border-left: 2px solid #bd4728;
+  border: 1px solid var(--line, #d6d8ce);
+  border-left: 2px solid var(--accent, #ce431e);
   border-radius: 0;
-  background: #f0f1f2;
-  color: #191d23;
+  background: var(--paper, #faf9f5);
+  color: var(--ink, #202624);
   text-align: left;
   font: inherit;
   cursor: pointer;
 }
 .tc-calendar-event:hover {
-  background: #e4e6e8;
+  background: #efeee5;
+  border-color: #9ba38e;
 }
 .tc-calendar-event strong {
   display: block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1.5;
 }
 .tc-calendar-event small {
   display: block;
-  font: 10px var(--mono, ui-monospace, Consolas, monospace);
-  color: #60656d;
+  font: 11px var(--mono, ui-monospace, Consolas, monospace);
+  color: var(--muted, #60665a);
   margin-top: 3px;
 }
 .tc-agenda-list {
   display: grid;
   gap: 0;
-  border-top: 1px solid #191d23;
+  border-top: 1px solid var(--ink, #202624);
 }
 .tc-agenda-date {
   display: flex;
   gap: 22px;
   padding: 22px 0;
   border: 0 !important;
-  border-bottom: 1px solid #d9dce0 !important;
+  border-bottom: 1px solid var(--line, #d6d8ce) !important;
   border-radius: 0 !important;
 }
 .tc-date-tile {
@@ -613,23 +660,24 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  width: 64px;
-  height: 65px;
+  width: 72px;
+  height: 73px;
   background: none;
   border: 0;
-  border-right: 1px solid #d9dce0;
+  border-right: 1px solid var(--line, #d6d8ce);
   border-radius: 0;
 }
 .tc-date-tile strong {
-  font-size: 29px;
-  font-weight: 400;
-  line-height: 1;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 46px;
+  font-weight: 600;
+  line-height: 0.95;
   font-variant-numeric: tabular-nums;
 }
 .tc-date-tile span {
   font: 11px var(--mono, ui-monospace, Consolas, monospace);
   text-transform: uppercase;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-bottom: 8px;
 }
 .tc-agenda-info {
@@ -647,7 +695,7 @@
   gap: 17px;
   flex-wrap: wrap;
   font-size: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
 }
 .tc-agenda-details span {
   display: flex;
@@ -657,7 +705,7 @@
 .tc-agenda-info p {
   font-size: 13px;
   line-height: 1.7;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin: 12px 0 0;
 }
 .tc-agenda-side {
@@ -678,19 +726,21 @@
   margin-bottom: 28px;
 }
 .tc-season-label {
-  font-size: 16px;
-  font-weight: 500;
+  font-family: var(--display, Arial, sans-serif);
+  font-size: 29px;
+  font-weight: 600;
+  text-transform: uppercase;
   padding-top: 18px;
-  color: #191d23;
+  color: var(--ink, #202624);
 }
 .tc-season-label small {
   display: block;
   font: 11px var(--mono, ui-monospace, Consolas, monospace);
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin-top: 7px;
 }
 .tc-season-events {
-  border-left: 1px solid #c7cbd0;
+  border-left: 1px solid #bdc2b5;
   padding-left: 26px;
   display: grid;
   gap: 0;
@@ -702,19 +752,19 @@
   position: relative;
   padding: 19px 0;
   border: 0;
-  border-bottom: 1px solid #d9dce0;
+  border-bottom: 1px solid var(--line, #d6d8ce);
   border-radius: 0;
-  background: #fff;
+  background: var(--paper, #faf9f5);
 }
 .tc-season-event:before {
   content: "";
   position: absolute;
   left: -30px;
   top: 28px;
-  width: 7px;
-  height: 7px;
-  background: #191d23;
-  border: 0;
+  width: 9px;
+  height: 9px;
+  background: var(--paper, #faf9f5);
+  border: 2px solid var(--accent, #ce431e);
   border-radius: 0;
 }
 .tc-season-event-info {
@@ -730,7 +780,7 @@
 .tc-season-event p {
   font-size: 12px;
   line-height: 1.7;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin: 0;
 }
 .tc-event-detail-meta {
@@ -739,7 +789,7 @@
   gap: 18px;
   flex-wrap: wrap;
   font-size: 12px;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin: 5px 0 22px;
 }
 .tc-event-detail-meta span {
@@ -748,7 +798,7 @@
   gap: 6px;
 }
 .tc-event-detail-block {
-  border-top: 1px solid #d9dce0;
+  border-top: 1px solid var(--line, #d6d8ce);
   padding: 17px 0;
   background: none;
   border-radius: 0;
@@ -764,13 +814,13 @@
   line-height: 1.8;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  color: #383e46;
+  color: #3b413b;
   margin: 0;
 }
 .tc-event-source {
   font-size: 12px;
   line-height: 1.7;
-  color: #60656d;
+  color: var(--muted, #60665a);
   overflow-wrap: anywhere;
   margin: 16px 0;
 }
@@ -781,13 +831,13 @@
 .tc-import-panel p {
   font-size: 13px;
   line-height: 1.7;
-  color: #60656d;
+  color: var(--muted, #60665a);
   margin: 0;
 }
 .tc-import-error {
-  border: 1px solid #bd4728;
-  border-left: 3px solid #bd4728;
-  background: #fff;
+  border: 1px solid var(--accent, #ce431e);
+  border-left: 3px solid var(--accent, #ce431e);
+  background: var(--paper, #faf9f5);
   color: #9b3520;
   font-size: 13px;
   line-height: 1.6;
@@ -846,7 +896,7 @@
     min-width: 120px;
   }
   .tc-task-summary strong {
-    font-size: 24px;
+    font-size: 36px;
   }
   .tc-summary-progress {
     order: 3;
@@ -929,7 +979,7 @@
   .tc-calendar-month h2 {
     flex: 1;
     min-width: 0;
-    font-size: 21px;
+    font-size: 30px;
   }
   .tc-calendar-month .icon-btn {
     width: 44px;
@@ -949,7 +999,7 @@
     padding: 5px 2px;
   }
   .tc-day-number {
-    font-size: 11px;
+    font-size: 22px;
     width: 25px;
     height: 25px;
   }
@@ -961,7 +1011,7 @@
     padding: 5px 3px;
   }
   .tc-calendar-event strong {
-    font-size: 10px;
+    font-size: 11px;
     white-space: normal;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -972,7 +1022,7 @@
   }
   .tc-weekdays span {
     text-align: center;
-    font-size: 10px;
+    font-size: 11px;
     padding: 12px 2px;
   }
   .tc-calendar-legend {
@@ -1043,5 +1093,13 @@
   }
   .tc-desktop-label {
     display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-task-card {
+    transition: none;
+  }
+  .tc-task-card:hover {
+    transform: none;
   }
 }

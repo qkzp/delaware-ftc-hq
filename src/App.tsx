@@ -74,10 +74,29 @@ export function Workspace() {
               onClick={() => navigate("home")}
               aria-label="Student HQ home"
             >
-              <span className="wordmark-state">
-                DE<span>/</span>FTC
+              <svg
+                className="station-mark"
+                viewBox="0 0 34 34"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 12V3h9M22 3h9v9M31 22v9h-9M12 31H3v-9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M10 10h14v14H10zM17 6v22M6 17h22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.1"
+                />
+                <circle cx="24" cy="10" r="3" fill="#e7653c" />
+              </svg>
+              <span className="wordmark-type">
+                <strong>STUDENT HQ</strong>
+                <small>DE / FTC FIELD STATION</small>
               </span>
-              <span className="wordmark-title">Student HQ</span>
             </button>
             <span className="masthead-divider" />
             <button
@@ -137,13 +156,16 @@ export function Workspace() {
         <div className="navigation-bar">
           <div className="navigation-inner">
             <nav className="workspace-tabs" aria-label="Main navigation">
-              {navigation.map((n) => (
+              {navigation.map((n, index) => (
                 <button
                   key={n.page}
                   className={`workspace-tab ${page === n.page ? "is-active" : ""}`}
                   aria-current={page === n.page ? "page" : undefined}
                   onClick={() => navigate(n.page)}
                 >
+                  <span className="tab-index" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
                   {n.label}
                   {n.page === "tasks" && myCount > 0 && (
                     <span className="nav-count">{myCount}</span>
@@ -167,7 +189,8 @@ export function Workspace() {
             <span className={`workspace-indicator ${hasDemo ? "is-demo" : ""}`}>
               {hasDemo ? "DEMO DATA" : "LOCAL WORKSPACE"}
             </span>
-            <span>{data.county}, Delaware</span>
+            <span className="context-team-name">{data.teamName}</span>
+            <span className="context-county">{data.county}, Delaware</span>
             <span className="context-separator">/</span>
             <button onClick={() => navigate("settings")}>
               {data.seasonName}
@@ -208,7 +231,7 @@ export function Workspace() {
         </div>
         <footer className="workspace-footer">
           <span>
-            <strong>DE / FTC</strong> Student HQ
+            <strong>DE / FTC</strong> Field station
           </span>
           <span>Local workspace · No shared team sync</span>
           <button onClick={() => navigate("onboarding")}>

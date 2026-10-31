@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { Page } from "./types";
 export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
-  { page: "home", label: "Overview", icon: Home },
+  { page: "home", label: "Workbench", icon: Home },
   { page: "tasks", label: "Tasks", icon: CheckCheck },
   { page: "calendar", label: "Schedule", icon: CalendarDays },
   { page: "resources", label: "Robot & files", icon: BookOpen },
@@ -18,7 +18,7 @@ export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
   { page: "pit", label: "Competition", icon: Flag },
 ];
 export const pageLabels: Record<Page, string> = {
-  home: "Overview",
+  home: "Workbench",
   tasks: "Tasks",
   calendar: "Schedule",
   resources: "Robot & resources",

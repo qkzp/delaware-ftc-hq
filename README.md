@@ -1,6 +1,6 @@
 # Delaware FTC Student HQ
 
-A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface uses a compact dark masthead, horizontal navigation, neutral typography, ruled data tables, and a restrained orange accent. There is no marketing hero, decorative robot illustration, pastel dashboard, or rounded card grid. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
+A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface is an original robotics field station: warm paper, ink, safety-orange accents, condensed workshop typography, numbered navigation, assignment sheets, and a task-driven workstream diagram. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
 
 ## Run it
 
@@ -22,6 +22,9 @@ Open the Local URL printed by Vite. `npm run build` checks TypeScript and create
 5. Export backups to school-approved private storage regularly. Use a separate browser profile or import a team backup to work with another team. Records carry team and season IDs; this MVP operates on one active team/season at a time.
 
 ## What works
+
+- **The workbench:** a real-event season line; a focused next-assignment sheet; a clickable Mechanical/Programming/Electrical map that filters the work queue; actual event-kit checklist ticks; direct CAD/code/build-log links; and permission-aware follow-up handoffs. The diagram describes tracked work, not live robot telemetry.
+- **Build sessions:** open a real assignment, keep its definition of done visible, run an optional 10/20/45-minute focus block, append a build note to the task, and deliberately finish it. Dependencies and ownership are enforced, completion supports undo, and unsaved notes trigger a close warning. The timer runs only while the session is open and never completes tasks automatically.
 
 - **Student home:** next actions, task completion with undo, actual checklist-derived readiness, next team event/countdown, coming meetings, season task progress, and team announcements/decisions. Home actions and global search open the exact matching task, event, resource, sponsor, or grant record.
 - **Tasks:** board/list views; search and work-area/status/owner filters; create/edit; assignees, dates, priorities, effort, dependencies, definition of done, linked resources, build notes, and comments. Dependencies block premature completion and cycles. Students can update their own tasks.
@@ -69,7 +72,7 @@ There is no live FIRST integration, grant feed, automatic reminder service, emai
 
 `src/types.ts` defines the team/season-scoped model. `src/persistence.ts` is the storage boundary: `read`, `write`, validation, and explicit recovery. Data uses browser `localStorage` under `delaware-ftc-hq:v1`. Invalid original snapshots are protected and explicit recovery preserves their bytes under `delaware-ftc-hq:v1:recovery`.
 
-**Role previews are interface demonstrations, not authentication or server authorization.** This local MVP is useful for non-sensitive planning on one device. Data is neither encrypted nor synced between teammates; someone with access to the browser profile or developer tools can inspect it. Do not store real student personal information or confidential financial/contact records until the shared backend is connected. The hosted app is public to anyone with its URL, while each visitor's records stay in their browser. The app itself never publishes team records or sends record data to an API. Typography uses native system fonts without an external font request.
+**Role previews are interface demonstrations, not authentication or server authorization.** This local MVP is useful for non-sensitive planning on one device. Data is neither encrypted nor synced between teammates; someone with access to the browser profile or developer tools can inspect it. Do not store real student personal information or confidential financial/contact records until the shared backend is connected. The hosted app is public to anyone with its URL, while each visitor's records stay in their browser. The app itself never publishes team records or sends record data to an API. Barlow Condensed, IBM Plex Sans, and IBM Plex Mono are hosted with the app; their SIL Open Font licenses are in `public/fonts/`. There is no external font request at runtime. `node scripts/fetch-fonts.mjs` refreshes the official font assets if needed.
 
 For shared school/team use, replace the local repository with an authenticated API while retaining the page model:
 
