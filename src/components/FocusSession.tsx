@@ -235,7 +235,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
                 </label>
               </div>
               <div className="focus-timer-face">
-                <output aria-label="Time remaining" data-running={running}>
+                <output aria-label="Time remaining" aria-live="off" data-running={running}>
                   {clock(remainingMs)}
                 </output>
                 <span>

@@ -1325,7 +1325,7 @@ time {
     padding-inline: 10px;
   }
   .chrome-create {
-    min-height: 32px !important;
+    min-height: 44px !important;
     padding: 6px 8px !important;
     gap: 4px;
     font-size: 10px !important;
