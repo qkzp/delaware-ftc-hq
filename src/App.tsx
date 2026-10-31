@@ -51,7 +51,7 @@ export function Workspace() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
   useEffect(() => {
-    document.title = `${pageLabels[page]} · Student HQ`;
+    document.title = `${pageLabels[page]} · MyFTCSpae`;
   }, [page]);
   const navigate = (next: Page) => setPage(next);
   const myCount = data.tasks.filter(
@@ -72,7 +72,7 @@ export function Workspace() {
             <button
               className="wordmark"
               onClick={() => navigate("home")}
-              aria-label="Student HQ home"
+              aria-label="MyFTCSpae home"
             >
               <svg
                 className="station-mark"
@@ -94,7 +94,7 @@ export function Workspace() {
                 <circle cx="24" cy="10" r="3" fill="#e7653c" />
               </svg>
               <span className="wordmark-type">
-                <strong>STUDENT HQ</strong>
+                <strong>MyFTCSpae</strong>
                 <small>DE / FTC FIELD STATION</small>
               </span>
             </button>
@@ -231,7 +231,7 @@ export function Workspace() {
         </div>
         <footer className="workspace-footer">
           <span>
-            <strong>DE / FTC</strong> Field station
+            <strong>MyFTCSpae</strong> DE / FTC field station
           </span>
           <span>Local workspace · No shared team sync</span>
           <button onClick={() => navigate("onboarding")}>

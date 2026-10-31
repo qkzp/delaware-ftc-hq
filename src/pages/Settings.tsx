@@ -135,7 +135,7 @@ export default function Settings() {
                     try {
                       const raw = localRepository.readRaw();
                       if (raw !== null)
-                        downloadFile("student-hq-recovery.json", raw);
+                        downloadFile("myftcspae-recovery.json", raw);
                       else notify("There is no saved snapshot to download.");
                     } catch {
                       notify("Browser storage is unavailable.");

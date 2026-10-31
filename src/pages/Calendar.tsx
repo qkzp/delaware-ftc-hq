@@ -374,7 +374,7 @@ export default function CalendarPage() {
     const lines = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
-      "PRODID:-//Student HQ//Team Calendar//EN",
+      "PRODID:-//MyFTCSpae//Team Calendar//EN",
       ...events.flatMap((e) => [
         "BEGIN:VEVENT",
         `UID:${e.id}@student-hq.local`,
@@ -397,7 +397,7 @@ export default function CalendarPage() {
       ]),
       "END:VCALENDAR",
     ];
-    download(lines.join("\r\n"), "student-hq-calendar.ics", "text/calendar");
+    download(lines.join("\r\n"), "myftcspae-calendar.ics", "text/calendar");
     notify("Calendar exported. Team event times use the local team timezone.");
   };
   const inspectImport = async (file?: File) => {
@@ -1096,7 +1096,7 @@ export default function CalendarPage() {
               onClick={() =>
                 download(
                   "title,date,time,endTime,type,location,owner,agenda\nExample team build night,2026-11-07,17:00,19:00,Build night,Team workshop,Alex (you),Build and test the next prototype\n",
-                  "student-hq-events-template.csv",
+                  "myftcspae-events-template.csv",
                   "text/csv",
                 )
               }
