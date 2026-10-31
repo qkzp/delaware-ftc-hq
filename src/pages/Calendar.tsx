@@ -243,9 +243,7 @@ export default function CalendarPage() {
   const [month, setMonth] = useState(
     () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   );
-  const [view, setView] = useState<"Month" | "Agenda" | "Season">(() =>
-    window.matchMedia("(max-width: 700px)").matches ? "Agenda" : "Month",
-  );
+  const [view, setView] = useState<"Month" | "Agenda" | "Season">("Agenda");
   const [typeFilter, setTypeFilter] = useState("All events");
   const [selected, setSelected] = useState<TeamEvent | null>(null);
   const [editing, setEditing] = useState<TeamEvent | null>(null);

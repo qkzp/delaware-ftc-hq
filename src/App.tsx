@@ -76,26 +76,39 @@ export function Workspace() {
             >
               <svg
                 className="station-mark"
-                viewBox="0 0 34 34"
+                viewBox="0 0 40 40"
                 aria-hidden="true"
               >
                 <path
-                  d="M3 12V3h9M22 3h9v9M31 22v9h-9M12 31H3v-9"
+                  d="M11 4h18l7 7v18l-7 7H11l-7-7V11z"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.5"
+                  strokeWidth="1.8"
                 />
                 <path
-                  d="M10 10h14v14H10zM17 6v22M6 17h22"
+                  d="M14 12h12l3 4v11H11V16z"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.1"
+                  strokeWidth="1.7"
                 />
-                <circle cx="24" cy="10" r="3" fill="#e7653c" />
+                <path
+                  d="M8 16h3m18 0h3M8 23h3m18 0h3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeWidth="2.4"
+                />
+                <path
+                  d="M16 15.5h8"
+                  fill="none"
+                  stroke="#e7653c"
+                  strokeLinecap="round"
+                  strokeWidth="2.4"
+                />
               </svg>
               <span className="wordmark-type">
                 <strong>MyFTCSpae</strong>
-                <small>DE / FTC FIELD STATION</small>
+                <small>DELAWARE · FTC</small>
               </span>
             </button>
             <span className="masthead-divider" />
@@ -139,7 +152,7 @@ export function Workspace() {
               </button>
             </div>
             <label className="role-switch">
-              <span>ROLE PREVIEW</span>
+              <span>PREVIEW AS</span>
               <select
                 aria-label="Demo permission preview"
                 value={role}
@@ -156,16 +169,13 @@ export function Workspace() {
         <div className="navigation-bar">
           <div className="navigation-inner">
             <nav className="workspace-tabs" aria-label="Main navigation">
-              {navigation.map((n, index) => (
+              {navigation.map((n) => (
                 <button
                   key={n.page}
                   className={`workspace-tab ${page === n.page ? "is-active" : ""}`}
                   aria-current={page === n.page ? "page" : undefined}
                   onClick={() => navigate(n.page)}
                 >
-                  <span className="tab-index" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
                   {n.label}
                   {n.page === "tasks" && myCount > 0 && (
                     <span className="nav-count">{myCount}</span>
@@ -231,7 +241,7 @@ export function Workspace() {
         </div>
         <footer className="workspace-footer">
           <span>
-            <strong>MyFTCSpae</strong> DE / FTC field station
+            <strong>MyFTCSpae</strong> FTC team workspace
           </span>
           <span>Local workspace · No shared team sync</span>
           <button onClick={() => navigate("onboarding")}>

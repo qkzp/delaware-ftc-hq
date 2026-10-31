@@ -11,23 +11,10 @@ export function PageHeader({
   description?: string;
   actions?: ReactNode;
 }) {
-  const sectionCode: Record<string, string> = {
-    Tasks: "02",
-    Schedule: "03",
-    "Robot & resources": "04",
-    "Grant register": "05",
-    "Sponsor outreach": "06",
-    "Competition checklist": "07",
-    "New member checklist": "08",
-    "Workspace settings": "09",
-  };
   return (
     <div className="page-header">
       <div>
         <div className="page-title-metadata">
-          {sectionCode[title] && (
-            <span className="page-section-code">FS / {sectionCode[title]}</span>
-          )}
           {eyebrow && <span className="eyebrow">{eyebrow}</span>}
         </div>
         <h1>{title}</h1>

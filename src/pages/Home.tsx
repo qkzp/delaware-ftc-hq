@@ -19,9 +19,9 @@ import type { Task } from "../types";
 import "./Home.css";
 
 const workstreams = [
-  { area: "Mechanical", label: "Mechanisms", index: "01", code: "MECH" },
-  { area: "Programming", label: "Control & code", index: "02", code: "CODE" },
-  { area: "Electrical", label: "Power & wiring", index: "03", code: "ELEC" },
+  { area: "Mechanical", label: "Mechanisms", code: "MECH" },
+  { area: "Programming", label: "Control & code", code: "CODE" },
+  { area: "Electrical", label: "Power & wiring", code: "ELEC" },
 ];
 const priorityOrder = { High: 0, Medium: 1, Low: 2 };
 
@@ -130,14 +130,9 @@ export default function Home() {
     <div className="field-workbench">
       <header className="field-heading">
         <div>
-          <div className="field-kicker">
-            <span className="field-registration" aria-hidden="true">
-              +
-            </span>{" "}
-            TEAM OPERATIONS / {data.seasonName}
-          </div>
+          <div className="field-kicker">{data.teamName} · {data.seasonName}</div>
           <h1>
-            THE WORKBENCH<span className="field-title-stop">.</span>
+            This week on the bench<span className="field-title-stop">.</span>
           </h1>
           <p>
             {data.teamName} <span>/</span>{" "}
@@ -167,7 +162,7 @@ export default function Home() {
 
       <section className="field-season" aria-labelledby="field-season-title">
         <div className="field-season-heading">
-          <h2 id="field-season-title">SEASON LINE</h2>
+          <h2 id="field-season-title">COMING UP</h2>
           <span>Next {Math.min(upcoming.length, 4)} team events</span>
           <button
             onClick={() => setPage("calendar")}
@@ -227,14 +222,14 @@ export default function Home() {
               <i />
               NEXT ASSIGNMENT
             </span>
-            <span className="field-sheet-number">01 / WORK ORDER</span>
+            <span className="field-sheet-number">UP NEXT</span>
           </div>
           {nextTask ? (
             <>
               <div className="field-assignment-tags">
                 <span>{nextTask.area}</span>
                 {nextTask.demo && (
-                  <span className="field-demo">SAMPLE TASK</span>
+                  <span className="field-demo">DEMO TASK</span>
                 )}
                 <span className="field-priority">
                   {nextTask.priority} priority
@@ -274,7 +269,7 @@ export default function Home() {
                   <Check size={13} />
                 </span>
                 <div>
-                  <h3>THE FINISH LINE</h3>
+                  <h3>DONE WHEN</h3>
                   <p>
                     {nextTask.done ||
                       "Ask the task owner to define the result before you start."}
@@ -313,7 +308,7 @@ export default function Home() {
                 </p>
               )}
               <div className="field-sheet-foot">
-                <span>WORK → TEST → LEAVE A NOTE</span>
+                <span>TEST IT · RECORD WHAT HAPPENED</span>
                 <span>
                   TEAM ONLY <span aria-hidden="true">↗</span>
                 </span>
@@ -352,15 +347,15 @@ export default function Home() {
         <section className="field-system-map" aria-labelledby="field-map-title">
           <div className="field-map-head">
             <div>
-              <span className="field-section-index">02 / BUILD STATUS</span>
-              <h2 id="field-map-title">ROBOT → FIELD</h2>
+              <span className="field-section-index">BUILD STATUS</span>
+          <h2 id="field-map-title">Build workstreams</h2>
             </div>
             <span className="field-map-cross" aria-hidden="true">
               +
             </span>
           </div>
           <p className="field-map-explainer">
-            Workstream status from your task board.
+            See what each build team still has open.
             <br />
             Select a line to filter the work queue.
           </p>
@@ -403,9 +398,9 @@ export default function Home() {
           <div className="field-map-output">
             <span className="field-terminal-out" aria-hidden="true" />
             <div>
-              <span>EVENT KIT</span>
+              <span>PIT CHECKLIST</span>
               <strong>
-                {String(readyItems).padStart(2, "0")}
+                {readyItems}
                 <small> / {PIT_ITEM_IDS.length} checked</small>
               </strong>
             </div>
@@ -438,7 +433,7 @@ export default function Home() {
         <section className="field-queue" aria-labelledby="field-queue-title">
           <div className="field-section-head">
             <div>
-              <span className="field-section-index">03 / OPEN WORK</span>
+              <span className="field-section-index">OPEN TASKS</span>
               <h2 id="field-queue-title">
                 On the bench<span>{orderedTasks.length}</span>
               </h2>
@@ -598,7 +593,7 @@ export default function Home() {
         >
           <div className="field-section-head">
             <div>
-              <span className="field-section-index">04 / NEXT FIELD TEST</span>
+              <span className="field-section-index">NEXT COMPETITION</span>
               <h2>
                 {competition
                   ? `${Math.max(0, daysUntil(competition.date))} days out`
@@ -720,7 +715,7 @@ export default function Home() {
       <section className="field-team-log" aria-labelledby="field-log-title">
         <div className="field-section-head">
           <div>
-            <span className="field-section-index">05 / TEAM MEMORY</span>
+            <span className="field-section-index">BUILD LOG</span>
             <h2 id="field-log-title">Notes that stay with the robot.</h2>
           </div>
           {canManage && (

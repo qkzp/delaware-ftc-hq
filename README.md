@@ -1,6 +1,6 @@
 # MyFTCSpae
 
-A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface is an original robotics field station: warm paper, ink, safety-orange accents, condensed workshop typography, numbered navigation, assignment sheets, and a task-driven workstream diagram. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
+A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface uses a top-down robot emblem, a paper-and-ink palette with restrained orange, clear team language, and a work-first layout. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
 
 ## Run it
 

@@ -12,7 +12,7 @@ export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
   { page: "home", label: "Workbench", icon: Home },
   { page: "tasks", label: "Tasks", icon: CheckCheck },
   { page: "calendar", label: "Schedule", icon: CalendarDays },
-  { page: "resources", label: "Robot & files", icon: BookOpen },
+  { page: "resources", label: "Robot & resources", icon: BookOpen },
   { page: "grants", label: "Grants", icon: Sprout },
   { page: "sponsors", label: "Outreach", icon: Users },
   { page: "pit", label: "Competition", icon: Flag },

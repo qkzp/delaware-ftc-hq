@@ -7,6 +7,60 @@ import type {
   TeamEvent,
 } from "./types";
 import { offsetDate, dateKey } from "./utils";
+export const DEFAULT_DEMO_TASK_DONE =
+  "Share the result at the next build meeting and add a short note to the build log.";
+export const DEFAULT_DEMO_TASK_DESCRIPTION =
+  "Work with a teammate. Ask a mentor if you need help or a safety check.";
+export const DEMO_TASK_CONTENT: Record<
+  string,
+  { done: string; description: string }
+> = {
+  "task-1": {
+    done: "Record each intake run, note any jams, and bring the best version to build night.",
+    description:
+      "Ask a teammate to spot the mechanism for the first three runs. Stop if anything binds.",
+  },
+  "task-2": {
+    done: "Attach the run log with the start position, score, and missed actions.",
+    description:
+      "Use the same starting path each time so the results are easy to compare.",
+  },
+  "task-3": {
+    done: "Choose three clear build photos and add a one-sentence caption to each.",
+    description:
+      "Include one wide shot, one close-up of the robot, and one photo of the team at work.",
+  },
+  "task-4": {
+    done: "Label each motor with its hub and port, then check the map against the code.",
+    description:
+      "Compare the printed labels with the controller configuration before powering on.",
+  },
+  "task-5": {
+    done: "Get mentor approval and save the approved draft before contacting anyone.",
+    description:
+      "This is a practice outreach record. Keep the draft unsent until a mentor reviews it.",
+  },
+  "task-6": {
+    done: "Check every drivetrain fastener and mark any that needed tightening.",
+    description:
+      "Turn the robot off and follow your team’s safety steps around moving parts.",
+  },
+  "task-7": {
+    done: "Save the repository link and controller setup steps in robot resources.",
+    description:
+      "Ask a teammate to find the driver code and confirm the setup notes are enough to get started.",
+  },
+  "task-8": {
+    done: "Add a photo, key measurements, test result, and next design question to the log.",
+    description:
+      "Keep the earlier measurements with the first prototype so changes stay traceable.",
+  },
+  "task-9": {
+    done: "Post the agenda with an owner and time estimate for each item.",
+    description:
+      "Leave time for robot check-in, subsystem updates, and decisions the team needs to make.",
+  },
+};
 export function createDemoData(): AppData {
   const base = { teamId: "demo-team", seasonId: "2026-27", demo: true };
   const task = (
@@ -28,9 +82,9 @@ export function createDemoData(): AppData {
     owner,
     priority,
     effort: "20 min",
-    done: "Share the result at the next build meeting and add a short note to the build log.",
+    done: DEMO_TASK_CONTENT[id]?.done || DEFAULT_DEMO_TASK_DONE,
     description:
-      "Work with a teammate. Ask a mentor if you need help or a safety check.",
+      DEMO_TASK_CONTENT[id]?.description || DEFAULT_DEMO_TASK_DESCRIPTION,
     dependencies: [],
     comments: [],
     resourceId,

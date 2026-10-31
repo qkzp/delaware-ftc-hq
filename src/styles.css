@@ -1,6 +1,6 @@
 :root {
   font-family: var(--body);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
   font-synthesis: none;
   color: #202624;
@@ -78,12 +78,12 @@ p {
   margin-top: 0;
 }
 h1 {
-  font-family: var(--display);
-  font-size: 48px;
-  text-transform: uppercase;
-  letter-spacing: 0.2px;
+  font-family: var(--body);
+  font-size: 42px;
+  text-transform: none;
+  letter-spacing: -1.8px;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.08;
   margin-bottom: 10px;
 }
 h2 {
@@ -204,13 +204,13 @@ time {
   gap: 3px;
 }
 .wordmark-type strong {
-  font: 600 25px/0.9 var(--display);
-  letter-spacing: 1px;
+  font: 600 21px/1 var(--body);
+  letter-spacing: -0.35px;
   white-space: nowrap;
 }
 .wordmark-type small {
-  font: 8px var(--mono);
-  letter-spacing: 0.6px;
+  font: 10px var(--body);
+  letter-spacing: 0.04em;
   color: #c8cfbe;
   white-space: nowrap;
 }
@@ -254,13 +254,13 @@ time {
   border-radius: 3px;
   color: #c5c8ce;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
 }
 .workspace-search:hover {
   border-color: #8c939d;
 }
 .workspace-search kbd {
-  font: 10px var(--mono);
+  font: 11px var(--body);
   margin-left: auto;
   white-space: nowrap;
   color: #b2b7c1;
@@ -293,7 +293,7 @@ time {
   min-width: 135px;
 }
 .role-switch > span {
-  font: 8px var(--mono);
+  font: 10px var(--body);
   color: #b0b6bf;
   letter-spacing: 0.9px;
 }
@@ -303,7 +303,7 @@ time {
   padding: 0 18px 0 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   background: #202624 !important;
   color: #f2f3f5 !important;
 }
@@ -350,7 +350,7 @@ time {
   white-space: nowrap;
   padding: 0 13px;
   min-height: 52px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   color: #636960;
 }
@@ -365,9 +365,7 @@ time {
   font-weight: 600;
 }
 .tab-index {
-  font: 9px var(--mono);
-  color: #68715f;
-  align-self: center;
+  display: none;
 }
 .workspace-tab.is-active .tab-index {
   color: #c5d0b9;
@@ -389,13 +387,13 @@ time {
 .chrome-create {
   min-height: 30px !important;
   padding: 6px 10px !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   white-space: nowrap;
   background: var(--accent) !important;
   border-color: var(--accent) !important;
 }
 .main-content {
-  max-width: 1440px;
+  max-width: 1512px;
   margin: 0 auto;
   padding: 0 36px;
   min-height: calc(100vh - 116px);
@@ -412,7 +410,7 @@ time {
   border-bottom: 1px solid #dfe0d7;
   margin-bottom: 25px;
   color: #60665f;
-  font-size: 11px;
+  font-size: 13px;
 }
 .workspace-context-left {
   display: flex;
@@ -421,7 +419,7 @@ time {
   min-width: 0;
 }
 .workspace-context-left > button {
-  font-size: 11px;
+  font-size: 13px;
   border: 0;
   background: none;
   padding: 7px 0;
@@ -433,7 +431,7 @@ time {
   text-decoration: underline;
 }
 .workspace-indicator {
-  font: 9px var(--mono);
+  font: 11px var(--body);
   border: 1px solid #d0d3d8;
   padding: 4px 6px;
   color: #5e646c;
@@ -457,7 +455,7 @@ time {
   align-items: center;
   gap: 7px;
   white-space: nowrap;
-  font: 10px var(--mono);
+  font: 12px var(--body);
   color: #636960;
 }
 .storage-dot {
@@ -540,7 +538,7 @@ time {
   margin: 8px 0 9px;
 }
 .eyebrow {
-  font: 10px var(--mono);
+  font: 12px var(--body);
   font-weight: 400;
   text-transform: uppercase;
   color: #6b7078;
@@ -549,7 +547,7 @@ time {
 }
 .page-description {
   color: #60665f;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.6;
   margin-bottom: 0;
   max-width: 720px;
@@ -1589,5 +1587,76 @@ time {
     animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Make the real work easy to read; reserve mono for values that need it. */
+.workspace-context {
+  font-size: 13px;
+}
+.workspace-context-left > button {
+  font-size: 13px;
+}
+.workspace-indicator {
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.storage-status {
+  font-size: 12px;
+}
+.eyebrow {
+  font: 12px/1.5 var(--body);
+  letter-spacing: 0.06em;
+}
+.page-description {
+  font-size: 15px;
+}
+.field-workbench .field-section-index,
+.field-workbench .field-sheet-number,
+.field-workbench .field-kicker {
+  font-family: var(--body);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+}
+.field-workbench .field-heading h1 {
+  font-family: var(--body);
+  font-size: 52px;
+  font-weight: 600;
+  letter-spacing: -2.3px;
+  line-height: 1.05;
+  text-transform: none;
+}
+.field-workbench .field-heading p {
+  font-size: 14px;
+}
+.field-workbench .field-dateline {
+  font-size: 14px;
+}
+.field-workbench .field-dateline > strong {
+  font-size: 14px;
+}
+.field-workbench .field-dateline-state,
+.field-workbench .field-season-heading h2,
+.field-workbench .field-season-heading > span,
+.field-workbench .field-map-explainer {
+  font-family: var(--body);
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.field-workbench .field-assignment-tags,
+.field-workbench .field-assignment-spec small {
+  font-size: 12px;
+}
+.field-workbench .field-map-head h2,
+.field-workbench .field-section-head h2 {
+  font-family: var(--body);
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  text-transform: none;
+}
+@media (max-width: 620px) {
+  .field-workbench .field-heading h1 {
+    font-size: 39px;
+    letter-spacing: -1.2px;
   }
 }

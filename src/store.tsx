@@ -7,7 +7,12 @@ import {
   type ReactNode,
 } from "react";
 import type { AppData, Collection, Page, RecordFor, Role } from "./types";
-import { createDemoData } from "./seed";
+import {
+  createDemoData,
+  DEFAULT_DEMO_TASK_DESCRIPTION,
+  DEFAULT_DEMO_TASK_DONE,
+  DEMO_TASK_CONTENT,
+} from "./seed";
 import {
   localRepository,
   validateData,
@@ -62,7 +67,23 @@ export function HQProvider({ children }: { children: ReactNode }) {
   const [storageError, setStorageError] = useState("");
   const [data, setData] = useState<AppData>(() => {
     try {
-      return localRepository.read() || createDemoData();
+      const saved = localRepository.read();
+      if (!saved) return createDemoData();
+      let migrated = false;
+      const tasks = saved.tasks.map((task) => {
+        const sample = task.demo ? DEMO_TASK_CONTENT[task.id] : undefined;
+        if (!sample) return task;
+        const done =
+          task.done === DEFAULT_DEMO_TASK_DONE ? sample.done : task.done;
+        const description =
+          task.description === DEFAULT_DEMO_TASK_DESCRIPTION
+            ? sample.description
+            : task.description;
+        if (done === task.done && description === task.description) return task;
+        migrated = true;
+        return { ...task, done, description };
+      });
+      return migrated ? { ...saved, tasks } : saved;
     } catch {
       return createDemoData();
     }
