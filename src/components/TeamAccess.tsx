@@ -12,6 +12,7 @@ export default function TeamAccess() {
  return <section className="card settings-section team-access" aria-labelledby="team-access-title">
   <h2 id="team-access-title">{cloud.shared?"Your private team":"Connect your team"}</h2>
   <p className="muted">Sign in with any ChatGPT account. Team records are private to invited members; the demo remains available without sign-in.</p>
+  {!cloud.shared&&cloud.error&&<div className="settings-info" role="alert"><p>{cloud.error}</p><button className="btn btn-secondary" onClick={()=>void run(async()=>{await cloud.refreshSession();notify('Team connection restored.');})}>Retry connection</button></div>}
   {!cloud.session.user?<a className="btn btn-primary" href="/signin-with-chatgpt?return_to=%2F%23settings" target="_top">Sign in with ChatGPT</a>:<>
    <div className="team-picker">{cloud.session.teams.map(t=><button disabled={busy||cloud.shared?.id===t.id} className="btn btn-secondary" key={t.id} onClick={()=>void run(()=>cloud.openTeam(t.id))}>{t.teamName} · {t.role}</button>)}</div>
    {!cloud.shared&&<div className="access-forms">

@@ -14,6 +14,7 @@ import { Badge, Field, Modal, PageHeader } from "../components/ui";
 import { localRepository } from "../persistence";
 import { downloadFile } from "../utils";
 import TeamAccess from "../components/TeamAccess";
+import { api } from "../cloud";
 export default function Settings() {
   const {
     data,
@@ -177,7 +178,7 @@ export default function Settings() {
               <button
                 className="btn btn-secondary"
                 disabled={role !== "admin"}
-                onClick={() => cloud.shared ? notify("Use shared revision history above to restore team records.") : input.current?.click()}
+                onClick={() => input.current?.click()}
               >
                 <FileUp size={15} />
                 Import backup
@@ -332,9 +333,7 @@ export default function Settings() {
           onClose={() => setRestore(null)}
         >
           <p className="muted">
-            This restores the selected backup and replaces the records currently
-            saved in this browser. Export your current workspace first if you
-            need to keep it.
+            {cloud.shared ? "This replaces the shared records for every teammate and preserves the previous revision for recovery. Owners are matched to current members; unmatched tasks become unassigned. Imported approvals and event verification must be reviewed again. Private files from another team must be uploaded again." : "This restores the selected backup and replaces records in this browser. Export your current workspace first if you need to keep it."}
           </p>
           <div className="form-actions">
             <button
@@ -345,7 +344,8 @@ export default function Settings() {
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => {
+              onClick={async () => {
+                if(cloud.shared){try{const result=await api(`/api/teams/${cloud.shared.id}/import`,'POST',{baseVersion:cloud.shared.version,data:JSON.parse(restore)});await cloud.reload();setRestore(null);notify(result.missingFiles.length?`Backup restored. Re-upload attachments for: ${result.missingFiles.join(', ')}`:'Shared backup restored. Imported approvals need review.');}catch(error){notify((error as Error).message);}return;}
                 if (importData(restore)) setRestore(null);
               }}
             >

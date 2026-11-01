@@ -8,7 +8,7 @@ A private FTC team workspace with an anonymous browser-local demo. The interface
 2. Create a private team with a display alias (first name and last initial), or join using a one-use invitation code.
 3. An admin invites students, student leads, and mentors. Invitations expire in 48 hours. Roles are checked by the server; demo role switching never changes a shared membership.
 4. Add tasks, events, robot notes, parts, funding records, and evidence. Watch the sync status before closing a tab.
-5. Mentors review evidence/consent and sign off rookie skills. Admins manage membership and restore saved revisions.
+5. Mentors review evidence/consent and sign off rookie skills. Admins manage membership and restore saved revisions. To migrate an existing browser workspace, export its JSON backup, open the shared team, then import it in Settings after reviewing the replacement warning.
 
 ## Features
 
@@ -21,7 +21,7 @@ A private FTC team workspace with an anonymous browser-local demo. The interface
 - Delaware: sourced New Castle, Kent, Sussex and statewide resources. Check dates and access caveats are visible. Conflicting event dates remain unverified. Grant eligibility is not assumed for a team.
 - Rookie path: first three meetings, glossary, beginner links, first task, per-member progress and mentor skill sign-offs.
 - Collaboration: authenticated members, server-side roles, per-member RSVPs/progress, comments, team announcements, in-app due reminders, approval and source-review receipts.
-- Recovery: shared D1 records, versioned writes, automatic merging of independent edits, conflict protection, saved revisions, private JSON backups and corruption-safe recovery for the separate local demo.
+- Recovery: shared D1 records, versioned writes, automatic merging of independent edits, conflict protection, saved revisions, admin-only shared backup import with scope remapping and approval reset, private JSON backups and corruption-safe recovery for the separate local demo.
 
 ## Privacy model
 
@@ -58,6 +58,6 @@ The portable preview uses the starter's loopback-only mock sign-in. Production a
 
 ## Verification status
 
-TypeScript and 51 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. These are not a substitute for two real hosted ChatGPT accounts on two devices.
+TypeScript and 52 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. These are not a substitute for two real hosted ChatGPT accounts on two devices.
 
 A browser walkthrough verified local sign-in, private team creation, shared task creation and a confirmed server revision. Desktop and 400px mobile-emulated workbench, task form, team setup and evidence form layouts were visually reviewed. Phone navigation uses a native section picker, and the primary task action remains reachable. Hosted anonymous/authenticated routing and rejection of forged identity headers were verified. Real second-account/device acceptance and assistive-technology testing must be recorded before awarding a certified 100/100 or calling this ready for team use.

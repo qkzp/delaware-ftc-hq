@@ -26,6 +26,11 @@ export function rebaseWorkspace(base: AppData, incoming: AppData, current: AppDa
 }
 export const manages = (role: Role) => role !== "student";
 export const reviews = (role: Role) => role === "mentor" || role === "admin";
+export function assertTaskGraph(tasks:AppData['tasks']) {
+ const taskMap = new Map(tasks.map(t => [t.id,t]));
+ function visit(id: string, active = new Set<string>(), done = new Set<string>()) { if (active.has(id)) throw new ApiError(400,"Task dependencies contain a cycle."); if(done.has(id)) return; active.add(id); for(const dep of taskMap.get(id)?.dependencies || []) { if(!taskMap.has(dep)) throw new ApiError(400,"A linked task is missing."); visit(dep,active,done); } active.delete(id); done.add(id); }
+ const visited = new Set<string>(); for(const id of taskMap.keys()) visit(id,new Set(),visited);
+}
 export function visibleEvidence(e: Evidence, role: Role, userId: string) { return manages(role) || e.owner === userId || (e.visibility !== "private" && e.approved); }
 export function view(envelope: Envelope, role: Role, userId: string): AppData {
  const d = structuredClone(envelope.workspace);
@@ -127,9 +132,7 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
  const learning = next.learning[userId] || {steps: [], skills: []};
  if (!same(before.skills, incoming.skills) && !reviews(role)) throw new ApiError(403, "A mentor must sign off workshop skills.");
  next.learning[userId] = { steps: incoming.onboarding, skills: reviews(role) ? incoming.skills : learning.skills };
- const taskMap = new Map(next.workspace.tasks.map(t => [t.id,t]));
- function visit(id: string, active = new Set<string>(), done = new Set<string>()) { if (active.has(id)) throw new ApiError(400,"Task dependencies contain a cycle."); if(done.has(id)) return; active.add(id); for(const dep of taskMap.get(id)?.dependencies || []) { if(!taskMap.has(dep)) throw new ApiError(400,"A linked task is missing."); visit(dep,active,done); } active.delete(id); done.add(id); }
- const visited = new Set<string>(); for(const id of taskMap.keys()) visit(id,new Set(),visited);
+ assertTaskGraph(next.workspace.tasks);
  if (!validateData(next.workspace)) throw new ApiError(400, "The changes would create an invalid workspace.");
  return next;
 }

@@ -1,7 +1,7 @@
 import type { AppData, Member, Role } from "../src/types";
 import { createDemoData } from "../src/seed";
 import { validateData } from "../src/persistence";
-import { ApiError, manages, reviews, view, visibleEvidence, mergeWorkspace, rebaseWorkspace, type Envelope } from "./policy";
+import { ApiError, manages, reviews, view, visibleEvidence, mergeWorkspace, rebaseWorkspace, assertTaskGraph, type Envelope } from "./policy";
 type User = {userId: string};
 const roles = ["student", "lead", "mentor", "admin"];
 const json = (data: unknown, status = 200) => Response.json(data, {status,headers:{"Cache-Control":"no-store, private", "X-Content-Type-Options":"nosniff"}});
@@ -90,6 +90,21 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    if(!reviews(member.role)) throw new ApiError(403,"A mentor or admin can review private backups.");
    if(request.method==="GET") return json({history:(await db.prepare("SELECT id,version,actor,created FROM revisions WHERE team_id=? ORDER BY version DESC LIMIT 30").bind(teamId).all()).results});
    if(request.method==="POST") { const input=await body(request); if(member.role!=="admin") throw new ApiError(403,"An admin must restore a shared revision."); if(input.baseVersion!==row.version) throw new ApiError(409,"Reload before restoring a revision.");const revision=await db.prepare("SELECT data FROM revisions WHERE team_id=? AND id=?").bind(teamId,input.id).first<any>();if(!revision)throw new ApiError(404,"Revision not found.");const candidate=JSON.parse(revision.data);if(!validateData(candidate.workspace)) throw new ApiError(400,"Revision is not valid.");const now=new Date().toISOString();const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=?").bind(crypto.randomUUID(),user.userId,now,teamId,row.version),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=?").bind(revision.data,now,teamId,row.version)]);if(!result[1].meta.changes)throw new ApiError(409,"Another save arrived first.");return json({ok:true}); }
+  }
+  if(path[2]==="import" && request.method==="POST") {
+   if(member.role!=="admin")throw new ApiError(403,"Only an admin can restore a shared backup.");
+   const input=await body(request);if(input.baseVersion!==row.version)throw new ApiError(409,"Reload before importing a shared backup.");if(!validateData(input.data))throw new ApiError(400,"Choose a valid MyFTCSpace backup.");
+   const candidate=structuredClone(input.data) as AppData,roster=await members(),ids=new Set(roster.map(m=>m.userId));
+   candidate.teamId=teamId;candidate.seasonId=envelope.workspace.seasonId;candidate.onboarding=[];candidate.skills=[];
+   const missingFiles:string[]=[];
+   for(const key of ['tasks','events','sponsors','grants','resources','announcements','evidence'] as const){for(const record of candidate[key]||[]){record.teamId=teamId;record.seasonId=candidate.seasonId;if('owner' in record&&!ids.has(record.owner))record.owner=key==='evidence'?user.userId:'Unassigned';if(key==='events'){const event=record as AppData['events'][number];event.rsvp=false;event.verification='needs-review';event.verifiedAt='';event.verifiedBy='';}if(key==='resources')(record as AppData['resources'][number]).approved=false;if(key==='sponsors')(record as AppData['sponsors'][number]).draftStatus='Needs review';if(key==='evidence'){const evidence=record as NonNullable<AppData['evidence']>[number];evidence.approved=false;evidence.reviewedAt='';evidence.reviewedBy='';if(evidence.fileId&&!(await db.prepare('SELECT 1 FROM files WHERE id=? AND team_id=? AND evidence_id=?').bind(evidence.fileId,teamId,evidence.id).first())){missingFiles.push(evidence.title);evidence.fileId='';}}}}
+   if(!validateData(candidate))throw new ApiError(400,"The backup could not be converted to this team.");
+   assertTaskGraph(candidate.tasks);
+   for(const grant of candidate.grants){grant.confirmed=false;grant.stale=true;}
+   for(const sponsor of candidate.sponsors)sponsor.stale=true;
+   const next={...envelope,workspace:candidate},now=new Date().toISOString();
+   const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=?").bind(crypto.randomUUID(),user.userId,now,teamId,row.version),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=?").bind(JSON.stringify(next),now,teamId,row.version)]);
+   if(!result[1].meta.changes)throw new ApiError(409,"Another save arrived first. Review the latest revision.");return json({ok:true,missingFiles});
   }
   if(path[2]==="files") {
    if(request.method==="POST") {

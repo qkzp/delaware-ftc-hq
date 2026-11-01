@@ -11,7 +11,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void) {
  const [session,setSession]=useState<Session>({user:null,teams:[]}),[shared,setShared]=useState<Shared|null>(null),[status,setStatus]=useState(""),[error,setError]=useState("");
  const active=useRef<Shared|null>(null),latest=useRef(data),dirty=useRef(false),saving=useRef(false),blocked=useRef(false),alive=useRef(true),replaceRef=useRef(replace);
  latest.current=data;replaceRef.current=replace;
- const refreshSession=async()=>{const s=await api('/api/session');setSession(s);return s as Session;};
+ const refreshSession=async()=>{const s=await api('/api/session');setSession(s);setError("");return s as Session;};
  function accept(id:string,result:any){const next={id,version:result.version,role:result.role,members:result.members,updated:result.updated};active.current=next;setShared(next);}
  const openTeam=async(id:string)=>{if(dirty.current||saving.current)throw new Error("Save or download your unsaved changes, then reload before switching teams.");const result=await api(`/api/teams/${id}`);accept(id,result);blocked.current=false;dirty.current=false;setError("");setStatus("Synced");replaceRef.current(result.data);localStorage.setItem('myftcspace:team',id);await refreshSession();};
  const reload=async()=>{if(!active.current)return;const id=active.current.id;const result=await api(`/api/teams/${id}`);dirty.current=false;blocked.current=false;accept(id,result);replaceRef.current(result.data);setError("");setStatus("Synced");};
@@ -24,7 +24,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void) {
  };
  const markDirty=()=>{if(active.current){dirty.current=true;setStatus("Changes waiting to save");}};
  const useDemo=()=>{if(dirty.current||saving.current)throw new Error("Download unsaved changes and reload before leaving this team.");active.current=null;setShared(null);setError("");setStatus("");localStorage.removeItem('myftcspace:team');};
- useEffect(()=>{alive.current=true;refreshSession().then(s=>{const id=localStorage.getItem('myftcspace:team');if(alive.current&&id&&s.teams.some(t=>t.id===id))openTeam(id).catch(e=>setError(e.message));}).catch(()=>{});return()=>{alive.current=false;};},[]);
+ useEffect(()=>{alive.current=true;refreshSession().then(s=>{const id=localStorage.getItem('myftcspace:team');if(alive.current&&id&&s.teams.some(t=>t.id===id))openTeam(id).catch(e=>setError(e.message));}).catch(()=>{if(alive.current)setError("Shared team connection is unavailable. The demo remains available; retry the connection before editing your real team.");});return()=>{alive.current=false;};},[]);
  useEffect(()=>{if(!shared)return;const timer=setTimeout(()=>void save(),500);return()=>clearTimeout(timer);},[data,shared?.version]);
  useEffect(()=>{if(!shared)return;const timer=setInterval(async()=>{
   if(dirty.current){if(!blocked.current&&navigator.onLine)await save();return;}if(saving.current||!active.current)return;
