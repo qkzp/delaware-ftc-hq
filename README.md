@@ -4,7 +4,7 @@ A private FTC team workspace with an anonymous browser-local demo. The interface
 
 ## Team use
 
-1. Open Workspace settings and sign in with ChatGPT using a normal top-level sign-in link.
+1. Open the site and choose **Continue with ChatGPT**. The server renders the login screen for anonymous visitors. Signed-in users choose a team; a single existing team reopens automatically. Use **Explore demo** for a separate browser-local sample workspace at `/demo`.
 2. Create a private team with a display alias (first name and last initial), or join using a one-use invitation code.
 3. An admin invites students, student leads, and mentors. Invitations expire in 48 hours. Roles are checked by the server; demo role switching never changes a shared membership.
 4. Add tasks, events, robot notes, parts, funding records, and evidence. Watch the sync status before closing a tab.
@@ -34,6 +34,10 @@ D1 stores team-scoped records and revision snapshots. R2 stores private evidence
 Use aliases rather than full student names. Keep student emails, emergency contacts, medical information and signed consent forms in the school's approved systems. Store only a consent reference and scope here. Admins can revoke members and unused invitations. Removed records remain recoverable in revision history; this release does not claim permanent erasure or a compliance certification.
 
 Shared records are not copied into browser localStorage. Only the last selected team ID is stored as a preference. An open tab holds its authorized records in memory; unsaved changes require a successful server save and a warning protects accidental tab closure. Full offline reload and email/push reminder delivery are not implemented; the UI describes in-app reminders explicitly.
+
+The signed-in root checks identity on the server before loading the workspace client. A client access gate waits for the session and membership check before showing private screens. `/demo` does not fetch a session or reopen a remembered private team. Sign-in/out use the platform-owned top-level routes; the app does not collect or store passwords. The Account menu exposes sign-out and team settings. Sign-out links block navigation while changes remain unsaved.
+
+Active teams recheck identity and membership every five seconds and when the tab is focused, restored, or becomes visible. Sign-out, account switching, and revoked membership clear private records from the tab and return to login/team selection; role changes reload server-filtered records even if a draft is pending. Each save rechecks identity and includes the preparing account ID; the server rejects a mismatched account. Server authorization remains authoritative on every API operation. These checks do not claim instantaneous removal from an offline device.
 
 ## Competition map
 
@@ -67,7 +71,7 @@ The portable preview uses the starter's loopback-only mock sign-in. Production a
 
 ## Verification status
 
-TypeScript and 58 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. Map checks cover coordinate validation/round trips, distance and date/text/radius filtering, stale source checks, opening actual team records, opt-in location with denied-permission fallback, and event form persistence. These are not a substitute for two real hosted ChatGPT accounts on two devices.
+TypeScript and 67 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. Map checks cover coordinate validation/round trips, distance and date/text/radius filtering, stale source checks, opening actual team records, opt-in location with denied-permission fallback, and event form persistence. Login checks cover anonymous/team-setup gates, demo isolation, private storage boundaries, cross-tab sign-out, revocation, account changes, role reduction, expired-session saves, and rejection of a save prepared by another account. These are not a substitute for two real hosted ChatGPT accounts on two devices.
 
 A browser walkthrough verified local sign-in, private team creation, shared task creation and a confirmed server revision. Desktop and 400px mobile-emulated workbench, task form, team setup and evidence form layouts were visually reviewed. Phone navigation uses a native section picker, and the primary task action remains reachable. Hosted anonymous/authenticated routing and rejection of forged identity headers were verified. Real second-account/device acceptance and assistive-technology testing must be recorded before awarding a certified 100/100 or calling this ready for team use.
 

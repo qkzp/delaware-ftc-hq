@@ -2,16 +2,15 @@ import { useState } from "react";
 import { api } from "../cloud";
 import { useHQ } from "../store";
 import { Field, Modal } from "./ui";
-import { createDemoData } from "../seed";
 import { downloadFile, dateKey } from "../utils";
 export default function TeamAccess() {
- const {cloud,data,setData,notify,memberName}=useHQ();
+ const {cloud,data,notify,memberName}=useHQ();
  const [busy,setBusy]=useState(false),[token,setToken]=useState(""),[invites,setInvites]=useState<any[]>([]),[history,setHistory]=useState<any[]>([]),[restore,setRestore]=useState<string|null>(null),[reload,setReload]=useState(false),[learning,setLearning]=useState<any[]>([]);
  async function run(action:()=>Promise<void>){setBusy(true);try{await action();}catch(e){notify((e as Error).message);}finally{setBusy(false);}}
  const base=cloud.shared?`/api/teams/${cloud.shared.id}`:"";
  return <section className="card settings-section team-access" aria-labelledby="team-access-title">
   <h2 id="team-access-title">{cloud.shared?"Your private team":"Connect your team"}</h2>
-  <p className="muted">Sign in with any ChatGPT account. Team records are private to invited members; the demo remains available without sign-in.</p>
+  <p className="muted">{cloud.session.user ? "Signed in with ChatGPT. Team records are private to invited members, with permissions assigned by your team admin." : "Sign in with your own ChatGPT account to create or join a private team."}</p>
   {!cloud.shared&&cloud.error&&<div className="settings-info" role="alert"><p>{cloud.error}</p><button className="btn btn-secondary" onClick={()=>void run(async()=>{await cloud.refreshSession();notify('Team connection restored.');})}>Retry connection</button></div>}
   {!cloud.session.user?<a className="btn btn-primary" href="/signin-with-chatgpt?return_to=%2F%23settings" target="_top">Sign in with ChatGPT</a>:<>
    <div className="team-picker">{cloud.session.teams.map(t=><button disabled={busy||cloud.shared?.id===t.id} className="btn btn-secondary" key={t.id} onClick={()=>void run(()=>cloud.openTeam(t.id))}>{t.teamName} · {t.role}</button>)}</div>
@@ -41,9 +40,9 @@ export default function TeamAccess() {
      <button className="btn btn-secondary" onClick={()=>void run(async()=>setLearning((await api(`${base}/learning`)).learning))}>Review rookie skill sign-offs</button>
      {learning.map(l=><fieldset key={l.userId}><legend>{memberName(l.userId)}</legend><p className="muted">{l.steps.length} onboarding steps completed</p>{['shop-safety','battery-safety','robot-startup','first-task'].map(skill=><label className="skill-review" key={skill}><input type="checkbox" checked={l.skills.includes(skill)} onChange={e=>void run(async()=>{await api(`${base}/learning`,'PUT',{userId:l.userId,skills:e.target.checked?[...l.skills,skill]:l.skills.filter((s:string)=>s!==skill)});setLearning((await api(`${base}/learning`)).learning);await cloud.reload();})}/>{skill.replaceAll('-',' ')}</label>)}</fieldset>)}
     </div>}
-    <button className="text-link" onClick={()=>void run(async()=>{cloud.useDemo();setData(createDemoData());notify("Demo opened. Your team stays saved on the server.");})}>Return to demo</button>
+    <a className="text-link" href="/demo" onClick={e=>{if(cloud.hasUnsaved()){e.preventDefault();notify("Save or download your changes before opening the demo.");}}}>Explore demo</a>
    </>}
-   <a className="text-link" href="/signout-with-chatgpt?return_to=%2F" target="_top">Sign out</a>
+   <a className="text-link" href="/signout-with-chatgpt?return_to=%2F" target="_top" onClick={e=>{if(cloud.hasUnsaved()){e.preventDefault();notify("Wait for your changes to save, or download them before signing out.");}}}>Sign out</a>
   </>}
   {(restore||reload)&&<Modal title={restore?"Restore a saved team revision?":"Reload the shared workspace?"} onClose={()=>{setRestore(null);setReload(false);}}><p>{restore?"This saves the current revision to history, then restores the selected revision for every teammate.":"Download your unsaved changes first. Reloading replaces this tab’s unsaved changes with the saved team version."}</p><div className="form-actions"><button className="btn btn-secondary" onClick={()=>{setRestore(null);setReload(false);}}>Cancel</button><button className="btn btn-primary" disabled={busy} onClick={()=>void run(async()=>{if(restore)await api(`${base}/history`,'POST',{id:restore,baseVersion:cloud.shared?.version});await cloud.reload();setRestore(null);setReload(false);notify("Shared workspace loaded.");})}>{restore?"Restore revision":"Reload saved records"}</button></div></Modal>}
  </section>;

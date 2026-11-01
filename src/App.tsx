@@ -9,6 +9,7 @@ import {
   Search,
   Settings2,
   X,
+  UserRound,
 } from "lucide-react";
 import type { Page, Role } from "./types";
 import { HQProvider, useHQ } from "./store";
@@ -26,6 +27,8 @@ import Pit from "./screens/Pit";
 import TeamSettings from "./screens/Settings";
 import EvidencePage from "./screens/Evidence";
 import Opportunities from "./screens/Opportunities";
+import TeamAccess from "./components/TeamAccess";
+import SignIn from "./components/SignIn";
 
 export function Workspace() {
   const {myOwner, memberName, cloud,
@@ -36,6 +39,7 @@ export function Workspace() {
     setPage,
     notice,
     clearNotice,
+    notify,
     storageError,
     canManage,
   } = useHQ();
@@ -43,6 +47,7 @@ export function Workspace() {
   const [quickTask, setQuickTask] = useState(false);
   const [notifications, setNotifications] = useState(false);
   const [help, setHelp] = useState(false);
+  const [account, setAccount] = useState(false);
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
@@ -131,6 +136,7 @@ export function Workspace() {
               <kbd>Ctrl K</kbd>
             </button>
             <div className="masthead-actions">
+              <button className="chrome-icon" aria-label="Your account" onClick={()=>setAccount(true)}><UserRound size={18}/></button>
               <button
                 className="chrome-icon"
                 aria-label="Team updates"
@@ -167,7 +173,7 @@ export function Workspace() {
                 <option value="admin">Team admin</option>
               </select>
             </label>
-            <button className="mobile-team-settings chrome-icon" aria-label="Team access and settings" onClick={()=>navigate('settings')}><Settings2 size={19}/></button>
+            <button className="mobile-team-settings chrome-icon" aria-label="Team access and settings" onClick={()=>setAccount(true)}><UserRound size={19}/></button>
           </div>
         </header>
         <div className="navigation-bar">
@@ -256,6 +262,12 @@ export function Workspace() {
       </main>
       {search && <SearchDialog onClose={() => setSearch(false)} />}
       {quickTask && <QuickTask onClose={() => setQuickTask(false)} />}
+      {account && <Modal title="Your account" onClose={()=>setAccount(false)}>
+        <div className="stack">
+          {cloud.session.user ? <><h3>{cloud.shared ? memberName(myOwner) === "You" ? cloud.shared.members.find(m=>m.userId===myOwner)?.name || "Signed in" : memberName(myOwner) : "Signed in with ChatGPT"}</h3><p>{cloud.shared ? `${data.teamName} · ${role === 'admin' ? 'Team admin' : role === 'mentor' ? 'Mentor / coach' : role === 'lead' ? 'Student lead' : 'Student'}` : "Choose or create a private team to save shared records."}</p><button className="btn btn-secondary" onClick={()=>{navigate('settings');setAccount(false);}}>Team access & settings</button><a className="btn btn-primary" href="/signout-with-chatgpt?return_to=%2F" target="_top" onClick={e=>{if(cloud.hasUnsaved()){e.preventDefault();notify("Wait for your changes to save, or download them in Settings before signing out.");}}}>Sign out</a></> : <><p>You’re exploring the demo. Sign in to create or join a private team.</p><a className="btn btn-primary" href="/signin-with-chatgpt?return_to=%2F" target="_top">Continue with ChatGPT</a></>}
+          <p className="privacy-note">Private records are limited to your team. Account passwords are handled by ChatGPT.</p>
+        </div>
+      </Modal>}
       {notifications && (
         <Modal title="Team updates" onClose={() => setNotifications(false)}>
           <h3>Needs attention</h3>
@@ -353,10 +365,21 @@ export function Workspace() {
     </div>
   );
 }
-export default function App() {
+export function AccountWorkspace() {
+  const {cloud,notice,clearNotice}=useHQ();
+  if(!cloud.ready)return <div className="account-entry"><main className="account-login" role="status" aria-busy="true"><img src="/favicon.svg" alt="" width="48" height="48"/><h1>Checking your account.</h1><p>Opening your private team workspace…</p></main></div>;
+  if(!cloud.session.user)return <>{cloud.error&&<div className="account-connection-message" role="alert">{cloud.error} <button className="text-link" onClick={()=>void cloud.refreshSession().catch(()=>{})}>Retry connection</button></div>}<SignIn/></>;
+  if(!cloud.shared)return <div className="account-entry">
+    <header className="account-entry-header"><a href="/"><img src="/favicon.svg" alt="" width="38" height="38"/><strong>MyFTCSpace</strong></a><a href="/signout-with-chatgpt?return_to=%2F" target="_top">Sign out</a></header>
+    <main className="account-team-setup"><h1>{cloud.session.teams.length ? "Choose your team." : "Set up your team."}</h1><p>Choose an existing workspace, join with an invitation, or start a private team.</p><TeamAccess/>{notice&&<p className="account-connection-message" role="alert">{notice.message} <button className="text-link" onClick={clearNotice}>Dismiss</button></p>}</main>
+    <footer className="account-entry-footer"><a href="/demo">Explore the demo</a> · Team memberships and permissions are checked on the server.</footer>
+  </div>;
+  return <Workspace/>;
+}
+export default function App({accountMode=false,demoMode=false}:{accountMode?:boolean;demoMode?:boolean}) {
   return (
-    <HQProvider>
-      <Workspace />
+    <HQProvider accountMode={accountMode} demoMode={demoMode}>
+      {accountMode ? <AccountWorkspace/> : <Workspace />}
     </HQProvider>
   );
 }

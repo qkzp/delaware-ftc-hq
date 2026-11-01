@@ -69,9 +69,10 @@ const validPages: Page[] = [
   "evidence",
   "opportunities",
 ];
-export function HQProvider({ children }: { children: ReactNode }) {
+export function HQProvider({ children, accountMode=false, demoMode=false }: { children: ReactNode; accountMode?:boolean; demoMode?:boolean }) {
   const [storageError, setStorageError] = useState("");
   const [data, updateData] = useState<AppData>(() => {
+    if (accountMode) return createDemoData();
     try {
       const saved = localRepository.read();
       if (!saved) return createDemoData();
@@ -94,7 +95,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
       return createDemoData();
     }
   });
-  const cloud = useCloud(data, updateData);
+  const cloud = useCloud(data, updateData, {enabled:!demoMode, autoOpen:accountMode});
   const myOwner = cloud.session.user && cloud.shared ? cloud.session.user.userId : "Alex (you)";
   const memberName = (owner: string) => owner === myOwner ? "You" : cloud.shared?.members.find(m => m.userId === owner)?.name || owner;
   const setData: React.Dispatch<React.SetStateAction<AppData>> = (action) => { cloud.markDirty(); updateData(action); };
@@ -117,6 +118,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
     setNotice({ message, action, actionLabel, id: ++counter.current });
   useEffect(() => {
     if (cloud.shared) { setStorageError(cloud.error); return; }
+    if (accountMode) { setStorageError(cloud.error); return; }
     try {
       localRepository.write(data);
       setStorageError("");
@@ -127,7 +129,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
           : "Your browser could not save these changes. Export a backup before closing this tab.",
       );
     }
-  }, [data, cloud.shared, cloud.error]);
+  }, [data, cloud.shared, cloud.error, accountMode]);
   useEffect(() => {
     if (!notice) return;
     const id = setTimeout(() => setNotice(null), 8000);

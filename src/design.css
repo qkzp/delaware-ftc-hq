@@ -277,3 +277,23 @@ input:not([type="checkbox"]):not([type="radio"]), select, textarea { border-colo
 }
 @media (max-width: 600px) { .role-switch { grid-column: 1; } .mobile-team-settings { display: grid; place-items: center; grid-column: 2; grid-row: 2; min-height: 40px; width: 44px; } .workspace-tabs { display: none; } .mobile-navigation { display: block; flex: 1; min-width: 0; width: auto; font-size: 16px; min-height: 44px; border: 0; background: transparent; padding-left: 0; color: var(--ink); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+
+.account-entry{min-height:100dvh;background:#fff;display:flex;flex-direction:column;color:#1d1d1f}
+.account-entry-header{display:flex;align-items:center;justify-content:space-between;gap:24px;width:100%;max-width:1280px;margin:0 auto;padding:28px 36px}
+.account-entry-header>a:first-child{display:flex;align-items:center;gap:11px;color:#1d1d1f;text-decoration:none;font-size:22px;letter-spacing:-.035em}
+.account-entry-header>a:last-child:not(:first-child){color:#0066cc;font-size:14px;min-height:44px;display:flex;align-items:center}
+.account-login{width:min(100%,500px);margin:auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 28px 72px}
+.account-login h1{font-size:clamp(34px,5vw,46px);line-height:1.08;letter-spacing:-.045em;margin:28px 0 18px;font-weight:650}
+.account-login>p{font-size:18px;line-height:1.6;color:#626267;margin:0 0 32px}
+.account-login .account-sign-in{width:100%;max-width:340px;min-height:52px;border-radius:12px;justify-content:space-between;padding:14px 20px;font-size:16px}
+.account-login>p.account-login-note{font-size:13px;line-height:1.65;max-width:330px;margin:18px 0 32px;color:#626267}
+.account-login-demo{width:100%;max-width:340px;border-top:1px solid #e8e8ed;padding-top:24px;display:flex;flex-direction:column;gap:9px;font-size:14px;color:#626267}
+.account-login-demo a,.account-entry-footer a{color:#0066cc;text-underline-offset:3px}
+.account-entry-footer{text-align:center;color:#626267;font-size:12px;line-height:1.7;padding:24px 28px}
+.account-team-setup{width:100%;max-width:1060px;margin:auto;padding:36px}
+.account-team-setup>h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-.04em;margin:0 0 14px}
+.account-team-setup>p{color:#626267;line-height:1.6;margin-bottom:28px;font-size:17px}
+.account-team-setup .team-access{margin-bottom:0}
+.account-connection-message{padding:16px 24px;background:#f0f7ff;color:#23415f;font-size:14px;line-height:1.65}
+.account-connection-message button{margin-left:12px}
+@media(max-width:600px){.account-entry-header{padding:20px}.account-entry-header>a:first-child{font-size:20px}.account-login{padding:36px 24px 48px}.account-login>p{font-size:17px}.account-team-setup{padding:28px 20px}.account-team-setup .team-access{padding:20px}.account-team-setup .access-forms form{padding:20px}}

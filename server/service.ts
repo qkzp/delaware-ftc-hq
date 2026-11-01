@@ -47,7 +47,9 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
   const members=async()=> (await db.prepare("SELECT user_id AS userId,name,role FROM memberships WHERE team_id=? ORDER BY name").bind(teamId).all<Member>()).results;
   if(path.length===2 && request.method==="GET") return json({data:view(envelope,member.role,user.userId),version:row.version,members:await members(),role:member.role,updated:row.updated});
   if(path.length===2 && request.method==="PUT") {
-   const input=await body(request); if(!validateData(input.data)||!Number.isInteger(input.baseVersion)||input.baseVersion<1)throw new ApiError(400,"Invalid workspace or starting revision.");
+   const input=await body(request);
+   if(input.accountId!==undefined&&input.accountId!==user.userId)throw new ApiError(401,"Your signed-in account changed. Reopen the workspace before saving.");
+   if(!validateData(input.data)||!Number.isInteger(input.baseVersion)||input.baseVersion<1)throw new ApiError(400,"Invalid workspace or starting revision.");
    let submitted=input.data;
    if(input.baseVersion !== row.version){const prior=await db.prepare("SELECT data FROM revisions WHERE team_id=? AND version=? ORDER BY created DESC LIMIT 1").bind(teamId,input.baseVersion).first<any>();if(!prior)throw new ApiError(409,"The starting revision is unavailable. Reload before saving.");submitted=rebaseWorkspace(view(JSON.parse(prior.data),member.role,user.userId),input.data,view(envelope,member.role,user.userId));}
    const next=mergeWorkspace(envelope,submitted,member.role,user.userId);
