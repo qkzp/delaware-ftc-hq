@@ -287,8 +287,11 @@ input:not([type="checkbox"]):not([type="radio"]), select, textarea { border-colo
 .account-login>p{font-size:18px;line-height:1.6;color:#626267;margin:0 0 32px}
 .account-login .account-sign-in{width:100%;max-width:340px;min-height:52px;border-radius:12px;justify-content:space-between;padding:14px 20px;font-size:16px}
 .account-login>p.account-login-note{font-size:13px;line-height:1.65;max-width:330px;margin:18px 0 32px;color:#626267}
-.account-login-demo{width:100%;max-width:340px;border-top:1px solid #e8e8ed;padding-top:24px;display:flex;flex-direction:column;gap:9px;font-size:14px;color:#626267}
-.account-login-demo a,.account-entry-footer a{color:#0066cc;text-underline-offset:3px}
+.account-login-detail{width:100%;max-width:340px;border-top:1px solid #e8e8ed;padding-top:24px;display:flex;flex-direction:column;gap:9px;font-size:14px;line-height:1.6;color:#626267}
+.account-login-detail strong{color:#1d1d1f;font-weight:600}
+.account-entry-footer a{color:#0066cc;text-underline-offset:3px}
+.assigned-role{font-size:13px;font-weight:600;line-height:1.5;color:#1d1d1f}
+.workspace-privacy-link{color:#626267;font-size:13px;text-decoration:underline;text-underline-offset:3px;min-height:32px;display:inline-flex;align-items:center}
 .account-entry-footer{text-align:center;color:#626267;font-size:12px;line-height:1.7;padding:24px 28px}
 .account-team-setup{width:100%;max-width:1060px;margin:auto;padding:36px}
 .account-team-setup>h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-.04em;margin:0 0 14px}

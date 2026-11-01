@@ -160,9 +160,8 @@ export function Workspace() {
               </button>
             </div>
             <label className="role-switch">
-              <span>{cloud.shared ? "Team role" : "Demo role"}</span>
-              <select
-                disabled={!!cloud.shared}
+              <span>{cloud.shared ? "Your role" : "Demo role"}</span>
+              {cloud.shared ? <strong className="assigned-role">{role === "admin" ? "Team admin" : role === "mentor" ? "Mentor / coach" : role === "lead" ? "Student lead" : "Student"}</strong> : <select
                 aria-label={cloud.shared ? "Assigned team role" : "Demo permission preview"}
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
@@ -171,7 +170,7 @@ export function Workspace() {
                 <option value="lead">Student lead</option>
                 <option value="mentor">Mentor / coach</option>
                 <option value="admin">Team admin</option>
-              </select>
+              </select>}
             </label>
             <button className="mobile-team-settings chrome-icon" aria-label="Team access and settings" onClick={()=>setAccount(true)}><UserRound size={19}/></button>
           </div>
@@ -255,6 +254,7 @@ export function Workspace() {
             <strong>MyFTCSpace</strong> FTC team workspace
           </span>
           <span>{cloud.shared ? "Private team · Shared records" : "Demo · Records stay in this browser"}</span>
+          <a className="workspace-privacy-link" href="/privacy">Privacy & data help</a>
           <button onClick={() => navigate("onboarding")}>
             New member checklist <ArrowRight size={13} />
           </button>
@@ -285,7 +285,7 @@ export function Workspace() {
                 </div>
                 <h3>{a.title}</h3>
                 <p>{a.body}</p>
-                <small>{a.author}</small>
+                <small>{memberName(a.author)}</small>
               </article>
             ))
           ) : (
@@ -372,7 +372,7 @@ export function AccountWorkspace() {
   if(!cloud.shared)return <div className="account-entry">
     <header className="account-entry-header"><a href="/"><img src="/favicon.svg" alt="" width="38" height="38"/><strong>MyFTCSpace</strong></a><a href="/signout-with-chatgpt?return_to=%2F" target="_top">Sign out</a></header>
     <main className="account-team-setup"><h1>{cloud.session.teams.length ? "Choose your team." : "Set up your team."}</h1><p>Choose an existing workspace, join with an invitation, or start a private team.</p><TeamAccess/>{notice&&<p className="account-connection-message" role="alert">{notice.message} <button className="text-link" onClick={clearNotice}>Dismiss</button></p>}</main>
-    <footer className="account-entry-footer"><a href="/demo">Explore the demo</a> · Team memberships and permissions are checked on the server.</footer>
+    <footer className="account-entry-footer">Private team records · Memberships and permissions are checked on the server.<br/><a href="/privacy">Privacy & data help</a></footer>
   </div>;
   return <Workspace/>;
 }

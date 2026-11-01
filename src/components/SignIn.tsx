@@ -7,8 +7,8 @@ export default function SignIn() {
       <p>Your tasks, robot notes, and season plans.<br/>Together in one private workspace.</p>
       <a className="btn btn-primary account-sign-in" href="/signin-with-chatgpt?return_to=%2F" target="_top">Continue with ChatGPT <span aria-hidden="true">→</span></a>
       <p className="account-login-note">Use your own ChatGPT account. After signing in, join with a team invitation or create a private team.</p>
-      <div className="account-login-demo"><span>Just looking around?</span><a href="/demo">Explore the demo <span aria-hidden="true">↗</span></a></div>
+      <div className="account-login-detail"><strong>Made for your FTC season.</strong><span>Plan the build. Prepare for competition. Keep your team’s work together.</span></div>
     </main>
-    <footer className="account-entry-footer">Team records require sign-in and team membership. Your password is handled by ChatGPT.</footer>
+    <footer className="account-entry-footer">Team records require sign-in and team membership. Your password is handled by ChatGPT.<br/><a href="/privacy">Privacy & data help</a></footer>
   </div>;
 }

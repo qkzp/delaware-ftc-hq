@@ -102,6 +102,7 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
      updated.verifiedAt = now.slice(0,10); updated.verifiedBy = userId;
     } else if (contentChanged && previous?.verification === "verified") { updated.verification = "needs-review"; updated.verifiedAt = ""; updated.verifiedBy = ""; }
    }
+   if (key === "announcements") updated.author = previous?.author || userId;
    if (key === "resources") {
     const changed = !previous || !same({...record,approved: previous.approved},previous);
     if (record.approved && (changed || !previous?.approved) && !reviews(role)) updated.approved = false;

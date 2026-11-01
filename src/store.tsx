@@ -20,6 +20,7 @@ import {
 } from "./persistence";
 import { downloadFile, dateKey } from "./utils";
 import { useCloud, type Cloud } from "./cloud";
+import { createWorkspaceData } from "./workspace-data";
 type Notice = {
   message: string;
   action?: () => void;
@@ -72,7 +73,7 @@ const validPages: Page[] = [
 export function HQProvider({ children, accountMode=false, demoMode=false }: { children: ReactNode; accountMode?:boolean; demoMode?:boolean }) {
   const [storageError, setStorageError] = useState("");
   const [data, updateData] = useState<AppData>(() => {
-    if (accountMode) return createDemoData();
+    if (accountMode) return createWorkspaceData();
     try {
       const saved = localRepository.read();
       if (!saved) return createDemoData();
@@ -249,7 +250,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
   const exportData = () => {
     if (!canReview) {
       notify(
-        "Switch to a mentor or admin preview to export private team records.",
+        "A mentor or team admin can export private team records.",
       );
       return;
     }

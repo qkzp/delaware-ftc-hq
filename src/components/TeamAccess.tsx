@@ -40,7 +40,6 @@ export default function TeamAccess() {
      <button className="btn btn-secondary" onClick={()=>void run(async()=>setLearning((await api(`${base}/learning`)).learning))}>Review rookie skill sign-offs</button>
      {learning.map(l=><fieldset key={l.userId}><legend>{memberName(l.userId)}</legend><p className="muted">{l.steps.length} onboarding steps completed</p>{['shop-safety','battery-safety','robot-startup','first-task'].map(skill=><label className="skill-review" key={skill}><input type="checkbox" checked={l.skills.includes(skill)} onChange={e=>void run(async()=>{await api(`${base}/learning`,'PUT',{userId:l.userId,skills:e.target.checked?[...l.skills,skill]:l.skills.filter((s:string)=>s!==skill)});setLearning((await api(`${base}/learning`)).learning);await cloud.reload();})}/>{skill.replaceAll('-',' ')}</label>)}</fieldset>)}
     </div>}
-    <a className="text-link" href="/demo" onClick={e=>{if(cloud.hasUnsaved()){e.preventDefault();notify("Save or download your changes before opening the demo.");}}}>Explore demo</a>
    </>}
    <a className="text-link" href="/signout-with-chatgpt?return_to=%2F" target="_top" onClick={e=>{if(cloud.hasUnsaved()){e.preventDefault();notify("Wait for your changes to save, or download them before signing out.");}}}>Sign out</a>
   </>}

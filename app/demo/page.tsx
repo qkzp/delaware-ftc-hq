@@ -1,4 +1,3 @@
-import WorkspaceClient from "../workspace-client";
+import { permanentRedirect } from "next/navigation";
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Demo · MyFTCSpace" };
-export default function DemoPage() { return <WorkspaceClient demoMode />; }
+export default function FormerDemoPage() { permanentRedirect("/"); }

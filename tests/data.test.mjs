@@ -22,6 +22,7 @@ async function moduleUrl(name, replacements = {}) {
   return `data:text/javascript;base64,${Buffer.from(code).toString("base64")}`;
 }
 const utilsUrl = await moduleUrl("utils");
+const {createWorkspaceData} = await import(await moduleUrl("workspace-data"));
 const { hasCoordinates, distanceMiles, nearbyCompetitions, sourceNeedsReview, publicCompetitions } = await import(await moduleUrl("competition-map"));
 const { createDemoData } = await import(
   await moduleUrl("seed", { "./utils": utilsUrl })
@@ -63,6 +64,17 @@ test("map coordinates round-trip and invalid or incomplete venue positions are r
     assert.equal(validateData(invalid), false);
   }
   assert.equal(hasCoordinates({latitude:0,longitude:0}), true);
+});
+test("official workspaces contain only clean team records and scoped reference links", () => {
+  const data=createWorkspaceData({teamId:"real-team",teamName:"Our actual team",county:"Kent"});
+  assert.equal(validateData(data),true);
+  for(const key of ["tasks","events","sponsors","grants","announcements","evidence","parts","onboarding","skills","pitNotes","pitChecklist"])assert.deepEqual(data[key],[]);
+  assert.ok(data.resources.length>0);
+  assert.ok(data.resources.every(r=>r.teamId==="real-team"&&!r.demo&&r.url.startsWith("https://")&&r.content===""));
+  assert.ok(Object.values(data.robot).every(v=>v===""));
+  assert.equal(data.coachInstructions,"");
+  assert.doesNotMatch(JSON.stringify(data),/Alex|Jordan|Circuit Breakers|intake v2|demo-team/);
+  const other=createWorkspaceData({teamId:"other"});other.resources[0].title="Changed";assert.notEqual(data.resources[0].title,"Changed");
 });
 test("nearby search uses great-circle miles, filters dates and text, and sorts by distance", () => {
   const origin = {latitude:0,longitude:0};

@@ -13,6 +13,7 @@ import {
 import { useHQ } from "../store";
 import { Field, Modal } from "../components/ui";
 import { FocusSession } from "../components/FocusSession";
+import { QuickTask } from "../components/WorkspaceDialogs";
 import { PIT_ITEM_IDS } from "./Pit";
 import { dateKey, daysUntil, dueLabel, formatDate } from "../utils";
 import type { Task } from "../types";
@@ -39,6 +40,7 @@ export default function Home() {
   const [pinnedTaskId, setPinnedTaskId] = useState<string | null>(null);
   const [sessionTaskId, setSessionTaskId] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState(false);
+  const [creatingTask, setCreatingTask] = useState(false);
   const today = dateKey();
   const openTasks = data.tasks.filter((task) => task.status !== "Done");
   const myTasks = openTasks.filter((task) => task.owner === myOwner);
@@ -246,17 +248,18 @@ export default function Home() {
               <p>
                 {area !== "All work"
                   ? `No open ${area.toLowerCase()} tasks in this view.`
-                  : "No open assignments in this view. Pick up a team task or start the new member checklist."}
+                  : data.tasks.length === 0 ? canManage ? "Add your first task with an owner and a clear result. Your team’s work will appear here." : "Your team has no assignments yet. Ask a student lead for your first task, or open the new member checklist." : "No open assignments in this view. Pick up a team task or start the new member checklist."}
               </p>
               <div>
                 <button
                   className="field-start-button"
                   onClick={() => {
+                    if(canManage && data.tasks.length === 0){setCreatingTask(true);return;}
                     setScope("team");
                     setArea("All work");
                   }}
                 >
-                  View team work <ArrowRight size={15} />
+                  {canManage && data.tasks.length === 0 ? "Add first task" : "View team work"} <ArrowRight size={15} />
                 </button>
                 <button
                   className="field-text-button"
@@ -769,7 +772,7 @@ export default function Home() {
                 seasonId: data.seasonId,
                 title,
                 body,
-                author: "Alex · student lead",
+                author: myOwner,
                 date: today,
                 type: form.get("type") as "Update" | "Decision",
               });
@@ -803,6 +806,7 @@ export default function Home() {
           </form>
         </Modal>
       )}
+      {creatingTask && <QuickTask onClose={()=>setCreatingTask(false)}/>}
     </div>
   );
 }

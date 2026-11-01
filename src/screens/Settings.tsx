@@ -122,7 +122,7 @@ export default function Settings() {
             <p className="muted" style={{ marginTop: 12 }}>
               {cloud.shared ? "Changes sync across team members. Shared revision history provides recovery, and a mentor can export a private backup." : "Demo changes save in this browser. Sign in above for shared team records."}
             </p>
-            {storageError && (
+            {storageError && !cloud.shared && (
               <div className="settings-info">
                 <p>
                   <strong>Your previous saved snapshot is preserved.</strong>
@@ -171,8 +171,7 @@ export default function Settings() {
               <div>
                 <strong>Restore a team backup</strong>
                 <p>
-                  Replaces this browser’s workspace. Export your current data
-                  first.
+                  {cloud.shared ? "Replaces shared records for every teammate and saves the previous version to revision history. Export a current backup first." : "Replaces this browser’s workspace. Export your current data first."}
                 </p>
               </div>
               <button
@@ -191,8 +190,8 @@ export default function Settings() {
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
                   if (file) {
-                    if (file.size > 5_000_000) {
-                      notify("Choose a backup smaller than 5 MB.");
+                    if (file.size > 2_000_000) {
+                      notify("Choose a backup smaller than 2 MB. Media files are stored separately.");
                       return;
                     }
                     setRestore(await file.text());
@@ -242,7 +241,7 @@ export default function Settings() {
             <p className="muted" style={{ marginTop: 12 }}>
               {cloud.shared ? "Your admin assigns roles. Only mentors and admins can approve external use and skill sign-offs." : "Preview how the interface changes for each team role."}
             </p>
-            <Field label="Demo permission preview">
+            {cloud.shared ? <p className="assigned-role">Your assigned role: {role === "admin" ? "Team admin" : role === "mentor" ? "Mentor / coach" : role === "lead" ? "Student lead" : "Student"}</p> : <Field label="Demo permission preview">
               <select
                 disabled={!!cloud.shared}
                 value={role}
@@ -256,7 +255,7 @@ export default function Settings() {
                 <option value="mentor">Mentor / coach</option>
                 <option value="admin">Team admin</option>
               </select>
-            </Field>
+            </Field>}
             <div className="privacy-grid">
               <div>
                 <strong>Student</strong>Own tasks, calendar RSVPs, approved

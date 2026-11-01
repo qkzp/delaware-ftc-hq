@@ -89,7 +89,7 @@ function csvRows(text: string): string[][] {
 function parseImport(
   text: string,
   name: string,
-  base: { teamId: string; seasonId: string },
+  base: { teamId: string; seasonId: string; owner: string },
 ): TeamEvent[] {
   const baseEvent = (): TeamEvent => ({
     id: crypto.randomUUID(),
@@ -101,7 +101,7 @@ function parseImport(
     endTime: "19:00",
     type: "Meeting",
     location: "",
-    owner: "Alex (you)",
+    owner: base.owner,
     agenda: "",
     notes: "",
     source: `Team-provided ${name.toLowerCase().endsWith(".ics") ? "ICS" : "CSV"} import`,
@@ -203,7 +203,7 @@ function parseImport(
       e.time = get("time") || "";
       e.endTime = get("endtime") || get("end_time") || "";
       e.location = get("location");
-      e.owner = get("owner") || "Alex (you)";
+      e.owner = get("owner") || base.owner;
       e.agenda = get("agenda");
       e.notes = get("notes");
       e.type = types.includes(get("type") as TeamEvent["type"])
@@ -387,7 +387,7 @@ export default function CalendarPage() {
       "PRODID:-//MyFTCSpace//Team Calendar//EN",
       ...events.flatMap((e) => [
         "BEGIN:VEVENT",
-        `UID:${e.id}@student-hq.local`,
+        `UID:${e.id}@myftcspace`,
         `DTSTAMP:${new Date()
           .toISOString()
           .replace(/[-:]/g, "")
@@ -422,6 +422,7 @@ export default function CalendarPage() {
         parseImport(await file.text(), file.name, {
           teamId: data.teamId,
           seasonId: data.seasonId,
+          owner: myOwner,
         }),
       );
     } catch (error) {
@@ -474,6 +475,7 @@ export default function CalendarPage() {
               <>
                 <button
                   className="btn btn-secondary"
+                  aria-label="Import calendar"
                   onClick={() => {
                     setImporting(true);
                     setImportRecords([]);
@@ -810,9 +812,8 @@ export default function CalendarPage() {
         />
       )}
       <p className="tc-page-footnote">
-        Events are maintained by your team. Demo events are practice examples,
-        not official Delaware competition dates. Local team times · No live
-        FIRST integration.
+        Events are maintained by your team. Times are local to the venue. Check the linked organizer source before registration or travel.
+        {data.events.some(e=>e.demo) && " Imported sample events are labeled and must not be used as official competition dates."}
       </p>
       {selected && (
         <Modal title={selected.title} onClose={() => setSelected(null)}>
@@ -1127,7 +1128,7 @@ export default function CalendarPage() {
               className="btn btn-secondary"
               onClick={() =>
                 download(
-                  "title,date,time,endTime,type,location,owner,agenda\nExample team build night,2026-11-07,17:00,19:00,Build night,Team workshop,Alex (you),Build and test the next prototype\n",
+                  "title,date,time,endTime,type,location,owner,agenda\nExample team build night,2026-11-07,17:00,19:00,Build night,Team workshop,,Build and test the next prototype\n",
                   "myftcspace-events-template.csv",
                   "text/csv",
                 )

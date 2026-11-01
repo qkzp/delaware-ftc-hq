@@ -24,6 +24,46 @@ function fixture(){const db=database(),storage=bucket();const request=async(user
 async function team(f){const r=await f.request('admin','/teams','POST',{teamName:'Private team',name:'Coach A.',county:'Kent'});assert.equal(r.status,201);return (await r.json()).id;}
 async function join(f,id,user,role){const r=await f.request('admin',`/teams/${id}/invites`,'POST',{role});assert.equal(r.status,200);const invitation=await r.json();assert.equal((await f.request(user,'/join','POST',{token:invitation.token,name:user+' A.'})).status,200);return invitation.token;}
 async function state(f,id,user='admin'){const response=await f.request(user,`/teams/${id}`);assert.equal(response.status,200);return response.json();}
+function chunkedRequest(path,total,type='application/json'){
+ let emitted=0,cancelled=false;const width=64*1024;
+ const stream=new ReadableStream({pull(controller){if(emitted>=total){controller.close();return;}const bytes=new Uint8Array(Math.min(width,total-emitted));bytes.fill(65);controller.enqueue(bytes);emitted+=bytes.byteLength;},cancel(){cancelled=true;}},{highWaterMark:0});
+ return {request:new Request(`https://team.test/api${path}`,{method:'POST',headers:{origin:'https://team.test','content-type':type},body:stream,duplex:'half'}),get emitted(){return emitted;},get cancelled(){return cancelled;}};
+}
+test('chunked JSON is capped and cancelled before an oversized request is fully buffered',async()=>{
+ const f=fixture();try{const incoming=chunkedRequest('/teams',5_000_000);assert.equal(incoming.request.headers.has('content-length'),false);const response=await service(incoming.request,f.db,f.storage,{userId:'admin'});assert.equal(response.status,413);assert.equal(incoming.cancelled,true);assert.ok(incoming.emitted<=2_000_000+64*1024);assert.equal((await f.db.prepare('SELECT count(*) AS n FROM teams').first()).n,0);}finally{f.db.close();}
+});
+test('the JSON limit accepts exactly 2,000,000 UTF-8 bytes and rejects larger multibyte data',async()=>{
+ const f=fixture();try{
+  const base={teamName:'Boundary team',name:'Alias',padding:''},overhead=new TextEncoder().encode(JSON.stringify(base)).byteLength;
+  const exact={...base,padding:'x'.repeat(2_000_000-overhead)};assert.equal(new TextEncoder().encode(JSON.stringify(exact)).byteLength,2_000_000);assert.equal((await f.request('admin','/teams','POST',exact)).status,201);
+  const multibyte={...base,padding:'é'.repeat(1_000_000)};assert.ok(JSON.stringify(multibyte).length<2_000_000);assert.equal((await f.request('admin','/teams','POST',multibyte)).status,413);
+ }finally{f.db.close();}
+});
+test('chunked uploads stop at 12 MiB without writing a file or storage object',async()=>{
+ const f=fixture();try{const id=await team(f),current=await state(f,id);current.data.evidence=[{id:'bounded-upload',teamId:id,seasonId:current.data.seasonId,title:'Private upload',date:'2026-11-01',county:'Kent',owner:'admin',kind:'Engineering',activity:'Build test',impact:'Results',reach:0,measurement:'',awards:[],mediaUrl:'',fileId:'',consent:'Not recorded',consentNote:'',visibility:'private',approved:false,reviewedBy:'',reviewedAt:'',archived:false}];assert.equal((await f.request('admin',`/teams/${id}`,'PUT',{baseVersion:current.version,data:current.data})).status,200);
+  let stored=0;const put=f.storage.put;f.storage.put=async(...args)=>{stored++;return put(...args);};
+  const incoming=chunkedRequest(`/teams/${id}/files?evidence=bounded-upload`,20*1024*1024,'application/pdf');const response=await service(incoming.request,f.db,f.storage,{userId:'admin'});assert.equal(response.status,413);assert.equal(incoming.cancelled,true);assert.ok(incoming.emitted<=12*1024*1024+64*1024);assert.equal(stored,0);assert.equal((await f.db.prepare('SELECT count(*) AS n FROM files').first()).n,0);
+ }finally{f.db.close();}
+});
+test('revocation or demotion before commit prevents saves, skill sign-offs, restores, and imports without adding revisions',async()=>{
+ for(const operation of ['workspace','learning','history','import'])for(const change of ['remove','demote']){
+  const f=fixture();try{const id=await team(f);await join(f,id,'mentor','mentor');let current=await state(f,id);current.data.teamName='Changed before guarded mutation';assert.equal((await f.request('admin',`/teams/${id}`,'PUT',{baseVersion:current.version,data:current.data})).status,200);current=await state(f,id);
+   const history=(await(await f.request('admin',`/teams/${id}/history`)).json()).history,actor=operation==='learning'?'mentor':'admin',before=await f.db.prepare('SELECT data,version FROM teams WHERE id=?').bind(id).first(),revisions=(await f.db.prepare('SELECT count(*) AS n FROM revisions WHERE team_id=?').bind(id).first()).n;
+   const batch=f.db.batch.bind(f.db);let armed=true;f.db.batch=async statements=>{if(armed){armed=false;if(change==='remove')await f.db.prepare('DELETE FROM memberships WHERE team_id=? AND user_id=?').bind(id,actor).run();else await f.db.prepare("UPDATE memberships SET role='student' WHERE team_id=? AND user_id=?").bind(id,actor).run();}return batch(statements);};
+   const payload=operation==='learning'?{userId:'mentor',skills:['shop-safety']}:operation==='history'?{id:history[0].id,baseVersion:current.version}:{data:operation==='workspace'?current.data:createDemoData(),baseVersion:current.version};
+   const response=await f.request(actor,`/teams/${id}${operation==='workspace'?'':`/${operation}`}`,['workspace','learning'].includes(operation)?'PUT':'POST',payload);assert.equal(response.status,409,`${operation}/${change}`);assert.match((await response.json()).error,/workspace|membership/i);assert.deepEqual(await f.db.prepare('SELECT data,version FROM teams WHERE id=?').bind(id).first(),before);assert.equal((await f.db.prepare('SELECT count(*) AS n FROM revisions WHERE team_id=?').bind(id).first()).n,revisions);
+  }finally{f.db.close();}
+ }
+});
+test('creating an official private team starts without sample work or invented members',async()=>{
+ const f=fixture();try{const id=await team(f),saved=await state(f,id);
+ assert.equal(saved.data.teamName,'Private team');assert.equal(saved.members.length,1);assert.equal(saved.members[0].userId,'admin');
+ for(const key of ['tasks','events','sponsors','grants','announcements','evidence','parts'])assert.deepEqual(saved.data[key],[]);
+ assert.ok(saved.data.resources.every(r=>r.teamId===id&&!r.demo));assert.doesNotMatch(JSON.stringify(saved.data),/Alex|Jordan|Circuit Breakers|demo-team/);
+ const next=structuredClone(saved.data);next.announcements=[{id:'announcement',teamId:id,seasonId:next.seasonId,title:'First build meeting',body:'Bring your workshop notes.',author:'Forged author',date:'2026-11-01',type:'Update'}];
+ assert.equal((await f.request('admin',`/teams/${id}`,'PUT',{baseVersion:saved.version,data:next,accountId:'admin'})).status,200);assert.equal((await state(f,id)).data.announcements[0].author,'admin');
+ }finally{f.db.close();}
+});
 test('a save prepared by another account is rejected even when both accounts belong to the team',async()=>{
  const f=fixture();try{const id=await team(f);await join(f,id,'lead','lead');const original=await state(f,id,'lead');
  const wrong=await f.request('lead',`/teams/${id}`,'PUT',{baseVersion:original.version,data:original.data,accountId:'admin'});assert.equal(wrong.status,401);assert.equal((await state(f,id)).version,original.version);

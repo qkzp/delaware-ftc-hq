@@ -1,5 +1,5 @@
 import type { AppData, Member, Role } from "../src/types";
-import { createDemoData } from "../src/seed";
+import { createWorkspaceData } from "../src/workspace-data";
 import { validateData } from "../src/persistence";
 import { ApiError, manages, reviews, view, visibleEvidence, mergeWorkspace, rebaseWorkspace, assertTaskGraph, type Envelope } from "./policy";
 type User = {userId: string};
@@ -7,7 +7,16 @@ const roles = ["student", "lead", "mentor", "admin"];
 const json = (data: unknown, status = 200) => Response.json(data, {status,headers:{"Cache-Control":"no-store, private", "X-Content-Type-Options":"nosniff"}});
 const hash = async (text: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)))].map(n => n.toString(16).padStart(2,"0")).join("");
 const cleanName = (name: unknown) => String(name || "").trim().slice(0,40);
-async function body(request: Request) { if (Number(request.headers.get("content-length") || 0) > 2_000_000) throw new ApiError(413,"Workspace exceeds the 2 MB record limit. Store media as files."); const text = await request.text(); if(text.length > 2_000_000) throw new ApiError(413,"Workspace too large."); try{return JSON.parse(text);}catch{throw new ApiError(400,"Invalid JSON.");} }
+async function limitedBody(request:Request,limit:number,message:string):Promise<ArrayBuffer> {
+ if(Number(request.headers.get("content-length")||0)>limit){void request.body?.cancel().catch(()=>{});throw new ApiError(413,message);}
+ const reader=request.body?.getReader();if(!reader)return new ArrayBuffer(0);
+ const chunks:Uint8Array[]=[];let length=0;
+ try{
+  while(true){const result=await reader.read();if(result.done)break;length+=result.value.byteLength;if(length>limit){void reader.cancel().catch(()=>{});throw new ApiError(413,message);}chunks.push(result.value);}
+ }finally{reader.releaseLock();}
+ const bytes=new Uint8Array(length);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}return bytes.buffer;
+}
+async function body(request: Request) { const bytes=await limitedBody(request,2_000_000,"Workspace exceeds the 2 MB record limit. Store media as files.");try{return JSON.parse(new TextDecoder().decode(bytes));}catch{throw new ApiError(400,"Invalid JSON.");} }
 export async function service(request: Request, db: D1Database, bucket: R2Bucket, user: User | null): Promise<Response> {
  try {
   const url = new URL(request.url), path = url.pathname.split("/").filter(Boolean).slice(1);
@@ -23,8 +32,8 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    if (!name || !teamName) throw new ApiError(400,"Enter a team name and your display name.");
    const count = await db.prepare("SELECT count(*) AS n FROM memberships WHERE user_id=?").bind(user.userId).first<{n:number}>();
    if ((count?.n || 0) >= 10) throw new ApiError(400,"You can belong to at most ten teams.");
-   const teamId=crypto.randomUUID(), seed=createDemoData();
-   const d:AppData = {...seed,teamId,teamName,teamNumber:"",county:["New Castle","Kent","Sussex","Statewide"].includes(input.county)?input.county:"Statewide",tasks:[],events:[],sponsors:[],grants:[],announcements:[],evidence:[],parts:[],onboarding:[],skills:[],pitChecklist:[],pitNotes:[],robot:{purpose:"",cad:"",code:"",wiring:"",setup:"",test:"",issues:"",repairs:""},coachInstructions:"",resources:seed.resources.filter(r=>!r.demo).map(r=>({...r,teamId}))};
+   const teamId=crypto.randomUUID();
+   const d=createWorkspaceData({teamId,teamName,county:["New Castle","Kent","Sussex","Statewide"].includes(input.county)?input.county:"Statewide"});
    const env:Envelope = {workspace:d,rsvps:{},learning:{}};
    await db.batch([db.prepare("INSERT INTO teams(id,data,version,updated) VALUES(?,?,1,?)").bind(teamId,JSON.stringify(env),new Date().toISOString()),db.prepare("INSERT INTO memberships(team_id,user_id,name,role) VALUES(?,?,?,'admin')").bind(teamId,user.userId,name)]);
    return json({id:teamId},201);
@@ -56,7 +65,7 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    for(const evidence of next.workspace.evidence || []) if(evidence.fileId && !(await db.prepare("SELECT 1 FROM files WHERE id=? AND team_id=? AND evidence_id=?").bind(evidence.fileId,teamId,evidence.id).first())) throw new ApiError(400,"Media file does not belong to this evidence record.");
    const now=new Date().toISOString();
    const r=await db.batch([
-    db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=?").bind(crypto.randomUUID(),user.userId,now,teamId,row.version),
+    db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(crypto.randomUUID(),user.userId,now,teamId,row.version,teamId,user.userId,member.role),
     db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(JSON.stringify(next),now,teamId,row.version,teamId,user.userId,member.role)
    ]);
    if(!r[1].meta.changes) throw new ApiError(409,"Your workspace or membership changed. Reload before saving.");
@@ -85,13 +94,13 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    const input=await body(request); if(!Array.isArray(input.skills)|| !input.skills.every((s:unknown)=>['shop-safety','battery-safety','robot-startup','first-task'].includes(String(s)))) throw new ApiError(400,"Invalid skill sign-off.");
    if(!(await db.prepare("SELECT 1 FROM memberships WHERE team_id=? AND user_id=?").bind(teamId,input.userId).first())) throw new ApiError(400,"Choose a team member.");
    const next=structuredClone(envelope); next.learning[input.userId]={steps:next.learning[input.userId]?.steps||[],skills:input.skills};
-   const now=new Date().toISOString(); const r=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) VALUES(?,?,?,?,?,?)").bind(crypto.randomUUID(),teamId,row.version,user.userId,now,row.data),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=?").bind(JSON.stringify(next),now,teamId,row.version)]);
-   if(!r[1].meta.changes) throw new ApiError(409,"Workspace changed. Try again."); return json({ok:true});
+   const now=new Date().toISOString(); const r=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(crypto.randomUUID(),user.userId,now,teamId,row.version,teamId,user.userId,member.role),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(JSON.stringify(next),now,teamId,row.version,teamId,user.userId,member.role)]);
+   if(!r[1].meta.changes) throw new ApiError(409,"Workspace or membership changed. Reload before signing off skills."); return json({ok:true});
   }
   if(path[2]==="history") {
    if(!reviews(member.role)) throw new ApiError(403,"A mentor or admin can review private backups.");
    if(request.method==="GET") return json({history:(await db.prepare("SELECT id,version,actor,created FROM revisions WHERE team_id=? ORDER BY version DESC LIMIT 30").bind(teamId).all()).results});
-   if(request.method==="POST") { const input=await body(request); if(member.role!=="admin") throw new ApiError(403,"An admin must restore a shared revision."); if(input.baseVersion!==row.version) throw new ApiError(409,"Reload before restoring a revision.");const revision=await db.prepare("SELECT data FROM revisions WHERE team_id=? AND id=?").bind(teamId,input.id).first<any>();if(!revision)throw new ApiError(404,"Revision not found.");const candidate=JSON.parse(revision.data);if(!validateData(candidate.workspace)) throw new ApiError(400,"Revision is not valid.");const now=new Date().toISOString();const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=?").bind(crypto.randomUUID(),user.userId,now,teamId,row.version),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=?").bind(revision.data,now,teamId,row.version)]);if(!result[1].meta.changes)throw new ApiError(409,"Another save arrived first.");return json({ok:true}); }
+   if(request.method==="POST") { const input=await body(request); if(member.role!=="admin") throw new ApiError(403,"An admin must restore a shared revision."); if(input.baseVersion!==row.version) throw new ApiError(409,"Reload before restoring a revision.");const revision=await db.prepare("SELECT data FROM revisions WHERE team_id=? AND id=?").bind(teamId,input.id).first<any>();if(!revision)throw new ApiError(404,"Revision not found.");const candidate=JSON.parse(revision.data);if(!validateData(candidate.workspace)) throw new ApiError(400,"Revision is not valid.");const now=new Date().toISOString();const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(crypto.randomUUID(),user.userId,now,teamId,row.version,teamId,user.userId,member.role),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(revision.data,now,teamId,row.version,teamId,user.userId,member.role)]);if(!result[1].meta.changes)throw new ApiError(409,"Workspace or membership changed. Reload before restoring a revision.");return json({ok:true}); }
   }
   if(path[2]==="import" && request.method==="POST") {
    if(member.role!=="admin")throw new ApiError(403,"Only an admin can restore a shared backup.");
@@ -105,8 +114,8 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    for(const grant of candidate.grants){grant.confirmed=false;grant.stale=true;}
    for(const sponsor of candidate.sponsors)sponsor.stale=true;
    const next={...envelope,workspace:candidate},now=new Date().toISOString();
-   const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=?").bind(crypto.randomUUID(),user.userId,now,teamId,row.version),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=?").bind(JSON.stringify(next),now,teamId,row.version)]);
-   if(!result[1].meta.changes)throw new ApiError(409,"Another save arrived first. Review the latest revision.");return json({ok:true,missingFiles});
+   const result=await db.batch([db.prepare("INSERT INTO revisions(id,team_id,version,actor,created,data) SELECT ?,id,version,?,?,data FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(crypto.randomUUID(),user.userId,now,teamId,row.version,teamId,user.userId,member.role),db.prepare("UPDATE teams SET data=?,version=version+1,updated=? WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role=?)").bind(JSON.stringify(next),now,teamId,row.version,teamId,user.userId,member.role)]);
+   if(!result[1].meta.changes)throw new ApiError(409,"Workspace or membership changed. Review the latest revision.");return json({ok:true,missingFiles});
   }
   if(path[2]==="files") {
    if(request.method==="POST") {
@@ -114,8 +123,7 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
     if(!evidence || (!manages(member.role)&&evidence.owner!==user.userId)) throw new ApiError(403,"Save your evidence record before adding a file.");
     const type=request.headers.get("content-type")?.split(";")[0]||"";
     if(!['image/png','image/jpeg','image/webp','application/pdf','video/mp4'].includes(type)) throw new ApiError(400,"Use PNG, JPEG, WebP, PDF, or MP4.");
-    if(Number(request.headers.get("content-length")||0)>12*1024*1024) throw new ApiError(413,"Choose a file under 12 MB.");
-    const bytes=await request.arrayBuffer(); if(bytes.byteLength>12*1024*1024 || !bytes.byteLength)throw new ApiError(413,"Choose a file under 12 MB.");
+    const bytes=await limitedBody(request,12*1024*1024,"Choose a file under 12 MB.");if(!bytes.byteLength)throw new ApiError(413,"Choose a file under 12 MB.");
     const head=new Uint8Array(bytes), sig=new TextDecoder().decode(head.slice(0,16));
     const valid= type==='image/png'?head[0]===137&&sig.slice(1,4)==='PNG':type==='image/jpeg'?head[0]===255&&head[1]===216:type==='image/webp'?sig.startsWith('RIFF')&&sig.slice(8,12)==='WEBP':type==='application/pdf'?sig.startsWith('%PDF-'):sig.slice(4,8)==='ftyp';
     if(!valid)throw new ApiError(400,"File contents do not match its type.");
