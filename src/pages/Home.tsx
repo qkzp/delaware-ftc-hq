@@ -19,9 +19,9 @@ import type { Task } from "../types";
 import "./Home.css";
 
 const workstreams = [
-  { area: "Mechanical", label: "Mechanisms", code: "MECH" },
-  { area: "Programming", label: "Control & code", code: "CODE" },
-  { area: "Electrical", label: "Power & wiring", code: "ELEC" },
+  { area: "Mechanical", label: "Mechanisms" },
+  { area: "Programming", label: "Control & code" },
+  { area: "Electrical", label: "Power & wiring" },
 ];
 const priorityOrder = { High: 0, Medium: 1, Low: 2 };
 
@@ -33,7 +33,6 @@ export default function Home() {
     saveRecord,
     canManage,
     notify,
-    storageError,
   } = useHQ();
   const [scope, setScope] = useState<"mine" | "team">("mine");
   const [area, setArea] = useState("All work");
@@ -130,39 +129,227 @@ export default function Home() {
     <div className="field-workbench">
       <header className="field-heading">
         <div>
-          <div className="field-kicker">{data.teamName} · {data.seasonName}</div>
-          <h1>
-            This week on the bench<span className="field-title-stop">.</span>
-          </h1>
+          <div className="field-kicker">{formatDate(today, { weekday: "long", month: "long", day: "numeric" })}</div>
+          <h1>Your space to build.</h1>
           <p>
-            {data.teamName} <span>/</span>{" "}
-            {data.county === "Statewide"
-              ? "Delaware"
-              : `${data.county} County, DE`}
+            {data.teamName} <span>·</span> {data.seasonName}
             {data.teamNumber && data.teamNumber !== "DEMO"
               ? ` / Team ${data.teamNumber}`
               : ""}
           </p>
         </div>
-        <div className="field-dateline">
-          <span>{formatDate(today, { weekday: "long" })}</span>
-          <strong>
-            {formatDate(today, {
-              month: "short",
-              day: "2-digit",
-              year: "numeric",
-            })}
-          </strong>
-          <span className="field-dateline-state">
-            <i />
-            {storageError ? "SAVE NEEDS ATTENTION" : "LOCAL WORKSPACE"}
-          </span>
-        </div>
       </header>
+
+      <div className="field-stage">
+        <section
+          className="field-assignment"
+          id="field-next-task"
+          aria-labelledby="field-assignment-title"
+        >
+          <div className="field-sheet-top">
+            <span>
+              <i />
+                Your next task
+            </span>
+          </div>
+          {nextTask ? (
+            <>
+              <div className="field-assignment-tags">
+                <span>{nextTask.area}</span>
+                {nextTask.demo && (
+                  <span className="field-demo">Demo task</span>
+                )}
+                <span className="field-priority">
+                  {nextTask.priority} priority
+                </span>
+              </div>
+              <h2 id="field-assignment-title">{nextTask.title}</h2>
+              <div className="field-assignment-spec">
+                <span>
+                  <small>Assigned to</small>
+                  <strong>
+                    {nextTask.owner === "Alex (you)"
+                      ? "You"
+                      : nextTask.owner}
+                  </strong>
+                </span>
+                <span>
+                  <small>Due</small>
+                  <strong
+                    className={
+                      nextTask.due && nextTask.due <= today ? "field-due" : ""
+                    }
+                  >
+                    {dueLabel(nextTask.due)}
+                  </strong>
+                </span>
+                <span>
+                  <small>Estimate</small>
+                  <strong>{nextTask.effort || "Not estimated"}</strong>
+                </span>
+                <span>
+                  <small>Status</small>
+                  <strong>{nextTask.status}</strong>
+                </span>
+              </div>
+              <div className="field-finish-line">
+                <span className="field-check-outline" aria-hidden="true">
+                  <Check size={13} />
+                </span>
+                <div>
+                  <h3>What success looks like</h3>
+                  <p>
+                    {nextTask.done ||
+                      "Ask the task owner to define the result before you start."}
+                  </p>
+                </div>
+              </div>
+              {blockedTasks(nextTask).length > 0 && (
+                <div className="field-blocker">
+                  WAITING ON {blockedTasks(nextTask).length} LINKED TASK
+                  {blockedTasks(nextTask).length > 1 ? "S" : ""}. Open the work
+                  order to check the dependency.
+                </div>
+              )}
+              <div className="field-assignment-actions">
+                <button
+                  className="field-start-button"
+                  disabled={
+                    !canWork(nextTask) || blockedTasks(nextTask).length > 0
+                  }
+                  onClick={() => setSessionTaskId(nextTask.id)}
+                >
+                  <Play size={14} fill="currentColor" />
+                  Start work session <ArrowUpRight size={17} />
+                </button>
+                <button
+                  className="field-text-button"
+                  onClick={() => openRecord("tasks", nextTask.id)}
+                >
+                  Task details <ArrowRight size={14} />
+                </button>
+              </div>
+              {!canWork(nextTask) && (
+                <p className="field-assignment-permission">
+                  Ask a student lead to assign this work to you before starting
+                  a session.
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="field-assignment-empty">
+              <Crosshair size={28} />
+              <h2 id="field-assignment-title">Clear bench.</h2>
+              <p>
+                {area !== "All work"
+                  ? `No open ${area.toLowerCase()} tasks in this view.`
+                  : "No open assignments in this view. Pick up a team task or start the new member checklist."}
+              </p>
+              <div>
+                <button
+                  className="field-start-button"
+                  onClick={() => {
+                    setScope("team");
+                    setArea("All work");
+                  }}
+                >
+                  View team work <ArrowRight size={15} />
+                </button>
+                <button
+                  className="field-text-button"
+                  onClick={() => setPage("onboarding")}
+                >
+                  First assignment <ArrowUpRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+
+        <section className="field-system-map" aria-labelledby="field-map-title">
+          <div className="field-map-head">
+            <div>
+              <h2 id="field-map-title">The bigger picture.</h2>
+            </div>
+            <span className="field-map-cross" aria-hidden="true">
+              +
+            </span>
+          </div>
+          <div className="field-progress" role="progressbar" aria-label="Team tasks completed" aria-valuemin={0} aria-valuemax={Math.max(1, data.tasks.length)} aria-valuenow={completed} aria-valuetext={`${completed} of ${data.tasks.length} team tasks completed`}>
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="51" className="field-progress-track" />
+              <circle cx="60" cy="60" r="51" className="field-progress-value" pathLength="100" strokeDasharray={`${data.tasks.length ? completed / data.tasks.length * 100 : 0} 100`} />
+            </svg>
+            <span><strong>{completed}<small>/{data.tasks.length}</small></strong><span>tasks complete</span></span>
+          </div>
+          <div className="field-circuit">
+            {workstreams.map((stream) => {
+              const tasks = data.tasks.filter(
+                (task) => task.area === stream.area,
+              );
+              const done = tasks.filter(
+                (task) => task.status === "Done",
+              ).length;
+              const open = tasks.length - done;
+              return (
+                <button
+                  key={stream.area}
+                  className={`field-stream ${area === stream.area ? "is-selected" : ""}`}
+                  onClick={() => selectWorkstream(stream.area)}
+                  aria-pressed={area === stream.area}
+                  aria-label={`Filter ${stream.area} workstream`}
+                >
+                  <span className="field-stream-terminal" aria-hidden="true" />
+                  <span className="field-stream-name">
+                    <strong>{stream.label}</strong>
+                    <small>
+                      {tasks.length
+                        ? `${done}/${tasks.length} tasks complete`
+                        : "No tasks tracked yet"}
+                    </small>
+                  </span>
+                  <span className="field-stream-open">
+                    {open}
+                    <small>open</small>
+                  </span>
+                  <ArrowDownRight size={17} />
+                </button>
+              );
+            })}
+          </div>
+          <div className="field-map-output">
+            <span className="field-terminal-out" aria-hidden="true" />
+            <div>
+              <span>Competition checklist</span>
+              <strong>
+                {readyItems}
+                <small> / {PIT_ITEM_IDS.length} checked</small>
+              </strong>
+            </div>
+            <button
+              onClick={() => setPage("pit")}
+              aria-label="Open competition preparation checklist"
+            >
+              <ArrowUpRight size={19} />
+            </button>
+          </div>
+          <div
+            className="field-pit-ticks"
+            aria-label={`${readyItems} of ${PIT_ITEM_IDS.length} competition preparation items checked`}
+          >
+            {PIT_ITEM_IDS.map((id) => (
+              <span
+                key={id}
+                className={data.pitChecklist.includes(id) ? "is-packed" : ""}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
 
       <section className="field-season" aria-labelledby="field-season-title">
         <div className="field-season-heading">
-          <h2 id="field-season-title">COMING UP</h2>
+          <h2 id="field-season-title">Coming up.</h2>
           <span>Next {Math.min(upcoming.length, 4)} team events</span>
           <button
             onClick={() => setPage("calendar")}
@@ -215,231 +402,12 @@ export default function Home() {
         )}
       </section>
 
-      <div className="field-stage">
-        <section
-          className="field-assignment"
-          id="field-next-task"
-          aria-labelledby="field-assignment-title"
-        >
-          <div className="field-sheet-top">
-            <span>
-              <i />
-              NEXT ASSIGNMENT
-            </span>
-            <span className="field-sheet-number">UP NEXT</span>
-          </div>
-          {nextTask ? (
-            <>
-              <div className="field-assignment-tags">
-                <span>{nextTask.area}</span>
-                {nextTask.demo && (
-                  <span className="field-demo">DEMO TASK</span>
-                )}
-                <span className="field-priority">
-                  {nextTask.priority} priority
-                </span>
-              </div>
-              <h2 id="field-assignment-title">{nextTask.title}</h2>
-              <div className="field-assignment-spec">
-                <span>
-                  <small>ASSIGNED TO</small>
-                  <strong>
-                    {nextTask.owner === "Alex (you)"
-                      ? "You / Alex"
-                      : nextTask.owner}
-                  </strong>
-                </span>
-                <span>
-                  <small>DUE</small>
-                  <strong
-                    className={
-                      nextTask.due && nextTask.due <= today ? "field-due" : ""
-                    }
-                  >
-                    {dueLabel(nextTask.due)}
-                  </strong>
-                </span>
-                <span>
-                  <small>ESTIMATE</small>
-                  <strong>{nextTask.effort || "Not estimated"}</strong>
-                </span>
-                <span>
-                  <small>STATUS</small>
-                  <strong>{nextTask.status}</strong>
-                </span>
-              </div>
-              <div className="field-finish-line">
-                <span className="field-check-outline" aria-hidden="true">
-                  <Check size={13} />
-                </span>
-                <div>
-                  <h3>DONE WHEN</h3>
-                  <p>
-                    {nextTask.done ||
-                      "Ask the task owner to define the result before you start."}
-                  </p>
-                </div>
-              </div>
-              {blockedTasks(nextTask).length > 0 && (
-                <div className="field-blocker">
-                  WAITING ON {blockedTasks(nextTask).length} LINKED TASK
-                  {blockedTasks(nextTask).length > 1 ? "S" : ""}. Open the work
-                  order to check the dependency.
-                </div>
-              )}
-              <div className="field-assignment-actions">
-                <button
-                  className="field-start-button"
-                  disabled={
-                    !canWork(nextTask) || blockedTasks(nextTask).length > 0
-                  }
-                  onClick={() => setSessionTaskId(nextTask.id)}
-                >
-                  <Play size={14} fill="currentColor" />
-                  Start work session <ArrowUpRight size={17} />
-                </button>
-                <button
-                  className="field-text-button"
-                  onClick={() => openRecord("tasks", nextTask.id)}
-                >
-                  Open work order <ArrowRight size={14} />
-                </button>
-              </div>
-              {!canWork(nextTask) && (
-                <p className="field-assignment-permission">
-                  Ask a student lead to assign this work to you before starting
-                  a session.
-                </p>
-              )}
-              <div className="field-sheet-foot">
-                <span>TEST IT · RECORD WHAT HAPPENED</span>
-                <span>
-                  TEAM ONLY <span aria-hidden="true">↗</span>
-                </span>
-              </div>
-            </>
-          ) : (
-            <div className="field-assignment-empty">
-              <Crosshair size={28} />
-              <h2 id="field-assignment-title">Clear bench.</h2>
-              <p>
-                {area !== "All work"
-                  ? `No open ${area.toLowerCase()} tasks in this view.`
-                  : "No open assignments in this view. Pick up a team task or start the new member checklist."}
-              </p>
-              <div>
-                <button
-                  className="field-start-button"
-                  onClick={() => {
-                    setScope("team");
-                    setArea("All work");
-                  }}
-                >
-                  View team work <ArrowRight size={15} />
-                </button>
-                <button
-                  className="field-text-button"
-                  onClick={() => setPage("onboarding")}
-                >
-                  First assignment <ArrowUpRight size={14} />
-                </button>
-              </div>
-            </div>
-          )}
-        </section>
-
-        <section className="field-system-map" aria-labelledby="field-map-title">
-          <div className="field-map-head">
-            <div>
-              <span className="field-section-index">BUILD STATUS</span>
-          <h2 id="field-map-title">Build workstreams</h2>
-            </div>
-            <span className="field-map-cross" aria-hidden="true">
-              +
-            </span>
-          </div>
-          <p className="field-map-explainer">
-            See what each build team still has open.
-            <br />
-            Select a line to filter the work queue.
-          </p>
-          <div className="field-circuit">
-            {workstreams.map((stream) => {
-              const tasks = data.tasks.filter(
-                (task) => task.area === stream.area,
-              );
-              const done = tasks.filter(
-                (task) => task.status === "Done",
-              ).length;
-              const open = tasks.length - done;
-              return (
-                <button
-                  key={stream.area}
-                  className={`field-stream ${area === stream.area ? "is-selected" : ""}`}
-                  onClick={() => selectWorkstream(stream.area)}
-                  aria-pressed={area === stream.area}
-                  aria-label={`Filter ${stream.area} workstream`}
-                >
-                  <span className="field-stream-terminal" aria-hidden="true" />
-                  <span className="field-stream-code">{stream.code}</span>
-                  <span className="field-stream-name">
-                    <strong>{stream.label}</strong>
-                    <small>
-                      {tasks.length
-                        ? `${done}/${tasks.length} tasks complete`
-                        : "No tasks tracked yet"}
-                    </small>
-                  </span>
-                  <span className="field-stream-open">
-                    {open}
-                    <small>OPEN</small>
-                  </span>
-                  <ArrowDownRight size={17} />
-                </button>
-              );
-            })}
-          </div>
-          <div className="field-map-output">
-            <span className="field-terminal-out" aria-hidden="true" />
-            <div>
-              <span>PIT CHECKLIST</span>
-              <strong>
-                {readyItems}
-                <small> / {PIT_ITEM_IDS.length} checked</small>
-              </strong>
-            </div>
-            <button
-              onClick={() => setPage("pit")}
-              aria-label="Open competition preparation checklist"
-            >
-              <ArrowUpRight size={19} />
-            </button>
-          </div>
-          <div
-            className="field-pit-ticks"
-            aria-label={`${readyItems} of ${PIT_ITEM_IDS.length} competition preparation items checked`}
-          >
-            {PIT_ITEM_IDS.map((id) => (
-              <span
-                key={id}
-                className={data.pitChecklist.includes(id) ? "is-packed" : ""}
-              />
-            ))}
-          </div>
-          <div className="field-map-footer">
-            <span>Status from your task board and pit checklist.</span>
-            <span aria-hidden="true">+</span>
-          </div>
-        </section>
-      </div>
-
       <div className="field-lower-layout">
         <section className="field-queue" aria-labelledby="field-queue-title">
           <div className="field-section-head">
             <div>
-              <span className="field-section-index">OPEN TASKS</span>
               <h2 id="field-queue-title">
-                On the bench<span>{orderedTasks.length}</span>
+                Your task list.<span>{orderedTasks.length}</span>
               </h2>
             </div>
             <button
@@ -597,7 +565,7 @@ export default function Home() {
         >
           <div className="field-section-head">
             <div>
-              <span className="field-section-index">NEXT COMPETITION</span>
+              <span className="field-section-index">Next competition</span>
               <h2>
                 {competition
                   ? `${Math.max(0, daysUntil(competition.date))} days out`
@@ -628,7 +596,7 @@ export default function Home() {
                 {competition.location || "Location to be confirmed"}
               </p>
               {competition.demo && (
-                <span className="field-demo">DEMO EVENT</span>
+                <span className="field-demo">Demo event</span>
               )}
               <button
                 className="field-event-action"
@@ -653,7 +621,7 @@ export default function Home() {
           )}
           {(overdueSponsors.length > 0 || reviewGrants.length > 0) && (
             <div className="field-follow-ups">
-              <span className="field-section-index">HANDOFFS TO MAKE</span>
+              <span className="field-section-index">Follow-ups</span>
               {overdueSponsors.length > 0 && (
                 <button
                   onClick={() => openRecord("sponsors", overdueSponsors[0].id)}
@@ -683,7 +651,7 @@ export default function Home() {
       >
         <div>
           <Wrench size={19} />
-          <span>BENCH ACCESS</span>
+          <span>Made for your robot.</span>
         </div>
         {[
           {
@@ -719,8 +687,7 @@ export default function Home() {
       <section className="field-team-log" aria-labelledby="field-log-title">
         <div className="field-section-head">
           <div>
-            <span className="field-section-index">BUILD LOG</span>
-            <h2 id="field-log-title">Notes that stay with the robot.</h2>
+            <h2 id="field-log-title">Keep everyone in the loop.</h2>
           </div>
           {canManage && (
             <button

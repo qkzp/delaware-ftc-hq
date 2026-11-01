@@ -1,6 +1,6 @@
 # MyFTCSpace
 
-A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface uses a top-down robot emblem, a paper-and-ink palette with restrained orange, clear team language, and a work-first layout. This project is not affiliated with FIRST and does not use another team-management product’s code or design.
+A working season workspace built with React 19, TypeScript, Vite, and Lucide. The interface uses a top-down robot emblem, system typography, white and soft gray surfaces, and blue actions. The home screen prioritizes the next task, actual team progress, and upcoming events. This project is not affiliated with FIRST.
 
 ## Run it
 

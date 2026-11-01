@@ -108,7 +108,6 @@ export function Workspace() {
               </svg>
               <span className="wordmark-type">
                 <strong>MyFTCSpace</strong>
-                <small>DELAWARE · FTC</small>
               </span>
             </button>
             <span className="masthead-divider" />
@@ -152,7 +151,7 @@ export function Workspace() {
               </button>
             </div>
             <label className="role-switch">
-              <span>PREVIEW AS</span>
+              <span>Demo role</span>
               <select
                 aria-label="Demo permission preview"
                 value={role}
@@ -197,7 +196,7 @@ export function Workspace() {
         <div className="workspace-context">
           <div className="workspace-context-left">
             <span className={`workspace-indicator ${hasDemo ? "is-demo" : ""}`}>
-              {hasDemo ? "DEMO DATA" : "LOCAL WORKSPACE"}
+              {hasDemo ? "Demo workspace" : "Your workspace"}
             </span>
             <span className="context-team-name">{data.teamName}</span>
             <span className="context-county">{data.county}, Delaware</span>
