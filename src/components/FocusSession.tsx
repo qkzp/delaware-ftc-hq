@@ -24,10 +24,10 @@ function clock(milliseconds: number) {
 }
 
 export function FocusSession({ taskId, onClose }: FocusSessionProps) {
-  const { data, canManage, saveRecord, notify, openRecord, storageError } =
+  const { data, canManage, saveRecord, notify, openRecord, storageError, myOwner, memberName, cloud } =
     useHQ();
   const task = data.tasks.find((item) => item.id === taskId);
-  const canEdit = !!task && (canManage || task.owner === "Alex (you)");
+  const canEdit = !!task && (canManage || task.owner === myOwner);
   const [minutes, setMinutes] = useState(20);
   const [remainingMs, setRemainingMs] = useState(20 * 60_000);
   const [running, setRunning] = useState(false);
@@ -103,7 +103,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
         ...current.comments,
         {
           text: note.trim(),
-          author: "Alex (you)",
+          author: myOwner,
           date: new Date().toISOString(),
         },
       ],
@@ -120,7 +120,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
       (id) =>
         dataRef.current.tasks.find((item) => item.id === id)?.status !== "Done",
     );
-    if (pending.length) {
+    if (pending.length || current.blockedReason) {
       notify("Complete the linked dependencies before finishing this task.");
       return;
     }
@@ -129,7 +129,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
           ...current.comments,
           {
             text: note.trim(),
-            author: "Alex (you)",
+            author: myOwner,
             date: new Date().toISOString(),
           },
         ]
@@ -173,7 +173,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
             <h3>{task.title}</h3>
             <p>
               <span>
-                {task.owner === "Alex (you)" ? "Assigned to you" : task.owner}
+                {task.owner === myOwner ? "Assigned to you" : memberName(task.owner)}
               </span>
               <span>{dueLabel(task.due)}</span>
               <span>{task.status}</span>
@@ -307,6 +307,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
               <p>{task.description}</p>
             </details>
           )}
+          {task.blockedReason && <p className="focus-blockers">Blocked: {task.blockedReason}</p>}
           {blockers.length > 0 && (
             <div className="focus-blockers">
               <span className="focus-label">
@@ -381,7 +382,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
             <span>
               {storageError
                 ? "SAVE NEEDS ATTENTION — SEE WORKSPACE NOTICE"
-                : "LOCAL SESSION · NO TEAM SYNC"}
+                : cloud.shared ? `Team session · ${cloud.status}` : "Demo session · saved in this browser"}
             </span>
             <button
               className="btn btn-primary"

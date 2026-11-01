@@ -37,7 +37,7 @@ const areas = [
   "Scouting",
   "Safety",
 ];
-const members = [
+const demoMembers = [
   "Alex (you)",
   "Jordan",
   "Sam",
@@ -62,7 +62,7 @@ const tone = (priority: Task["priority"]) =>
   priority === "High" ? "amber" : priority === "Medium" ? "blue" : "gray";
 
 export default function TasksPage() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     role,
     canManage,
@@ -73,16 +73,18 @@ export default function TasksPage() {
     openRecord,
     clearFocusRecord,
   } = useHQ();
+  const members = cloud.shared ? [...cloud.shared.members.map(m => m.userId), "Unassigned"] : demoMembers;
   const [view, setView] = useState<"board" | "list">("board");
   const [scope, setScope] = useState("All tasks");
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("All work areas");
   const [statusFilter, setStatusFilter] = useState("All statuses");
+  const [subsystem, setSubsystem] = useState("All subsystems");
   const [editing, setEditing] = useState<Task | null>(null);
   const [comment, setComment] = useState("");
   const [deleting, setDeleting] = useState(false);
   const canEdit = (task: Task) =>
-    role !== "student" || task.owner === "Alex (you)";
+    role !== "student" || task.owner === myOwner;
   const visibleResources = data.resources.filter(
     (r) => canManage || (r.visibility !== "private" && r.approved),
   );
@@ -90,14 +92,15 @@ export default function TasksPage() {
     () =>
       data.tasks.filter(
         (t) =>
-          (scope !== "My tasks" || t.owner === "Alex (you)") &&
+          (scope !== "My tasks" || t.owner === myOwner) &&
           (area === "All work areas" || t.area === area) &&
-          (statusFilter === "All statuses" || t.status === statusFilter) &&
-          `${t.title} ${t.owner} ${t.area} ${t.description}`
+          (subsystem === "All subsystems" || t.subsystem === subsystem) &&
+          (statusFilter === "All statuses" || (statusFilter === "Blocked" ? !!t.blockedReason || t.dependencies.some(id => data.tasks.find(x => x.id === id)?.status !== "Done") : t.status === statusFilter)) &&
+          `${t.title} ${memberName(t.owner)} ${t.area} ${t.subsystem || ""} ${t.blockedReason || ""} ${t.description}`
             .toLowerCase()
             .includes(query.toLowerCase()),
       ),
-    [data.tasks, scope, area, statusFilter, query],
+    [data.tasks, scope, area, statusFilter, query, subsystem, myOwner],
   );
   const complete = data.tasks.filter((t) => t.status === "Done").length;
   const blockedBy = (task: Task) =>
@@ -119,7 +122,7 @@ export default function TasksPage() {
   };
   const changeStatus = (task: Task, status: Task["status"]) => {
     if (!canEdit(task)) return;
-    if (status === "Done" && blockedBy(task).length) {
+    if (status === "Done" && (blockedBy(task).length || task.blockedReason)) {
       notify("Finish this task’s dependencies before marking it done.");
       return;
     }
@@ -153,7 +156,7 @@ export default function TasksPage() {
       seasonId: data.seasonId,
       demo: false,
       title: "",
-      owner: "Alex (you)",
+      owner: myOwner,
       area: "Mechanical",
       due: day(),
       priority: "Medium",
@@ -169,7 +172,7 @@ export default function TasksPage() {
   const save = (event: React.FormEvent) => {
     event.preventDefault();
     if (!editing || !canEdit(editing)) return;
-    if (editing.status === "Done" && blockedBy(editing).length) {
+    if (editing.status === "Done" && (blockedBy(editing).length || editing.blockedReason)) {
       notify("Complete the linked dependencies first.");
       return;
     }
@@ -255,7 +258,7 @@ export default function TasksPage() {
                 <span className="tc-tab-count">
                   {
                     data.tasks.filter(
-                      (t) => t.owner === "Alex (you)" && t.status !== "Done",
+                      (t) => t.owner === myOwner && t.status !== "Done",
                     ).length
                   }
                 </span>
@@ -312,10 +315,12 @@ export default function TasksPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
         >
           <option>All statuses</option>
+          <option>Blocked</option>
           {statuses.map((s) => (
             <option key={s}>{s}</option>
           ))}
         </select>
+        <select aria-label="Filter robot subsystem" value={subsystem} onChange={e=>setSubsystem(e.target.value)}><option>All subsystems</option>{Array.from(new Set(data.tasks.map(t=>t.subsystem).filter(Boolean))).map(s=><option key={s}>{s}</option>)}</select>
       </div>
       {!filtered.length ? (
         <EmptyState
@@ -329,6 +334,7 @@ export default function TasksPage() {
                 setArea("All work areas");
                 setStatusFilter("All statuses");
                 setScope("All tasks");
+                setSubsystem("All subsystems");
               }}
             >
               Clear filters
@@ -392,6 +398,8 @@ export default function TasksPage() {
                         <ArrowUpRight size={16} />
                       </button>
                       <p className="tc-task-condition">{task.done}</p>
+                      {task.subsystem && <Badge>{task.subsystem}</Badge>}
+                      {task.blockedReason && <p className="tc-blocked">Blocked: {task.blockedReason}</p>}
                       {blockedBy(task).length > 0 && (
                         <div className="tc-blocked">
                           Waiting on {blockedBy(task).length} linked task
@@ -418,8 +426,8 @@ export default function TasksPage() {
                       </div>
                       <div className="tc-task-card-footer">
                         <div className="inline">
-                          <Avatar name={task.owner} small />
-                          <span>{task.owner}</span>
+                          <Avatar name={memberName(task.owner)} small />
+                          <span>{memberName(task.owner)}</span>
                         </div>
                         {task.comments.length > 0 && (
                           <span className="inline muted">
@@ -474,7 +482,7 @@ export default function TasksPage() {
               <button className="tc-task-list-title" onClick={() => open(task)}>
                 <strong>{task.title}</strong>
                 <span>
-                  {task.area} · {task.effort} · {task.owner}
+                  {task.area} · {task.effort} · {memberName(task.owner)}
                 </span>
               </button>
               <Badge tone={tone(task.priority)}>{task.priority}</Badge>
@@ -536,7 +544,7 @@ export default function TasksPage() {
                   {Array.from(
                     new Set([...members, ...data.tasks.map((t) => t.owner)]),
                   ).map((m) => (
-                    <option key={m}>{m}</option>
+                    <option key={m} value={m}>{memberName(m)}</option>
                   ))}
                 </select>
               </Field>
@@ -618,6 +626,7 @@ export default function TasksPage() {
                 placeholder="Add the context, test results, or decision behind this work."
               />
             </Field>
+            <div className="form-grid"><Field label="Robot subsystem" hint="For example: drivetrain, intake, lift, or autonomous localization."><input value={editing.subsystem || ""} disabled={!canEdit(editing)} onChange={e=>patch({subsystem:e.target.value})}/></Field><Field label="Blocker" hint="Explain what is needed before work can continue. Clear this when resolved."><input value={editing.blockedReason || ""} disabled={!canEdit(editing)} onChange={e=>patch({blockedReason:e.target.value})}/></Field></div>
             <Field label="Linked learning or build resource">
               <select
                 disabled={!canEdit(editing)}
@@ -724,9 +733,9 @@ export default function TasksPage() {
               {editing.comments.length ? (
                 editing.comments.map((c, i) => (
                   <div className="tc-comment" key={`${c.date}-${i}`}>
-                    <Avatar name={c.author} small />
+                    <Avatar name={memberName(c.author)} small />
                     <div>
-                      <strong>{c.author}</strong>
+                      <strong>{memberName(c.author)}</strong>
                       <small>
                         {new Date(c.date).toLocaleString("en-US", {
                           month: "short",
@@ -749,7 +758,7 @@ export default function TasksPage() {
                 className="tc-comment-form"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (!comment.trim() || !canEdit(editing)) return;
+                  if (!comment.trim()) return;
                   const current =
                     data.tasks.find((t) => t.id === editing.id) || editing;
                   const updated = {
@@ -757,7 +766,7 @@ export default function TasksPage() {
                     comments: [
                       ...current.comments,
                       {
-                        author: "Alex (you)",
+                        author: myOwner,
                         text: comment.trim(),
                         date: new Date().toISOString(),
                       },
@@ -771,7 +780,6 @@ export default function TasksPage() {
               >
                 <input
                   aria-label="Add a team comment"
-                  disabled={!canEdit(editing)}
                   placeholder="Leave a helpful note…"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
@@ -780,7 +788,7 @@ export default function TasksPage() {
                 <button
                   className="btn btn-secondary"
                   type="submit"
-                  disabled={!comment.trim() || !canEdit(editing)}
+                  disabled={!comment.trim()}
                 >
                   Add note
                 </button>

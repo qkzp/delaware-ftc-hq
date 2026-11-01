@@ -26,7 +26,7 @@ const workstreams = [
 const priorityOrder = { High: 0, Medium: 1, Low: 2 };
 
 export default function Home() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     setPage,
     openRecord,
@@ -41,12 +41,12 @@ export default function Home() {
   const [announcement, setAnnouncement] = useState(false);
   const today = dateKey();
   const openTasks = data.tasks.filter((task) => task.status !== "Done");
-  const myTasks = openTasks.filter((task) => task.owner === "Alex (you)");
+  const myTasks = openTasks.filter((task) => task.owner === myOwner);
   const blockedTasks = (task: Task) =>
-    task.dependencies.filter(
+    [...task.dependencies.filter(
       (id) => data.tasks.find((item) => item.id === id)?.status !== "Done",
-    );
-  const canWork = (task: Task) => canManage || task.owner === "Alex (you)";
+    ), ...(task.blockedReason ? ["manual-blocker"] : [])];
+  const canWork = (task: Task) => canManage || task.owner === myOwner;
   const orderedTasks = (scope === "mine" ? myTasks : openTasks)
     .filter((task) => area === "All work" || task.area === area)
     .sort(
@@ -139,6 +139,11 @@ export default function Home() {
           </p>
         </div>
       </header>
+      <div className="attention-strip" aria-label="Needs attention">
+       {myTasks.some(t=>t.due&&t.due<=today)&&<button onClick={()=>setPage('tasks')}><strong>{myTasks.filter(t=>t.due&&t.due<=today).length}</strong> of your tasks due</button>}
+       {openTasks.some(t=>blockedTasks(t).length>0)&&<button onClick={()=>setPage('tasks')}><strong>{openTasks.filter(t=>blockedTasks(t).length>0).length}</strong> blocked tasks</button>}
+       {canManage&&(data.evidence||[]).some(e=>!e.approved&&!e.archived)&&<button onClick={()=>setPage('evidence')}><strong>{(data.evidence||[]).filter(e=>!e.approved&&!e.archived).length}</strong> evidence reviews</button>}
+      </div>
 
       <div className="field-stage">
         <section
@@ -186,9 +191,9 @@ export default function Home() {
                 <span>
                   <small>Assigned to</small>
                   <strong>
-                    {nextTask.owner === "Alex (you)"
+                    {nextTask.owner === myOwner
                       ? "You"
-                      : nextTask.owner}
+                      : memberName(nextTask.owner)}
                   </strong>
                 </span>
                 <span>
@@ -224,9 +229,7 @@ export default function Home() {
               </div>
               {blockedTasks(nextTask).length > 0 && (
                 <div className="field-blocker">
-                  WAITING ON {blockedTasks(nextTask).length} LINKED TASK
-                  {blockedTasks(nextTask).length > 1 ? "S" : ""}. Open the work
-                  order to check the dependency.
+                  {nextTask.blockedReason || `Waiting on ${blockedTasks(nextTask).length} linked task(s). Open task details to see the dependencies.`}
                 </div>
               )}
               {!canWork(nextTask) && (
@@ -497,7 +500,7 @@ export default function Home() {
                     <p>
                       {task.area} <span>/</span> {task.effort || "No estimate"}{" "}
                       <span>/</span>{" "}
-                      {task.owner === "Alex (you)" ? "You" : task.owner}
+                      {task.owner === myOwner ? "You" : memberName(task.owner)}
                       {task.demo && (
                         <span className="field-row-demo">Demo</span>
                       )}
@@ -712,7 +715,7 @@ export default function Home() {
                 <p>{update.body}</p>
                 <footer>
                   <FileText size={13} />
-                  {update.author}
+                  {memberName(update.author)}
                 </footer>
               </article>
             ))

@@ -7,8 +7,11 @@ export type Page =
   | "grants"
   | "resources"
   | "onboarding"
+  | "evidence"
+  | "opportunities"
   | "pit"
   | "settings";
+export type Member = { userId: string; name: string; role: Role };
 export type Visibility = "team" | "private" | "public";
 export interface Base {
   id: string;
@@ -17,6 +20,8 @@ export interface Base {
   demo?: boolean;
 }
 export interface Task extends Base {
+  subsystem?: string;
+  blockedReason?: string;
   title: string;
   owner: string;
   area: string;
@@ -31,6 +36,10 @@ export interface Task extends Base {
   comments: { text: string; date: string; author: string }[];
 }
 export interface TeamEvent extends Base {
+  verification?: "team-created" | "needs-review" | "verified";
+  verifiedAt?: string;
+  verifiedBy?: string;
+  deadline?: string;
   title: string;
   date: string;
   time: string;
@@ -108,6 +117,7 @@ export interface Grant extends Base {
   stale?: boolean;
 }
 export interface Resource extends Base {
+  archived?: boolean;
   title: string;
   category: string;
   level: "Beginner" | "Intermediate" | "Advanced";
@@ -132,6 +142,8 @@ export interface Announcement extends Base {
   type: "Decision" | "Update";
 }
 export interface AppData {
+  evidence?: Evidence[];
+  parts?: Part[];
   schemaVersion: 1;
   teamId: string;
   seasonId: string;
@@ -162,5 +174,28 @@ export interface AppData {
   coachInstructions: string;
 }
 export type Collection =
-  "tasks" | "events" | "sponsors" | "grants" | "resources" | "announcements";
-export type RecordFor<K extends Collection> = AppData[K][number];
+  "tasks" | "events" | "sponsors" | "grants" | "resources" | "announcements" | "evidence";
+export type RecordFor<K extends Collection> = NonNullable<AppData[K]>[number];
+
+export interface Evidence extends Base {
+  title: string;
+  date: string;
+  county: string;
+  owner: string;
+  kind: "Outreach" | "Engineering" | "Team development";
+  activity: string;
+  impact: string;
+  reach: number;
+  measurement: string;
+  awards: string[];
+  mediaUrl: string;
+  fileId: string;
+  consent: "Not recorded" | "Team use only" | "External use permitted";
+  consentNote: string;
+  visibility: Visibility;
+  approved: boolean;
+  reviewedBy: string;
+  reviewedAt: string;
+  archived: boolean;
+}
+export interface Part { id: string; name: string; subsystem: string; quantity: number; location: string; source: string; notes: string; }

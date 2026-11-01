@@ -16,6 +16,8 @@ export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
   { page: "grants", label: "Grants", icon: Sprout },
   { page: "sponsors", label: "Outreach", icon: Users },
   { page: "pit", label: "Competition", icon: Flag },
+  { page: "evidence", label: "Evidence", icon: BookOpen },
+  { page: "opportunities", label: "Delaware", icon: Sprout },
 ];
 export const pageLabels: Record<Page, string> = {
   home: "Workbench",
@@ -27,4 +29,6 @@ export const pageLabels: Record<Page, string> = {
   pit: "Competition checklist",
   onboarding: "New member checklist",
   settings: "Workspace settings",
+  evidence: "Outreach & portfolio",
+  opportunities: "Delaware opportunities",
 };

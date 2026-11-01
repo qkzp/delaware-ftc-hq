@@ -17,7 +17,7 @@ import { useHQ } from "../store";
 import { EmptyState, Field, Modal } from "./ui";
 import { navigation } from "../navigation";
 export function SearchDialog({ onClose }: { onClose: () => void }) {
-  const { data, setPage, openRecord, canManage } = useHQ();
+  const {myOwner, memberName, cloud, data, setPage, openRecord, canManage } = useHQ();
   const [query, setQuery] = useState("");
   const q = query.toLowerCase().trim();
   const go = (page: Page) => {
@@ -25,6 +25,8 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
     onClose();
   };
   const results = [
+    ...(data.evidence || []).filter(e=>canManage||e.owner===myOwner||(e.approved&&e.visibility!=='private')).map(e=>({id:e.id,title:e.title,detail:`Evidence · ${e.county} · ${e.awards.join(', ')}`,page:'evidence' as Page,icon:BookOpen})),
+    ...(data.parts || []).map(p=>({id:'robot-reference',title:p.name,detail:`Part · ${p.subsystem} · ${p.location}`,page:'resources' as Page,icon:BookOpen})),
     ...data.tasks.map((t) => ({
       id: t.id,
       title: t.title,
@@ -127,14 +129,14 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
         />
       )}
       <p className="privacy-note">
-        <LockKeyhole size={12} /> Results respect your role preview. Open a
+        <LockKeyhole size={12} /> Results respect your current role. Open a
         result to go straight to its details.
       </p>
     </Modal>
   );
 }
 export function QuickTask({ onClose }: { onClose: () => void }) {
-  const { data, saveRecord, canManage, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, saveRecord, canManage, notify } = useHQ();
   return (
     <Modal title="New task" onClose={onClose}>
       <form
@@ -147,8 +149,9 @@ export function QuickTask({ onClose }: { onClose: () => void }) {
             teamId: data.teamId,
             seasonId: data.seasonId,
             title: String(f.get("title")).trim(),
-            owner: String(f.get("owner") || "Alex (you)"),
+            owner: String(f.get("owner") || myOwner),
             area: String(f.get("area")),
+            subsystem: String(f.get("subsystem") || ""),
             due: String(f.get("due")),
             priority: "Medium",
             status: "To do",
@@ -185,13 +188,12 @@ export function QuickTask({ onClose }: { onClose: () => void }) {
         <div className="form-grid">
           <Field label="Owner">
             <select name="owner" disabled={!canManage}>
-              <option>Alex (you)</option>
-              <option>Jordan</option>
-              <option>Sam</option>
-              <option>Riley</option>
+              <option value={myOwner}>You</option>
+              {cloud.shared ? cloud.shared.members.filter(m=>m.userId!==myOwner).map(m=><option key={m.userId} value={m.userId}>{m.name}</option>) : <><option>Jordan</option><option>Sam</option><option>Riley</option></>}
               <option>Unassigned</option>
             </select>
           </Field>
+          <Field label="Subsystem"><input name="subsystem" placeholder="For example, intake" /></Field>
           <Field label="Work area">
             <select name="area">
               <option>Mechanical</option>

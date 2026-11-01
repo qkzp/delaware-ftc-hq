@@ -13,6 +13,7 @@ import { useHQ } from "../store";
 import { Badge, Field, Modal, PageHeader } from "../components/ui";
 import { localRepository } from "../persistence";
 import { downloadFile } from "../utils";
+import TeamAccess from "../components/TeamAccess";
 export default function Settings() {
   const {
     data,
@@ -27,6 +28,7 @@ export default function Settings() {
     resetDemo,
     startFresh,
     storageError,
+    cloud,
   } = useHQ();
   const [confirm, setConfirm] = useState<"reset" | "fresh" | null>(null);
   const [restore, setRestore] = useState<string | null>(null);
@@ -36,8 +38,9 @@ export default function Settings() {
       <PageHeader
         eyebrow="WORKSPACE / SETTINGS"
         title="Workspace settings"
-        description="Team details, role previews, and data management."
+        description="Team access, roles, details, and recoverable records."
       />
+      <TeamAccess />
       <div className="settings-layout">
         <div className="stack">
           <section className="card settings-section">
@@ -116,8 +119,7 @@ export default function Settings() {
               <h2>Data & backups</h2>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
-              Changes save in this browser. Export a backup to move your
-              workspace or preserve a season.
+              {cloud.shared ? "Changes sync across team members. Shared revision history provides recovery, and a mentor can export a private backup." : "Demo changes save in this browser. Sign in above for shared team records."}
             </p>
             {storageError && (
               <div className="settings-info">
@@ -175,7 +177,7 @@ export default function Settings() {
               <button
                 className="btn btn-secondary"
                 disabled={role !== "admin"}
-                onClick={() => input.current?.click()}
+                onClick={() => cloud.shared ? notify("Use shared revision history above to restore team records.") : input.current?.click()}
               >
                 <FileUp size={15} />
                 Import backup
@@ -198,7 +200,7 @@ export default function Settings() {
                 }}
               />
             </div>
-            <div className="settings-action">
+            {!cloud.shared && <div className="settings-action">
               <div>
                 <strong>Start with your own team</strong>
                 <p>
@@ -213,8 +215,8 @@ export default function Settings() {
                 <RefreshCcw size={15} />
                 Start fresh
               </button>
-            </div>
-            <div className="settings-action">
+            </div>}
+            {!cloud.shared && <div className="settings-action">
               <div>
                 <strong>Explore the demo again</strong>
                 <p>Restores all sample records and clears local changes.</p>
@@ -227,20 +229,21 @@ export default function Settings() {
                 <RefreshCcw size={14} />
                 Reset demo
               </button>
-            </div>
+            </div>}
           </section>
         </div>
         <aside className="stack">
           <section className="card settings-section">
             <div className="section-title">
               <ShieldCheck size={21} />
-              <h2>Role preview</h2>
+              <h2>{cloud.shared ? "Team permissions" : "Role preview"}</h2>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
-              Preview how the interface changes for each team role.
+              {cloud.shared ? "Your admin assigns roles. Only mentors and admins can approve external use and skill sign-offs." : "Preview how the interface changes for each team role."}
             </p>
             <Field label="Demo permission preview">
               <select
+                disabled={!!cloud.shared}
                 value={role}
                 onChange={(e) => {
                   setRole(e.target.value as typeof role);
@@ -275,16 +278,13 @@ export default function Settings() {
           <section className="settings-info">
             <FolderLock size={22} />
             <p>
-              <strong>A local workspace with honest boundaries.</strong>
+              <strong>{cloud.shared ? "Private records. Clear permissions." : "A separate demo workspace."}</strong>
             </p>
             <p>
-              Role switching previews permissions; it is not authentication.
-              Data stays in this browser and is not shared with teammates.
+              {cloud.shared ? "Membership and role checks run on every server operation. Student names are display aliases; do not store student email addresses or signed consent forms here." : "Role switching is a demo. Sign in above for a private team with server-enforced membership."}
             </p>
             <p>
-              Use sample or non-sensitive records here. A shared team deployment
-              needs school-approved sign-in and a backend that enforces team and
-              role access.
+              {cloud.shared ? "Private media requires an authorized team request. Review consent before approving any external-use evidence." : "Use sample or non-sensitive records in the demo."}
             </p>
             <p>
               Drafts stay drafts. No emails, grant submissions, or public

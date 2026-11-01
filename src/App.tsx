@@ -15,18 +15,20 @@ import { HQProvider, useHQ } from "./store";
 import { Badge, EmptyState, Modal } from "./components/ui";
 import { QuickTask, SearchDialog } from "./components/WorkspaceDialogs";
 import { navigation, pageLabels } from "./navigation";
-import Home from "./pages/Home";
-import Tasks from "./pages/Tasks";
-import Calendar from "./pages/Calendar";
-import Sponsors from "./pages/Sponsors";
-import Grants from "./pages/Grants";
-import Resources from "./pages/Resources";
-import Onboarding from "./pages/Onboarding";
-import Pit from "./pages/Pit";
-import TeamSettings from "./pages/Settings";
+import Home from "./screens/Home";
+import Tasks from "./screens/Tasks";
+import Calendar from "./screens/Calendar";
+import Sponsors from "./screens/Sponsors";
+import Grants from "./screens/Grants";
+import Resources from "./screens/Resources";
+import Onboarding from "./screens/Onboarding";
+import Pit from "./screens/Pit";
+import TeamSettings from "./screens/Settings";
+import EvidencePage from "./screens/Evidence";
+import Opportunities from "./screens/Opportunities";
 
 export function Workspace() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     role,
     setRole,
@@ -35,6 +37,7 @@ export function Workspace() {
     notice,
     clearNotice,
     storageError,
+    canManage,
   } = useHQ();
   const [search, setSearch] = useState(false);
   const [quickTask, setQuickTask] = useState(false);
@@ -55,7 +58,7 @@ export function Workspace() {
   }, [page]);
   const navigate = (next: Page) => setPage(next);
   const myCount = data.tasks.filter(
-    (t) => t.owner === "Alex (you)" && t.status !== "Done",
+    (t) => t.owner === myOwner && t.status !== "Done",
   ).length;
   const hasDemo =
     data.tasks.some((t) => t.demo) ||
@@ -151,9 +154,10 @@ export function Workspace() {
               </button>
             </div>
             <label className="role-switch">
-              <span>Demo role</span>
+              <span>{cloud.shared ? "Team role" : "Demo role"}</span>
               <select
-                aria-label="Demo permission preview"
+                disabled={!!cloud.shared}
+                aria-label={cloud.shared ? "Assigned team role" : "Demo permission preview"}
                 value={role}
                 onChange={(e) => setRole(e.target.value as Role)}
               >
@@ -163,6 +167,7 @@ export function Workspace() {
                 <option value="admin">Team admin</option>
               </select>
             </label>
+            <button className="mobile-team-settings chrome-icon" aria-label="Team access and settings" onClick={()=>navigate('settings')}><Settings2 size={19}/></button>
           </div>
         </header>
         <div className="navigation-bar">
@@ -182,6 +187,7 @@ export function Workspace() {
                 </button>
               ))}
             </nav>
+            <select className="mobile-navigation" aria-label="Workspace section" value={page} onChange={e=>navigate(e.target.value as Page)}>{navigation.map(n=><option key={n.page} value={n.page}>{n.label}</option>)}<option value="onboarding">New member checklist</option><option value="settings">Team access & settings</option></select>
             <button
               className="btn btn-primary chrome-create"
               onClick={() => setQuickTask(true)}
@@ -196,7 +202,7 @@ export function Workspace() {
         <div className="workspace-context">
           <div className="workspace-context-left">
             <span className={`workspace-indicator ${hasDemo ? "is-demo" : ""}`}>
-              {hasDemo ? "Demo workspace" : "Your workspace"}
+              {cloud.shared ? "Private team" : "Demo workspace"}
             </span>
             <span className="context-team-name">{data.teamName}</span>
             <span className="context-county">{data.county}, Delaware</span>
@@ -209,7 +215,7 @@ export function Workspace() {
             <span
               className={`storage-dot ${storageError ? "has-error" : ""}`}
             />
-            {storageError ? "Save needs attention" : "Saved in this browser"}
+            {cloud.shared ? cloud.status : storageError ? "Save needs attention" : "Saved in this browser"}
           </span>
         </div>
         {storageError && (
@@ -218,7 +224,7 @@ export function Workspace() {
           </div>
         )}
         <div key={role} className="page-surface">
-          {page === "home" ? (
+          {page === "evidence" ? <EvidencePage /> : page === "opportunities" ? <Opportunities /> : page === "home" ? (
             <Home />
           ) : page === "tasks" ? (
             <Tasks />
@@ -242,7 +248,7 @@ export function Workspace() {
           <span>
             <strong>MyFTCSpace</strong> FTC team workspace
           </span>
-          <span>Local workspace · No shared team sync</span>
+          <span>{cloud.shared ? "Private team · Shared records" : "Demo · Records stay in this browser"}</span>
           <button onClick={() => navigate("onboarding")}>
             New member checklist <ArrowRight size={13} />
           </button>
@@ -252,6 +258,11 @@ export function Workspace() {
       {quickTask && <QuickTask onClose={() => setQuickTask(false)} />}
       {notifications && (
         <Modal title="Team updates" onClose={() => setNotifications(false)}>
+          <h3>Needs attention</h3>
+          {data.tasks.filter(t=>t.status!=='Done'&&(t.owner===myOwner||canManage)&&(!!t.blockedReason||t.dependencies.some(id=>data.tasks.find(d=>d.id===id)?.status!=='Done')||(t.due&&t.due<=new Date().toLocaleDateString('en-CA')))).slice(0,6).map(t=><button className="search-result" key={t.id} onClick={()=>{navigate('tasks');setNotifications(false);}}><span>{t.title}<small>{t.blockedReason?`Blocked: ${t.blockedReason}`:t.due?`Due ${t.due}`:'Linked dependency needs attention'}</small></span><ArrowRight size={16}/></button>)}
+          {canManage&&data.sponsors.filter(s=>s.followUp&&s.followUp<=new Date().toLocaleDateString('en-CA')&&!['Committed','Declined','Do Not Contact'].includes(s.status)).map(s=><button className="search-result" key={s.id} onClick={()=>{navigate('sponsors');setNotifications(false);}}><span>{s.name}<small>Sponsor follow-up due {s.followUp}</small></span><ArrowRight size={16}/></button>)}
+          {data.grants.filter(g=>g.status!=='Closed'&&g.deadline&&g.deadline<=new Date(Date.now()+7*86400000).toLocaleDateString('en-CA')).map(g=><button className="search-result" key={g.id} onClick={()=>{navigate('grants');setNotifications(false);}}><span>{g.name}<small>Grant deadline {g.deadline} · {g.status}</small></span><ArrowRight size={16}/></button>)}
+          <p className="privacy-note">In-app reminders use your team’s records. Check this list when you open the app; no email is sent.</p>
           {data.announcements.length ? (
             data.announcements.map((a) => (
               <article key={a.id} className="notification-item">
@@ -315,8 +326,7 @@ export function Workspace() {
               </button>
             ))}
             <div className="settings-info">
-              Data saves in this browser. Role previews demonstrate interface
-              permissions; this version has no shared accounts or team sync.
+              {cloud.shared ? "Team records save to your private shared workspace. Your role is enforced by the server. Use Settings for invitations, backups, and member access." : "The demo saves in this browser. Open Settings and sign in with ChatGPT to create or join a private shared team."}
             </div>
           </div>
         </Modal>

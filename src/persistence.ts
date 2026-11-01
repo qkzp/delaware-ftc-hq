@@ -47,6 +47,8 @@ const uniqueIds = (values: unknown[]) =>
 export function validateData(value: unknown): value is AppData {
   if (!object(value)) return false;
   const v = value;
+  if (v.evidence !== undefined && (!Array.isArray(v.evidence) || !uniqueIds(v.evidence) || !v.evidence.every((e) => object(e) && strings(e, ["id", "teamId", "seasonId", "title", "date", "county", "owner", "activity", "impact", "measurement", "mediaUrl", "fileId", "consentNote", "reviewedBy", "reviewedAt"]) && e.teamId === v.teamId && e.seasonId === v.seasonId && day(e.date, false) && day(e.reviewedAt) && oneOf(e.kind, ["Outreach", "Engineering", "Team development"]) && oneOf(e.consent, ["Not recorded", "Team use only", "External use permitted"]) && visibility(e.visibility) && booleans(e, ["approved", "archived"]) && stringList(e.awards) && link(e.mediaUrl) && Number.isInteger(e.reach) && (e.reach as number) >= 0))) return false;
+  if (v.parts !== undefined && (!Array.isArray(v.parts) || !uniqueIds(v.parts) || !v.parts.every((p) => object(p) && strings(p, ["id", "name", "subsystem", "location", "source", "notes"]) && link(p.source) && Number.isInteger(p.quantity) && (p.quantity as number) >= 0))) return false;
   if (
     v.schemaVersion !== 1 ||
     !strings(v, [
@@ -115,6 +117,8 @@ export function validateData(value: unknown): value is AppData {
   )
     return false;
   const events = v.events as ObjectValue[];
+  if (!(v.tasks as ObjectValue[]).every(t => (t.subsystem === undefined || typeof t.subsystem === "string") && (t.blockedReason === undefined || typeof t.blockedReason === "string"))) return false;
+  if (!events.every(e => (e.verification === undefined || oneOf(e.verification, ["team-created", "needs-review", "verified"])) && (e.verifiedAt === undefined || day(e.verifiedAt)) && (e.verifiedBy === undefined || typeof e.verifiedBy === "string") && (e.deadline === undefined || day(e.deadline)))) return false;
   if (
     !events.every(
       (e) =>

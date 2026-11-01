@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
-import { createServer } from "vite";
+import { createServer } from "vite-legacy";
 
 // These tests exercise real React components and context mutations without a browser.
 // They deliberately do not claim to verify layout, focus behavior, or actual device input.
@@ -54,6 +54,8 @@ Object.defineProperties(globalThis, {
   },
 });
 const server = await createServer({
+  configFile: false,
+  esbuild: { jsx: "automatic" },
   root: fileURLToPath(new URL("..", import.meta.url)),
   logLevel: "silent",
   server: { middlewareMode: true, watch: null, hmr: false },
@@ -76,12 +78,14 @@ const pageNames = [
   "Onboarding",
   "Pit",
   "Settings",
+  "Evidence",
+  "Opportunities",
 ];
 const pages = Object.fromEntries(
   await Promise.all(
     pageNames.map(async (name) => [
       name,
-      (await server.ssrLoadModule(`/src/pages/${name}.tsx`)).default,
+      (await server.ssrLoadModule(`/src/screens/${name}.tsx`)).default,
     ]),
   ),
 );

@@ -90,7 +90,7 @@ const skills = [
 ];
 
 export default function OnboardingPage() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     setData,
     setPage,
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
     (r) => r.level === "Beginner" && r.approved && r.visibility !== "private",
   );
   const firstTask = data.tasks.find(
-    (t) => t.owner === "Alex (you)" && t.status !== "Done",
+    (t) => t.owner === myOwner && t.status !== "Done",
   );
   function toggle(id: string) {
     setData((s) => ({
@@ -128,7 +128,7 @@ export default function OnboardingPage() {
         ["Unassigned", "Team", ""].includes(t.owner) && t.status !== "Done",
     );
     if (unassigned && canManage) {
-      saveRecord("tasks", { ...unassigned, owner: "Alex (you)" });
+      saveRecord("tasks", { ...unassigned, owner: myOwner });
       notify("First task assigned to you.");
       openRecord("tasks", unassigned.id);
       return;
@@ -139,7 +139,7 @@ export default function OnboardingPage() {
       seasonId: data.seasonId,
       demo: false,
       title: "Complete a robot walkaround with a teammate",
-      owner: "Alex (you)",
+      owner: myOwner,
       area: "Robot design",
       due: new Date().toLocaleDateString("en-CA"),
       priority: "Low",
@@ -178,6 +178,11 @@ export default function OnboardingPage() {
         title="New member checklist"
         description="Find a team contact, review the basics, and take a first assignment."
       />
+      <section className="rookie-meetings"><h2>Your first three meetings</h2><div className="evidence-grid">{[
+       {id:'meeting-one',title:'First meeting: get oriented',detail:'Meet your student lead and supervising mentor. Review safety, find the robot reference, and observe how the team starts and stops the robot.'},
+       {id:'meeting-two',title:'Second meeting: make one contribution',detail:'Choose a small task with a teammate. Read its completion criteria, try it, and record the result or blocker.'},
+       {id:'meeting-three',title:'Third meeting: own a handoff',detail:'Finish a task, add a build note or evidence record, and explain the next step to another student.'},
+      ].map(meeting=><article className="card evidence-card" key={meeting.id}><h3>{meeting.title}</h3><p>{meeting.detail}</p><label className="inline"><input type="checkbox" checked={data.onboarding.includes(meeting.id)} onChange={()=>toggle(meeting.id)}/>Explored this meeting</label></article>)}</div><details className="team-glossary"><summary>FTC terms you will hear</summary><dl><dt>Subsystem</dt><dd>A part of the robot with a distinct job, such as the drivetrain or intake.</dd><dt>Autonomous</dt><dd>The part of a match when the robot follows its program without driver input.</dd><dt>TeleOp</dt><dd>The driver-controlled part of a match.</dd><dt>Engineering portfolio</dt><dd>A selected account of your team’s engineering process and evidence, prepared for judging under the current competition manual.</dd><dt>Pit</dt><dd>Your team’s work area at a competition.</dd><dt>Inspection</dt><dd>The competition check that your robot meets the applicable rules; the app checklist does not replace it.</dd></dl><a href="https://ftc-docs.firstinspires.org/en/latest/" target="_blank" rel="noreferrer">Official FTC learning documentation ↗</a></details></section>
       <div className="rookie-welcome">
         <div>
           <div className="rookie-progress">

@@ -95,7 +95,7 @@ function eventDate(date: string) {
   });
 }
 export default function PitPage() {
-  const { data, setData, setPage, openRecord, notify, canReview } = useHQ();
+  const { data, setData, setPage, openRecord, notify, canReview, cloud } = useHQ();
   const [note, setNote] = useState("");
   const [noteType, setNoteType] = useState("Robot issue");
   const [match, setMatch] = useState("");
@@ -142,7 +142,7 @@ export default function PitPage() {
     }));
     setNote("");
     setMatch("");
-    notify("Pit note saved on this device.");
+    notify(cloud.shared ? "Pit note added to the shared workspace." : "Pit note saved on this device.");
   }
   function exportRecap() {
     const text = `${data.teamName} · Competition recap\n\nChecklist: ${completed}/${allItems.length}\n${allItems.map((i) => `${data.pitChecklist.includes(i.id) ? "[x]" : "[ ]"} ${i.title}`).join("\n")}\n\nNOTES\n${data.pitNotes.map((n) => `${new Date(n.date).toLocaleString()}\n${n.text}`).join("\n\n")}\n`;
@@ -168,8 +168,8 @@ export default function PitPage() {
       <div className="pit-save-status" role="status">
         {online ? <Wifi size={15} /> : <WifiOff size={15} />}
         <span>
-          Checklist & notes save on this device.{" "}
-          {online ? "No live team sync." : "Offline: keep this page open."}
+          {cloud.shared ? `Shared checklist and notes · ${cloud.status}. ` : "Demo checklist and notes save on this device. "}
+          {!online && "Offline: keep this tab open. Shared changes wait for a successful retry."}
         </span>
         <Badge tone="green">Team only</Badge>
       </div>

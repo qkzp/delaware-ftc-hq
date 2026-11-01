@@ -70,7 +70,7 @@ const statusTone = (s: Grant["status"]) =>
           : "purple";
 
 export default function GrantsPage() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     canManage,
     canReview,
@@ -130,7 +130,7 @@ export default function GrantsPage() {
       amount: "",
       deadline: "",
       internalDeadline: "",
-      owner: "Alex (you)",
+      owner: myOwner,
       status: "New",
       requirements: "",
       documents: "",
@@ -389,8 +389,8 @@ export default function GrantsPage() {
               <Progress value={progress(g)} />
               <div className="grant-footer">
                 <span className="funding-owner">
-                  <Avatar name={g.owner} small />
-                  {g.owner.replace(" (you)", "")}
+                  <Avatar name={memberName(g.owner)} small />
+                  {memberName(g.owner)}
                 </span>
                 <button
                   className="btn btn-ghost btn-sm"
@@ -558,11 +558,7 @@ export default function GrantsPage() {
                   />
                 </Field>
                 <Field label="Assigned owner">
-                  <input
-                    required
-                    value={editing.owner}
-                    onChange={(e) => patch("owner", e.target.value)}
-                  />
+                  {cloud.shared ? <select required value={editing.owner} onChange={e=>patch("owner",e.target.value)}>{cloud.shared.members.map(m=><option value={m.userId} key={m.userId}>{m.name}</option>)}</select> : <input required value={editing.owner} onChange={e=>patch("owner",e.target.value)}/>}
                 </Field>
                 <Field
                   label="Reminder plan"

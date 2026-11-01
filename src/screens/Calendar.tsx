@@ -234,6 +234,9 @@ export default function CalendarPage() {
   const {
     data,
     canManage,
+    canReview,
+    myOwner,
+    memberName,
     saveRecord,
     removeRecord,
     notify,
@@ -295,7 +298,7 @@ export default function CalendarPage() {
     new Set(events.map((e) => e.date.slice(0, 7))),
   );
   const patch = (update: Partial<TeamEvent>) =>
-    setEditing((e) => (e ? { ...e, ...update } : e));
+    setEditing((e) => (e ? { ...e, ...(e.verification === "verified" && !('verification' in update) ? {verification:"needs-review" as const,verifiedAt:"",verifiedBy:""} : {}), ...update } : e));
   const openEdit = (event: TeamEvent) => {
     setSelected(null);
     setEditing({ ...event });
@@ -313,7 +316,7 @@ export default function CalendarPage() {
       endTime: "19:00",
       type: "Build night",
       location: "",
-      owner: "Alex (you)",
+      owner: myOwner,
       agenda: "",
       notes: "",
       source: "Manually added by team",
@@ -683,7 +686,7 @@ export default function CalendarPage() {
                   {event.demo ? (
                     <Badge tone="gray">Demo event</Badge>
                   ) : (
-                    <Badge tone="gray">Team only</Badge>
+                    <Badge tone={event.verification === "verified" ? "green" : "gray"}>{event.verification === "verified" ? "Mentor verified" : event.verification === "needs-review" ? "Needs verification" : "Team-created"}</Badge>
                   )}
                   <div className="tc-agenda-actions">
                     <button
@@ -826,7 +829,7 @@ export default function CalendarPage() {
             </span>
             <span>
               <Users size={15} />
-              Owner: {selected.owner}
+              Owner: {memberName(selected.owner)}
             </span>
           </div>
           <div className="tc-event-detail-block">
@@ -849,7 +852,7 @@ export default function CalendarPage() {
                 .filter((t) => t.due === selected.date)
                 .map((t) => (
                   <p key={t.id}>
-                    {t.status === "Done" ? "✓" : "○"} {t.title} · {t.owner}
+                    {t.status === "Done" ? "✓" : "○"} {t.title} · {memberName(t.owner)}
                   </p>
                 ))}
             </div>
@@ -873,6 +876,7 @@ export default function CalendarPage() {
               </>
             )}
           </p>
+          <p className="muted">{selected.verification === "verified" ? `Source checked ${selected.verifiedAt} by ${memberName(selected.verifiedBy || "")}` : "Team-created information. Confirm details with the organizer."}{selected.deadline ? ` · Registration deadline: ${selected.deadline}` : ""}</p>
           <div className="form-actions">
             <button
               className={`btn ${selected.rsvp ? "btn-primary" : "btn-secondary"}`}
@@ -1055,6 +1059,8 @@ export default function CalendarPage() {
                 placeholder="https://… or Manually added by team"
               />
             </Field>
+            <Field label="Registration or team deadline"><input type="date" value={editing.deadline || ""} onChange={e=>patch({deadline:e.target.value})}/></Field>
+            <Field label="Verification status" hint="Only a mentor or admin can verify a real event after checking its official source. An imported source is not automatically verified."><select value={editing.verification || 'team-created'} onChange={e=>patch({verification:e.target.value as TeamEvent['verification']})}><option value="team-created">Team-created</option><option value="needs-review">Needs source verification</option>{canReview&&!editing.demo&&<option value="verified">Mentor checked official source</option>}</select></Field>
             {editing.demo && (
               <Badge tone="amber">
                 This remains a clearly labeled demo event

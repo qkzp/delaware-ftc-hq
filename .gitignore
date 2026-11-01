@@ -6,3 +6,10 @@ playwright-report/
 .env*
 .sites-local/
 *.tsbuildinfo
+
+.wrangler/
+.vinext/
+.next/
+.sites-runtime/
+.dev.vars*
+!.env.example

@@ -21,6 +21,7 @@ import type { Resource } from "../types";
 import { useHQ } from "../store";
 import { PageHeader, Modal, Badge, EmptyState, Field } from "../components/ui";
 import "./Library.css";
+import PartsList from "../components/PartsList";
 
 const categories = [
   "Robot design",
@@ -67,7 +68,7 @@ function displayDate(value: string) {
     : "Not reviewed yet";
 }
 export default function ResourcesPage() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     canManage,
     canReview,
@@ -78,6 +79,7 @@ export default function ResourcesPage() {
   } = useHQ();
   const [tab, setTab] = useState<"library" | "robot">("library");
   const [query, setQuery] = useState("");
+  const [showArchived, setShowArchived] = useState(false);
   const [category, setCategory] = useState("All areas");
   const [level, setLevel] = useState("All levels");
   const [kind, setKind] = useState("All types");
@@ -103,7 +105,7 @@ export default function ResourcesPage() {
     clearFocusRecord();
   }, [focusRecord, data.resources, canManage]);
   const visible = data.resources.filter(
-    (r) => canManage || (r.visibility !== "private" && r.approved),
+    (r) => (canManage || (r.visibility !== "private" && r.approved)) && !!r.archived === showArchived,
   );
   const filtered = visible.filter(
     (r) =>
@@ -120,7 +122,7 @@ export default function ResourcesPage() {
   function save(resource: Resource) {
     saveRecord("resources", resource);
     setEditing(null);
-    notify("Resource saved to this device.");
+    notify(cloud.shared ? "Resource updated. Check the sync status before closing." : "Resource saved to this device.");
   }
   function exportNote(resource: Resource) {
     const text = `${resource.title}\n\n${resource.description}\n\n${resource.content}\n\nSource: ${resource.url || "Team record"}\nOwner: ${resource.owner}\nReviewed: ${resource.reviewed || "Not reviewed"}\nVisibility: ${resource.visibility}\n`;
@@ -185,6 +187,7 @@ export default function ResourcesPage() {
                 </button>
               )}
             </label>
+            <label className="inline"><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/>Archived resources</label>
             <select
               aria-label="Filter work area"
               value={category}
@@ -328,7 +331,7 @@ export default function ResourcesPage() {
             <div className="resource-detail-meta">
               <span>
                 <strong>Owner</strong>
-                {current.owner}
+                {memberName(current.owner)}
               </span>
               <span>
                 <strong>Last reviewed</strong>
@@ -456,7 +459,7 @@ function ResourceEditor({
   onClose: () => void;
   onSave: (resource: Resource) => void;
 }) {
-  const { data, canReview, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, canReview, notify } = useHQ();
   const [value, setValue] = useState<Resource>(
     initial || {
       id: crypto.randomUUID(),
@@ -470,7 +473,7 @@ function ResourceEditor({
       description: "",
       url: "",
       content: "",
-      owner: "Alex (you)",
+      owner: myOwner,
       reviewed: "",
       official: false,
       visibility: "private",
@@ -577,11 +580,7 @@ function ResourceEditor({
             </select>
           </Field>
           <Field label="Owner">
-            <input
-              required
-              value={value.owner}
-              onChange={(e) => set("owner", e.target.value)}
-            />
+            {cloud.shared ? <select value={value.owner} onChange={e=>set("owner",e.target.value)}>{cloud.shared.members.map(m=><option key={m.userId} value={m.userId}>{m.name}</option>)}</select> : <input required value={value.owner} onChange={e=>set("owner",e.target.value)}/>} 
           </Field>
         </div>
         <Field
@@ -605,7 +604,7 @@ function ResourceEditor({
         </Field>
         <Field
           label="Import a text or Markdown note"
-          hint="Notes stay on this device. Use a source link for large CAD, video, and image files."
+          hint="Text becomes part of the resource record. Use a private source link for large CAD files, or upload photos and videos through Evidence."
         >
           <input
             type="file"
@@ -662,6 +661,7 @@ function ResourceEditor({
           />{" "}
           This link is an official source (FIRST, funder, or manufacturer).
         </label>
+        <label className="library-check"><input type="checkbox" checked={!!value.archived} onChange={e=>set("archived",e.target.checked)}/>Archive this resource</label>
         {canReview && (
           <label className="library-check">
             <input
@@ -686,7 +686,7 @@ function ResourceEditor({
 }
 
 function RobotReference() {
-  const { data, canManage, setData, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, canManage, setData, notify } = useHQ();
   const [edit, setEdit] = useState(false);
   const [robot, setRobot] = useState(data.robot);
   const sections: {
@@ -794,6 +794,7 @@ function RobotReference() {
           </section>
         ))}
       </div>
+      <PartsList />
       {edit && (
         <Modal
           title="Edit robot quick reference"
@@ -814,7 +815,7 @@ function RobotReference() {
               }
               setData((s) => ({ ...s, robot }));
               setEdit(false);
-              notify("Robot reference saved on this device.");
+              notify(cloud.shared ? "Robot reference updated in the shared workspace." : "Robot reference saved on this device.");
             }}
           >
             {links.map((l) => (

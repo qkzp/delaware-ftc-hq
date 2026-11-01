@@ -19,6 +19,7 @@ import {
   RecoveryRequiredError,
 } from "./persistence";
 import { downloadFile, dateKey } from "./utils";
+import { useCloud, type Cloud } from "./cloud";
 type Notice = {
   message: string;
   action?: () => void;
@@ -26,6 +27,9 @@ type Notice = {
   id: number;
 };
 interface HQContext {
+  cloud: Cloud;
+  myOwner: string;
+  memberName: (owner: string) => string;
   data: AppData;
   setData: React.Dispatch<React.SetStateAction<AppData>>;
   role: Role;
@@ -62,10 +66,12 @@ const validPages: Page[] = [
   "onboarding",
   "pit",
   "settings",
+  "evidence",
+  "opportunities",
 ];
 export function HQProvider({ children }: { children: ReactNode }) {
   const [storageError, setStorageError] = useState("");
-  const [data, setData] = useState<AppData>(() => {
+  const [data, updateData] = useState<AppData>(() => {
     try {
       const saved = localRepository.read();
       if (!saved) return createDemoData();
@@ -88,7 +94,13 @@ export function HQProvider({ children }: { children: ReactNode }) {
       return createDemoData();
     }
   });
-  const [role, setRole] = useState<Role>("lead");
+  const cloud = useCloud(data, updateData);
+  const myOwner = cloud.session.user && cloud.shared ? cloud.session.user.userId : "Alex (you)";
+  const memberName = (owner: string) => owner === myOwner ? "You" : cloud.shared?.members.find(m => m.userId === owner)?.name || owner;
+  const setData: React.Dispatch<React.SetStateAction<AppData>> = (action) => { cloud.markDirty(); updateData(action); };
+  const [previewRole, setPreviewRole] = useState<Role>("lead");
+  const role = cloud.shared?.role || previewRole;
+  const setRole = (next: Role) => { if (!cloud.shared) setPreviewRole(next); };
   const [page, updatePage] = useState<Page>(() => {
     const p = location.hash.slice(1) as Page;
     return validPages.includes(p) ? p : "home";
@@ -104,6 +116,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
   const notify = (message: string, action?: () => void, actionLabel = "Undo") =>
     setNotice({ message, action, actionLabel, id: ++counter.current });
   useEffect(() => {
+    if (cloud.shared) { setStorageError(cloud.error); return; }
     try {
       localRepository.write(data);
       setStorageError("");
@@ -114,7 +127,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
           : "Your browser could not save these changes. Export a backup before closing this tab.",
       );
     }
-  }, [data]);
+  }, [data, cloud.shared, cloud.error]);
   useEffect(() => {
     if (!notice) return;
     const id = setTimeout(() => setNotice(null), 8000);
@@ -141,6 +154,11 @@ export function HQProvider({ children }: { children: ReactNode }) {
     collection: K,
     record: RecordFor<K>,
   ) {
+    if (collection === "tasks") {
+      const incoming = record as RecordFor<"tasks">;
+      const current = data.tasks.find(t=>t.id===incoming.id);
+      if(current) record = {...incoming, comments:[...current.comments,...incoming.comments.filter(c=>!current.comments.some(x=>x.text===c.text&&x.date===c.date&&x.author===c.author))]} as RecordFor<K>;
+    }
     if (record.teamId !== data.teamId || record.seasonId !== data.seasonId) {
       notify("This record belongs to another team or season.");
       return;
@@ -154,16 +172,18 @@ export function HQProvider({ children }: { children: ReactNode }) {
         existingEvent &&
         JSON.stringify({ ...record, rsvp: existingEvent.rsvp }) ===
           JSON.stringify(existingEvent);
-      if (!isRsvp) {
+      const priorTask = collection === "tasks" ? data.tasks.find(t=>t.id===record.id) : undefined;
+      const isComment = priorTask && JSON.stringify({...record,comments:priorTask.comments}) === JSON.stringify(priorTask) && (record as RecordFor<"tasks">).comments.length > priorTask.comments.length;
+      if (!isRsvp && !isComment) {
         if (
-          collection !== "tasks" ||
-          (record as RecordFor<"tasks">).owner !== "Alex (you)"
+          !["tasks", "evidence"].includes(collection) ||
+          (record as RecordFor<"tasks">).owner !== myOwner
         ) {
           notify("A student lead or mentor can make this change.");
           return;
         }
         const previous = data.tasks.find((t) => t.id === record.id);
-        if (previous && previous.owner !== "Alex (you)") {
+        if (previous && previous.owner !== myOwner) {
           notify("You can update tasks assigned to you.");
           return;
         }
@@ -192,34 +212,35 @@ export function HQProvider({ children }: { children: ReactNode }) {
     }
     setData((previous) => ({
       ...previous,
-      [collection]: (previous[collection] as RecordFor<K>[]).some(
+      [collection]: ((previous[collection] || []) as RecordFor<K>[]).some(
         (r) => r.id === record.id,
       )
-        ? (previous[collection] as RecordFor<K>[]).map((r) =>
+        ? ((previous[collection] || []) as RecordFor<K>[]).map((r) =>
             r.id === record.id ? record : r,
           )
-        : [record, ...previous[collection]],
+        : [record, ...(previous[collection] || [])],
     }));
   }
   function removeRecord(collection: Collection, id: string) {
+    if (collection === "tasks" && data.tasks.some(t=>t.dependencies.includes(id))) { notify("Unlink this task from its dependent tasks before removing it."); return; }
     if (!canManage) {
       notify("A student lead or mentor can remove records.");
       return;
     }
-    const removed = (data[collection] as { id: string }[]).find(
+    const removed = ((data[collection] || []) as { id: string }[]).find(
       (r) => r.id === id,
     );
     if (!removed) return;
     setData((prev) => ({
       ...prev,
-      [collection]: (prev[collection] as { id: string }[]).filter(
+      [collection]: ((prev[collection] || []) as { id: string }[]).filter(
         (r) => r.id !== id,
       ),
     }));
     notify("Record removed.", () =>
       setData((prev) => ({
         ...prev,
-        [collection]: [...prev[collection], removed],
+        [collection]: [...(prev[collection] || []), removed],
       })),
     );
   }
@@ -234,6 +255,7 @@ export function HQProvider({ children }: { children: ReactNode }) {
     notify("Backup exported. Keep it in your team’s approved private storage.");
   };
   const importData = (text: string) => {
+    if (cloud.shared) { notify("Use shared revision history to restore a team workspace. Browser imports are demo-only."); return false; }
     if (role !== "admin") {
       notify("Only the team admin preview can restore a backup.");
       return false;
@@ -265,10 +287,12 @@ export function HQProvider({ children }: { children: ReactNode }) {
     }
   };
   const resetDemo = () => {
+    if (cloud.shared) return;
     if (role !== "admin") return;
     replaceWorkspace(createDemoData(), "Sample workspace restored.");
   };
   const startFresh = () => {
+    if (cloud.shared) return;
     if (role !== "admin") return;
     const fresh = createDemoData();
     const teamId = crypto.randomUUID();
@@ -308,6 +332,9 @@ export function HQProvider({ children }: { children: ReactNode }) {
   return (
     <Context.Provider
       value={{
+        cloud,
+        myOwner,
+        memberName,
         data,
         setData,
         role,

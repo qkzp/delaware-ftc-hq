@@ -76,7 +76,7 @@ const tone = (s: Sponsor["status"]) =>
           : "blue";
 
 export default function SponsorsPage() {
-  const {
+  const {myOwner, memberName, cloud,
     data,
     canManage,
     canReview,
@@ -126,7 +126,7 @@ export default function SponsorsPage() {
       type: "Sponsor prospect",
       source: "",
       verified: "",
-      owner: "Alex (you)",
+      owner: myOwner,
       reviewer: "Coach Morgan",
       status: "Researching",
       contacted: false,
@@ -437,8 +437,8 @@ export default function SponsorsPage() {
                     </td>
                     <td>
                       <span className="funding-owner">
-                        <Avatar name={s.owner} small />
-                        <span>{s.owner.replace(" (you)", "")}</span>
+                        <Avatar name={memberName(s.owner)} small />
+                        <span>{memberName(s.owner)}</span>
                       </span>
                     </td>
                     <td>
@@ -628,11 +628,7 @@ export default function SponsorsPage() {
                 </select>
               </Field>
               <Field label="Student owner">
-                <input
-                  required
-                  value={editing.owner}
-                  onChange={(e) => patch("owner", e.target.value)}
-                />
+                {cloud.shared ? <select required value={editing.owner} onChange={e=>patch("owner",e.target.value)}>{cloud.shared.members.map(m=><option value={m.userId} key={m.userId}>{m.name}</option>)}</select> : <input required value={editing.owner} onChange={e=>patch("owner",e.target.value)}/>}
               </Field>
               <Field label="Mentor reviewer">
                 <input
