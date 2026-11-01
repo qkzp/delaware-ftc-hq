@@ -40,6 +40,8 @@ export interface TeamEvent extends Base {
   verifiedAt?: string;
   verifiedBy?: string;
   deadline?: string;
+  latitude?: number;
+  longitude?: number;
   title: string;
   date: string;
   time: string;

@@ -35,6 +35,14 @@ Use aliases rather than full student names. Keep student emails, emergency conta
 
 Shared records are not copied into browser localStorage. Only the last selected team ID is stored as a preference. An open tab holds its authorized records in memory; unsaved changes require a successful server save and a warning protects accidental tab closure. Full offline reload and email/push reminder delivery are not implemented; the UI describes in-app reminders explicitly.
 
+## Competition map
+
+Schedule → Map uses locally bundled Leaflet 1.9.4 with attributed OpenStreetMap tiles. Six curated Delaware and southeastern Pennsylvania scrimmages/qualifiers were checked against their individual organizer pages on November 1, 2026. Venue coordinates come from organizer-linked venue maps or the PA organizer's public `data-venue` records. This is regional coverage, not a live nationwide event feed. Past events are hidden; checks older than 30 days are marked for review. Registration deadlines use the organizer's stated cutoff and do not imply space remains available.
+
+Students can use county starting points or explicitly request browser geolocation, filter by radius/text/source, select numbered pins or equivalent list buttons, inspect source/date/registration information, and open directions. Geolocation is rounded to two decimals and retained only in component memory. OpenStreetMap receives the viewed tile area and normal network metadata; the interface discloses this. No address is automatically sent to a geocoder. Tile failures retain the complete results list.
+
+Leads can review an organizer listing before adding it to the team schedule. Imported listings need mentor verification. Existing real team competitions appear when both venue coordinates are valid; unmapped competitions remain accessible in a separate list. Coordinates are validated during import/save on client and server, and venue changes invalidate prior verification. Demo events never become real map pins. Team event coordinates stay within the existing private workspace permissions.
+
 ## Sources
 
 Official and local directory entries were checked on October 31, 2026. Recheck sources before relying on dates, eligibility, access or current competition rules.
@@ -42,7 +50,8 @@ Official and local directory entries were checked on October 31, 2026. Recheck s
 - [BIOBUZZ TU07 competition manual](https://ftc-resources.firstinspires.org/ftc/game/cm-html/BIOBUZZ%20Competition%20Manual%20-%20TU07.htm)
 - [FTC outreach definitions](https://info.firstinspires.org/hubfs/web/program/ftc/outreach-terms-and-definitions.pdf)
 - [FTC documentation](https://ftc-docs.firstinspires.org/en/latest/)
-- [FIRST Delaware events](https://firstdelaware.org/events) ? source conflicts are explicitly marked; no directory date is seeded as a verified competition.
+- [FIRST Delaware events](https://firstdelaware.org/events) — calendar records are never automatically mentor-verified. The map's reviewed subset links individual current BIOBUZZ event pages.
+- [Pennsylvania FTC events](https://www.ftcpenn.org/ftc-events) — individual organizer pages provide the map's PA event dates, venues, and registration cutoffs.
 - [FIRST grant opportunities](https://www.firstinspires.org/programs/team-grant-opportunities)
 - [UD MakerSpace](https://www.udel.edu/research-innovation/maker/spaces/makerspace/) ? youth access requires confirmation.
 - [Kent County libraries](https://www.kentcountyde.gov/Residents/Library-Services)
@@ -58,6 +67,8 @@ The portable preview uses the starter's loopback-only mock sign-in. Production a
 
 ## Verification status
 
-TypeScript and 52 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. These are not a substitute for two real hosted ChatGPT accounts on two devices.
+TypeScript and 58 automated checks pass. Tests exercise the actual server service with SQLite-backed D1 operations and multiple independent account identities, including membership boundaries, cross-account saves, role escalation, conflicts, comments, approvals, private files, personal progress and recovery. Map checks cover coordinate validation/round trips, distance and date/text/radius filtering, stale source checks, opening actual team records, opt-in location with denied-permission fallback, and event form persistence. These are not a substitute for two real hosted ChatGPT accounts on two devices.
 
 A browser walkthrough verified local sign-in, private team creation, shared task creation and a confirmed server revision. Desktop and 400px mobile-emulated workbench, task form, team setup and evidence form layouts were visually reviewed. Phone navigation uses a native section picker, and the primary task action remains reachable. Hosted anonymous/authenticated routing and rejection of forged identity headers were verified. Real second-account/device acceptance and assistive-technology testing must be recorded before awarding a certified 100/100 or calling this ready for team use.
+
+The competition-map update has not received a visual browser review: computer use stopped because it could not verify the active browser URL. Automated checks and production compilation cover this update; real geolocation permission behavior and map rendering still need a browser acceptance pass.

@@ -90,6 +90,45 @@ const pages = Object.fromEntries(
   ),
 );
 const { Workspace } = await server.ssrLoadModule("/src/App.tsx");
+
+test("competition map opens real team records and requests location only after a click", async () => {
+  const initial = createDemoData();
+  Object.assign(initial.events[0], {demo:false,type:"Competition",title:"Mapped team qualifier",date:"2040-01-01",latitude:39.75,longitude:-75.59});
+  let calls = 0;
+  navigator.geolocation = {getCurrentPosition(_success, failure) { calls++; failure({code:1}); }};
+  try {
+    await fixture({initial,page:pages.Calendar}, async app => {
+      await app.update(()=>byText(app.root,"button","Map").props.onClick());
+      assert.equal(calls,0);
+      const result = app.root.findAllByType("button").find(b=>b.findAllByType("strong").some(s=>s.children.includes("Mapped team qualifier")));
+      assert.ok(result);
+      await app.update(()=>result.props.onClick());
+      assert.match(app.text,/Selected competition/);
+      await app.update(()=>byText(app.root,"button","Use my location").props.onClick());
+      assert.equal(calls,1);
+      assert.match(app.text,/Location permission was declined/);
+      assert.equal(app.context.data.latitude,undefined);
+      await app.update(()=>byText(app.root,"button","Open team event").props.onClick());
+      assert.ok(app.root.findAllByProps({role:"dialog"}).length);
+      assert.match(app.text,/Mapped team qualifier/);
+    });
+  } finally { delete navigator.geolocation; }
+});
+
+test("competition coordinate fields enforce paired valid values and persist through the event form", async () => {
+  await fixture({page:pages.Calendar}, async app => {
+    await app.update(()=>byText(app.root,"button","New event").props.onClick());
+    await app.update(()=>fieldControl(app.root,"Event title").props.onChange({target:{value:"Venue coordinate round trip"}}));
+    await app.update(()=>fieldControl(app.root,"Venue latitude").props.onChange({target:{value:"39.75"}}));
+    await app.update(()=>app.root.findByType("form").props.onSubmit({preventDefault(){}}));
+    assert.equal(app.context.data.events.some(e=>e.title==="Venue coordinate round trip"),false);
+    await app.update(()=>fieldControl(app.root,"Venue longitude").props.onChange({target:{value:"-75.59"}}));
+    await app.update(()=>app.root.findByType("form").props.onSubmit({preventDefault(){}}));
+    const event = app.context.data.events.find(e=>e.title==="Venue coordinate round trip");
+    assert.equal(event.latitude,39.75); assert.equal(event.longitude,-75.59);
+    assert.equal(validateData(JSON.parse(localStorage.getItem(STORAGE_KEY))),true);
+  });
+});
 const { FocusSession } = await server.ssrLoadModule(
   "/src/components/FocusSession.tsx",
 );

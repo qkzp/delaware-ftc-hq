@@ -9,6 +9,15 @@ const {service}=await vite.ssrLoadModule('/server/service.ts');
 const {view,mergeWorkspace}=await vite.ssrLoadModule('/server/policy.ts');
 const {rebaseWorkspace}=await vite.ssrLoadModule('/server/policy.ts');
 const {createDemoData}=await vite.ssrLoadModule('/src/seed.ts');
+test('venue coordinates follow event verification and server validation rules',()=>{
+ const data=createDemoData();const event=data.events[0];event.demo=false;event.source='https://firstdelaware.org/events';
+ const envelope={workspace:data,rsvps:{},learning:{}};
+ const verified=view(envelope,'mentor','mentor');verified.events[0].verification='verified';
+ const approved=mergeWorkspace(envelope,verified,'mentor','mentor');
+ const moved=view(approved,'lead','lead');Object.assign(moved.events[0],{latitude:39.75,longitude:-75.59,verification:'needs-review',verifiedAt:'',verifiedBy:''});
+ const result=mergeWorkspace(approved,moved,'lead','lead');assert.equal(result.workspace.events[0].verification,'needs-review');assert.equal(result.workspace.events[0].verifiedBy,'');
+ const invalid=view(result,'lead','lead');invalid.events[0].latitude=91;assert.throws(()=>mergeWorkspace(result,invalid,'lead','lead'));
+});
 function database(){const sqlite=new DatabaseSync(':memory:');sqlite.exec(readFileSync(new URL('../drizzle/0000_tidy_infant_terrible.sql',import.meta.url),'utf8'));function prepare(sql){return {args:[],bind(...args){this.args=args;return this;},async first(){return sqlite.prepare(sql).get(...this.args)||null;},async all(){return {results:sqlite.prepare(sql).all(...this.args)};},async run(){const result=sqlite.prepare(sql).run(...this.args);return {meta:{changes:Number(result.changes)},success:true};}};}return {prepare,async batch(statements){sqlite.exec('BEGIN');try{const result=[];for(const s of statements)result.push(await s.run());sqlite.exec('COMMIT');return result;}catch(e){sqlite.exec('ROLLBACK');throw e;}},close:()=>sqlite.close()};}
 function bucket(){const files=new Map();return {async put(k,v){files.set(k,v);},async get(k){return files.has(k)?{body:files.get(k)}:null;},async delete(k){files.delete(k);}};}
 function fixture(){const db=database(),storage=bucket();const request=async(user,path,method='GET',data,headers={})=>{const init={method,headers:{origin:'https://team.test',...headers}};if(data!==undefined){init.headers['content-type']='application/json';init.body=JSON.stringify(data);}return service(new Request('https://team.test/api'+path,init),db,storage,user?{userId:user}:null);};return {db,storage,request};}

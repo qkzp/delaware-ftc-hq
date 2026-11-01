@@ -22,6 +22,7 @@ async function moduleUrl(name, replacements = {}) {
   return `data:text/javascript;base64,${Buffer.from(code).toString("base64")}`;
 }
 const utilsUrl = await moduleUrl("utils");
+const { hasCoordinates, distanceMiles, nearbyCompetitions, sourceNeedsReview, publicCompetitions } = await import(await moduleUrl("competition-map"));
 const { createDemoData } = await import(
   await moduleUrl("seed", { "./utils": utilsUrl })
 );
@@ -52,6 +53,39 @@ function changed(mutate) {
   mutate(data);
   return data;
 }
+
+test("map coordinates round-trip and invalid or incomplete venue positions are rejected", () => {
+  const data = changed(d => { d.events[0].latitude = 39.75; d.events[0].longitude = -75.59; });
+  assert.equal(validateData(JSON.parse(JSON.stringify(data))), true);
+  for (const point of [{latitude:91,longitude:0},{latitude:0,longitude:-181},{latitude:NaN,longitude:0},{latitude:0,longitude:Infinity},{latitude:39},{longitude:-75},{latitude:"39",longitude:-75}]) {
+    assert.equal(hasCoordinates(point), false);
+    const invalid = createDemoData(); Object.assign(invalid.events[0], point);
+    assert.equal(validateData(invalid), false);
+  }
+  assert.equal(hasCoordinates({latitude:0,longitude:0}), true);
+});
+test("nearby search uses great-circle miles, filters dates and text, and sorts by distance", () => {
+  const origin = {latitude:0,longitude:0};
+  assert.equal(distanceMiles(origin,origin), 0);
+  assert.ok(Math.abs(distanceMiles(origin,{latitude:0,longitude:1})-69.0934)<.001);
+  assert.ok(Number.isFinite(distanceMiles(origin,{latitude:0,longitude:180})));
+  const event = publicCompetitions[0];
+  const list = [{...event,id:"far",latitude:0,longitude:1,title:"Qualifier"},{...event,id:"near",latitude:0,longitude:.1,title:"Qualifier"},{...event,id:"past",latitude:0,longitude:0,date:"2025-01-01"},{...event,id:"bad",latitude:Infinity}];
+  const matches = nearbyCompetitions(list,origin,100,"2026-11-01","qualifier");
+  assert.deepEqual(matches.map(m=>m.event.id),["near","far"]);
+  assert.deepEqual(nearbyCompetitions(list,origin,25,"2026-11-01","qualifier").map(m=>m.event.id),["near"]);
+  assert.equal(nearbyCompetitions(list,origin,100,"2026-11-01","no match").length,0);
+});
+test("curated competitions retain dated HTTPS sources and stale checks are visible", () => {
+  assert.equal(new Set(publicCompetitions.map(e=>e.id)).size,6);
+  for (const event of publicCompetitions) {
+    assert.ok(hasCoordinates(event)); assert.match(event.source,/^https:\/\/(www\.ftcpenn\.org|firstdelaware\.org)\//);
+    assert.equal(sourceNeedsReview(event.checkedAt,"2026-11-01"),false);
+    assert.equal(sourceNeedsReview(event.checkedAt,"2026-12-02"),true);
+  }
+  assert.equal(sourceNeedsReview("","2026-11-01"),true);
+  assert.equal(sourceNeedsReview("bad","2026-11-01"),true);
+});
 
 test("demo seed and a JSON round trip satisfy the complete import contract", () => {
   const data = createDemoData();

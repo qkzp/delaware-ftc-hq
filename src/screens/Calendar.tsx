@@ -15,6 +15,8 @@ import {
 import { useHQ } from "../store";
 import { Badge, EmptyState, Field, Modal, PageHeader } from "../components/ui";
 import type { TeamEvent } from "../types";
+import CompetitionMap from "../components/CompetitionMap";
+import { hasCoordinates } from "../competition-map";
 import "./tasks-calendar.css";
 
 const types: TeamEvent["type"][] = [
@@ -246,7 +248,7 @@ export default function CalendarPage() {
   const [month, setMonth] = useState(
     () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   );
-  const [view, setView] = useState<"Month" | "Agenda" | "Season">("Agenda");
+  const [view, setView] = useState<"Month" | "Agenda" | "Season" | "Map">("Agenda");
   const [typeFilter, setTypeFilter] = useState("All events");
   const [selected, setSelected] = useState<TeamEvent | null>(null);
   const [editing, setEditing] = useState<TeamEvent | null>(null);
@@ -327,6 +329,10 @@ export default function CalendarPage() {
   const save = (event: React.FormEvent) => {
     event.preventDefault();
     if (!editing || !canManage) return;
+    if ((editing.latitude !== undefined || editing.longitude !== undefined) && !hasCoordinates(editing)) {
+      notify("Add both venue coordinates: latitude from -90 to 90 and longitude from -180 to 180.");
+      return;
+    }
     if (editing.time && editing.endTime && editing.endTime <= editing.time) {
       notify("End time should be later than start time.");
       return;
@@ -490,7 +496,7 @@ export default function CalendarPage() {
       <div className="tc-calendar-top">
         <div className="tc-calendar-month">
           <h2>
-            {view === "Season"
+            {view === "Map" ? "Competition map" : view === "Season"
               ? data.seasonName
               : view === "Agenda"
                 ? "Upcoming events"
@@ -541,10 +547,11 @@ export default function CalendarPage() {
           )}
         </div>
         <div className="filter-tabs" aria-label="Calendar view">
-          {(["Month", "Agenda", "Season"] as const).map((v) => (
+          {(["Agenda", "Month", "Season", "Map"] as const).map((v) => (
             <button
               className={view === v ? "active" : ""}
               key={v}
+              aria-pressed={view === v}
               onClick={() => setView(v)}
             >
               {v}
@@ -552,7 +559,7 @@ export default function CalendarPage() {
           ))}
         </div>
       </div>
-      <div className="filters tc-task-filters">
+      {view !== "Map" && <><div className="filters tc-task-filters">
         <select
           aria-label="Filter event type"
           value={typeFilter}
@@ -575,8 +582,10 @@ export default function CalendarPage() {
             {t}
           </span>
         ))}
-      </div>
-      {view === "Month" ? (
+      </div></>}
+      {view === "Map" ? <CompetitionMap events={data.events} county={data.county} canManage={canManage} onOpen={setSelected} onAdd={event => openEdit({
+        id:crypto.randomUUID(),teamId:data.teamId,seasonId:data.seasonId,demo:false,title:event.title,date:event.date,time:event.time,endTime:event.endTime,type:"Competition",location:event.location,latitude:event.latitude,longitude:event.longitude,owner:myOwner,agenda:"",notes:`Organizer listing checked ${event.checkedAt}. Confirm registration, eligibility, and travel arrangements with the organizer.`,source:event.source,lastSynced:event.checkedAt,rsvp:false,recurring:"None",verification:"needs-review",deadline:event.deadline || "",
+      })}/> : view === "Month" ? (
         <div className="tc-calendar">
           <div className="tc-weekdays">
             {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
@@ -1001,6 +1010,14 @@ export default function CalendarPage() {
                 placeholder="Team workshop or event venue"
               />
             </Field>
+            <details className="competition-coordinate-fields">
+              <summary>Map location (optional)</summary>
+              <p className="muted">Add the public venue’s coordinates to show a competition on the map. Keep private home addresses out of event records. Changing a venue requires a new source check.</p>
+              <div className="form-grid">
+                <Field label="Venue latitude"><input type="number" step="any" min="-90" max="90" required={editing.longitude !== undefined} value={editing.latitude ?? ""} onChange={e=>patch({latitude:e.target.value === "" ? undefined : Number(e.target.value)})} placeholder="39.75"/></Field>
+                <Field label="Venue longitude"><input type="number" step="any" min="-180" max="180" required={editing.latitude !== undefined} value={editing.longitude ?? ""} onChange={e=>patch({longitude:e.target.value === "" ? undefined : Number(e.target.value)})} placeholder="-75.59"/></Field>
+              </div>
+            </details>
             <Field
               label="Agenda"
               hint="Make it easy for every student to arrive ready."

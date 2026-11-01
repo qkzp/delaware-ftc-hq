@@ -1,0 +1,59 @@
+.competition-explorer{margin:24px 0 40px;color:#1d1d1f}
+.competition-intro{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:24px}
+.competition-intro h2{font-size:clamp(26px,3vw,38px);letter-spacing:-.035em;line-height:1.15;margin:0 0 10px}
+.competition-intro p{margin:0;color:#626267;font-size:16px;line-height:1.5;max-width:620px}
+.competition-intro .btn{flex-shrink:0}
+.competition-controls{display:grid;grid-template-columns:1fr .7fr 1fr 1.4fr;gap:16px}
+.competition-controls label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:600}
+.competition-controls select,.competition-controls input{min-height:44px;width:100%;font:inherit;font-size:14px;border:1px solid #d2d2d7;border-radius:9px;background:#fff;color:#1d1d1f;padding:10px}
+.competition-search>div{display:flex;align-items:center;gap:7px;border:1px solid #d2d2d7;border-radius:9px;padding:0 12px;background:#fff}
+.competition-search input{border:0;padding-left:0;min-width:0}
+.competition-privacy,.competition-coverage{font-size:13px;line-height:1.6;color:#626267;margin:14px 0 20px}
+.competition-coverage a{color:#0066cc;text-decoration:underline;text-underline-offset:3px}
+.competition-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);border:1px solid #dedee3;border-radius:18px;overflow:hidden;background:#fff}
+.competition-map-column{min-width:0;background:#f5f5f7}
+.competition-map{height:560px;width:100%;isolation:isolate;z-index:0;background:#e9edf0;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.competition-map .leaflet-control-attribution{font-size:11px;color:#363639;line-height:1.6;max-width:100%;white-space:normal;background:rgba(255,255,255,.94)}
+.competition-map .leaflet-control-attribution a{color:#0060bd}
+.competition-map .leaflet-popup-content{line-height:1.5;min-width:180px}
+.competition-map .leaflet-popup-content p{margin:8px 0}
+.competition-map .leaflet-control-zoom a{color:#1d1d1f}
+.competition-pin{background:none;border:none}
+.competition-pin>span{display:grid;place-items:center;width:34px;height:34px;border:3px solid white;background:#1d1d1f;color:#fff;border-radius:50%;box-shadow:0 2px 8px #0003;font-weight:700}
+.competition-pin-team>span{background:#0071e3}
+.competition-map-caption{display:flex;flex-wrap:wrap;gap:12px;padding:16px;font-size:12px;color:#54545a}
+.competition-map-caption span{display:flex;align-items:center;gap:6px}
+.competition-map-caption i{width:9px;height:9px;border-radius:50%;background:#1d1d1f}
+.competition-map-caption .team-dot{background:#0071e3}
+.competition-results{max-height:614px;overflow:auto;border-left:1px solid #dedee3;overscroll-behavior:contain}
+.competition-result-heading{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;gap:12px;border-bottom:1px solid #e8e8ed}
+.competition-result-heading h3{margin:0;font-size:19px;letter-spacing:-.02em}
+.competition-result-heading>span{color:#626267;font-size:13px}
+.competition-result-list{list-style:none;padding:0;margin:0}
+.competition-result-list li+li{border-top:1px solid #e8e8ed}
+.competition-result-list button{width:100%;display:flex;align-items:flex-start;gap:14px;text-align:left;background:#fff;border:0;padding:20px;color:inherit;font:inherit;cursor:pointer}
+.competition-result-list button:hover,.competition-result-list button.selected{background:#f0f7ff}
+.competition-result-list button:focus-visible{outline:3px solid #0071e3;outline-offset:-3px}
+.competition-result-number{flex-shrink:0;width:27px;height:27px;display:grid;place-items:center;border:1px solid #d2d2d7;border-radius:50%;font-size:12px;font-weight:600}
+.competition-result-list strong{display:block;font-size:15px;line-height:1.4;margin-bottom:6px;letter-spacing:-.01em}
+.competition-result-list small{display:block;font-size:12px;line-height:1.6;color:#626267;margin-bottom:4px}
+.competition-result-distance{display:block;margin-top:8px;font-size:12px;color:#0066cc;font-weight:600}
+.competition-detail{padding:20px;background:#f0f7ff;border-bottom:1px solid #c7dffc}
+.competition-detail h3{font-size:22px;letter-spacing:-.025em;line-height:1.2;margin:14px 0}
+.competition-detail p{font-size:13px;line-height:1.6;overflow-wrap:anywhere;margin:12px 0}
+.competition-detail p svg{vertical-align:middle;margin-right:5px}
+.competition-detail-top{display:flex;justify-content:space-between;gap:16px;align-items:center;font-size:12px;color:#515157}
+.competition-detail-top .text-btn{font-size:13px;padding:4px}
+.competition-detail-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.competition-message{padding:12px 16px;background:#f0f7ff;color:#244368;border-radius:9px;font-size:13px;line-height:1.6}
+.competition-map-column .competition-message{margin:10px}
+.competition-empty{padding:26px 22px}
+.competition-empty h3,.competition-unmapped h3{font-size:17px;margin:0 0 8px}
+.competition-empty p,.competition-unmapped p{font-size:14px;line-height:1.6;color:#626267}
+.competition-unmapped{padding:20px;background:#f5f5f7;border-radius:12px;margin-top:20px}
+.competition-unmapped .btn{margin:4px 6px 4px 0}
+.competition-coordinate-fields{border:1px solid #dedee3;border-radius:10px;padding:16px;margin:10px 0 20px;font-size:14px}
+.competition-coordinate-fields summary{cursor:pointer;font-weight:600}
+.competition-coordinate-fields p{font-size:13px;line-height:1.6;margin:12px 0}
+@media(max-width:1000px){.competition-layout{grid-template-columns:minmax(0,1.1fr) minmax(290px,1fr)}.competition-controls{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.competition-intro{align-items:flex-start;flex-direction:column;gap:16px}.competition-controls{gap:12px}.competition-layout{grid-template-columns:minmax(0,1fr)}.competition-map{height:340px}.competition-results{max-height:none;border-left:0;border-top:1px solid #dedee3}.competition-result-list{max-height:440px;overflow:auto}.competition-map-caption{padding:12px;font-size:11px}.competition-intro h2{font-size:29px}}
