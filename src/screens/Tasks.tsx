@@ -28,6 +28,7 @@ import "./tasks-calendar.css";
 const statuses: Task["status"][] = ["To do", "In progress", "Done"];
 const areas = [
   "Mechanical",
+  "Electrical",
   "CAD",
   "Programming",
   "Outreach",
