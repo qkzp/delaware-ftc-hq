@@ -164,6 +164,24 @@ export default function Home() {
                 </span>
               </div>
               <h2 id="field-assignment-title">{nextTask.title}</h2>
+              <div className="field-assignment-actions">
+                <button
+                  className="field-start-button"
+                  disabled={
+                    !canWork(nextTask) || blockedTasks(nextTask).length > 0
+                  }
+                  onClick={() => setSessionTaskId(nextTask.id)}
+                >
+                  <Play size={14} fill="currentColor" />
+                  Start work session <ArrowUpRight size={17} />
+                </button>
+                <button
+                  className="field-text-button"
+                  onClick={() => openRecord("tasks", nextTask.id)}
+                >
+                  Task details <ArrowRight size={14} />
+                </button>
+              </div>
               <div className="field-assignment-spec">
                 <span>
                   <small>Assigned to</small>
@@ -211,24 +229,6 @@ export default function Home() {
                   order to check the dependency.
                 </div>
               )}
-              <div className="field-assignment-actions">
-                <button
-                  className="field-start-button"
-                  disabled={
-                    !canWork(nextTask) || blockedTasks(nextTask).length > 0
-                  }
-                  onClick={() => setSessionTaskId(nextTask.id)}
-                >
-                  <Play size={14} fill="currentColor" />
-                  Start work session <ArrowUpRight size={17} />
-                </button>
-                <button
-                  className="field-text-button"
-                  onClick={() => openRecord("tasks", nextTask.id)}
-                >
-                  Task details <ArrowRight size={14} />
-                </button>
-              </div>
               {!canWork(nextTask) && (
                 <p className="field-assignment-permission">
                   Ask a student lead to assign this work to you before starting

@@ -36,7 +36,7 @@
 .field-finish-line h3 { margin: 1px 0 8px; font-size: 14px; font-weight: 600; }
 .field-finish-line p { margin: 0; color: var(--field-muted); font-size: 15px; line-height: 1.6; overflow-wrap: anywhere; }
 .field-blocker { border-left: 2px solid #b64419; color: #a23815; padding-left: 12px; margin-top: 20px; font-size: 14px; line-height: 1.6; }
-.field-assignment-actions { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; margin-top: 28px; }
+.field-assignment-actions { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; margin: -6px 0 28px; }
 .field-start-button, .field-text-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 0; background: none; border: 0; color: var(--field-accent-dark); font-size: 15px; line-height: 1.4; text-align: left; }
 .field-start-button { background: var(--field-accent); color: #fff; border-radius: 999px; padding: 12px 20px; }
 .field-start-button > svg:first-child { width: 12px; }
