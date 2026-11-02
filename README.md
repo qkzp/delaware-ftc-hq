@@ -103,6 +103,6 @@ The GitHub remote is `https://github.com/qkzp/delaware-ftc-hq.git` and its liste
 
 ## Release operations
 
-`npm run db:rehearse` applies the tracked migrations only to a fresh in-memory SQLite database. `npm run release:preflight` reports local configuration presence, release fingerprints and public hosted checks without printing secrets; `--database` adds read-only D1 schema metadata checks when credentials are available. It never applies production migrations or approves a release. See [launch acceptance](docs/launch-acceptance.md). `/api/deployment/status` exposes only configuration/gate flags and the source fingerprint.
+`npm run db:rehearse` applies the tracked migrations only to a fresh in-memory SQLite database. `npm run release:preflight` reports local configuration presence, release fingerprints and public hosted checks without printing secrets; `--database` adds read-only D1 schema metadata checks when credentials are available. It never applies production migrations or approves a release. See [launch acceptance](docs/launch-acceptance.md). `/api/deployment/status` exposes configuration/gate flags, the source fingerprint and changed build-source paths.
 
 Each team can set monitored support/privacy addresses in Workspace settings. Adult mentor/admin permissions protect updates; current members can read those contacts through authorized privacy maintenance even while ordinary access is paused. Platform identity and public monitored contacts remain a separate required operator responsibility.

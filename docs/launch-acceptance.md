@@ -16,7 +16,7 @@ npm run release:preflight -- --output=../outputs/release-preflight.json
 
 The preflight returns exit code 1 when technical prerequisites are missing. The report contains credential names/presence, schema metadata and status flags; it does not print credential values or raw provider errors. A closed release is an expected blocker until operator approval/configuration is completed. `--offline` skips hosted checks; `--origin=https://your-canonical-domain` chooses a different reviewed origin. `--database` performs read-only production schema checks when Cloudflare credentials are available in the process environment.
 
-The public `/api/deployment/status` endpoint returns only the source fingerprint and coarse configuration/gate flags. It does not expose account IDs, team IDs, contacts, credentials, review evidence or database contents. A configured flag proves presence only, not successful sign-in, email delivery, provider permissions or legal acceptance.
+The public `/api/deployment/status` endpoint returns the source fingerprint, changed build-source paths and coarse configuration/gate flags. It does not expose account IDs, team IDs, contacts, credentials, review evidence or database contents. A configured flag proves presence only, not successful sign-in, email delivery, provider permissions or legal acceptance.
 
 ## Configure and verify providers
 

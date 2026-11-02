@@ -1,3 +1,4 @@
+import release from "./release-manifest.json";
 import {assessReadiness,type ReadinessEnvironment} from "./readiness";
 type Environment=ReadinessEnvironment&Record<string,string|undefined>;
 export function deploymentStatus(environment:Environment,origin:string){
@@ -10,5 +11,5 @@ export function deploymentStatus(environment:Environment,origin:string){
   database&&has("RESEND_API_KEY","EMAIL_FROM")?"email":"",
  ].filter(Boolean):[];
  const scheduledCleanup=has("CRON_SECRET"),gate=assessReadiness(environment,{origin});
- return {schemaVersion:1,releaseId:gate.releaseId,teamAccess:environment.MYFTC_SERVICE_PAUSED==="true"?"paused":!signInMethods.length||!database||!privateFiles||!scheduledCleanup?"setup-required":gate.enabled?"enabled":"review-required",configuration:{signInMethods,database,privateFiles,scheduledCleanup}};
+ return {schemaVersion:1,releaseId:gate.releaseId,sourceChanges:release.sourceChanges,teamAccess:environment.MYFTC_SERVICE_PAUSED==="true"?"paused":!signInMethods.length||!database||!privateFiles||!scheduledCleanup?"setup-required":gate.enabled?"enabled":"review-required",configuration:{signInMethods,database,privateFiles,scheduledCleanup}};
 }
