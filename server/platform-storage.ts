@@ -152,3 +152,4 @@ export function getPlatformR2(): R2Bucket {
 export function hasPlatformStorageConfig() {
   return ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_D1_DATABASE_ID", "CLOUDFLARE_D1_API_TOKEN", "CLOUDFLARE_R2_BUCKET_NAME", "CLOUDFLARE_R2_ACCESS_KEY_ID", "CLOUDFLARE_R2_SECRET_ACCESS_KEY"].every((key) => !!process.env[key]?.trim());
 }
+export function hasPlatformD1Config(){return ["CLOUDFLARE_ACCOUNT_ID","CLOUDFLARE_D1_DATABASE_ID","CLOUDFLARE_D1_API_TOKEN"].every(key=>!!process.env[key]?.trim());}

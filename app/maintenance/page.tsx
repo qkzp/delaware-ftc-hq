@@ -21,7 +21,7 @@ export default async function MaintenancePage() {
     return <ReviewHold support={publicSupport(record)} />;
   }
   const user = await getCurrentUser();
-  if (!user) return <main className="privacy-content"><h1>Sign in for private data help</h1><p>Existing approved team members can record privacy requests and retry authorized cleanup while normal work is paused.</p><p><a className="btn btn-primary" href="/api/auth/signin/google?callbackUrl=%2Fmaintenance">Continue with Google</a></p><p><a className="btn btn-secondary" href="/api/auth/signin/azure-ad?callbackUrl=%2Fmaintenance">Continue with Microsoft</a></p><p><a href="/privacy">Privacy and other help routes</a></p></main>;
+  if (!user) return <main className="privacy-content"><h1>Sign in for private data help</h1><p>Existing approved team members can record privacy requests and retry authorized cleanup while normal work is paused.</p><p><a className="btn btn-primary" href="/signin?callbackUrl=%2Fmaintenance">Choose a sign-in method</a></p><p><a href="/privacy">Privacy and other help routes</a></p></main>;
   if (!development && !record?.allowedAccountIds.includes(user.userId)) return <ReviewHold support={publicSupport(record)} />;
   const stores = getDataStores();
   if (!stores) return <main className="privacy-content"><h1>Private data help is unavailable</h1><p>Storage could not be reached. Use the monitored adult contact on the <a href="/privacy">privacy page</a> for requests or a cleanup receipt.</p></main>;

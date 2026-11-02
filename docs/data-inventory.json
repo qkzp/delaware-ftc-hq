@@ -11,7 +11,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -27,7 +27,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -43,7 +43,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -59,7 +59,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -75,7 +75,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -91,7 +91,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -107,7 +107,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -123,7 +123,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -139,7 +139,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -155,7 +155,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -171,7 +171,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -187,7 +187,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -203,7 +203,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -219,7 +219,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -235,7 +235,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -251,7 +251,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -267,7 +267,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -283,7 +283,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -299,7 +299,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -315,7 +315,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -331,7 +331,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -347,7 +347,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -363,7 +363,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -379,7 +379,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -395,7 +395,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -411,7 +411,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -427,7 +427,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -443,7 +443,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -459,7 +459,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -475,7 +475,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -491,7 +491,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -507,7 +507,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -523,7 +523,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -539,7 +539,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -555,7 +555,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -571,7 +571,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -587,7 +587,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -603,7 +603,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -619,7 +619,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -635,7 +635,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -651,7 +651,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -667,7 +667,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -683,7 +683,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -699,7 +699,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -715,7 +715,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -731,7 +731,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -747,7 +747,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -763,7 +763,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -779,7 +779,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -795,7 +795,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -811,7 +811,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -827,7 +827,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -843,7 +843,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -859,7 +859,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -875,7 +875,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -891,7 +891,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -907,7 +907,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -923,7 +923,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -939,7 +939,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -955,7 +955,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -971,7 +971,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -987,7 +987,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1003,7 +1003,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1019,7 +1019,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1035,7 +1035,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1051,7 +1051,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1067,7 +1067,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1083,7 +1083,55 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.events[].awardName",
+      "type": "string",
+      "purpose": "Coordinate team dates, venues and per-member RSVP; venue coordinates only",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team; each member receives their own RSVP",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.events[].awardSubmitted",
+      "type": "boolean",
+      "purpose": "Coordinate team dates, venues and per-member RSVP; venue coordinates only",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team; each member receives their own RSVP",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.events[].awardTimezone",
+      "type": "string",
+      "purpose": "Coordinate team dates, venues and per-member RSVP; venue coordinates only",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team; each member receives their own RSVP",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1099,7 +1147,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1115,7 +1163,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1131,7 +1179,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1147,7 +1195,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1163,7 +1211,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1179,7 +1227,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1195,7 +1243,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1211,7 +1259,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1227,7 +1275,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1243,7 +1291,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1259,7 +1307,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1275,7 +1323,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1291,7 +1339,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1307,7 +1355,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1323,7 +1371,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1339,7 +1387,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1355,7 +1403,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1371,7 +1419,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1387,7 +1435,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1403,7 +1451,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1419,7 +1467,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1435,7 +1483,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1451,7 +1499,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1467,7 +1515,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1483,7 +1531,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1499,7 +1547,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1515,7 +1563,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1531,7 +1579,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1547,7 +1595,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1563,7 +1611,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1579,7 +1627,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1595,7 +1643,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1611,7 +1659,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1627,7 +1675,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1643,7 +1691,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1659,7 +1707,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1675,7 +1723,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1691,7 +1739,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1707,7 +1755,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1723,7 +1771,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1739,7 +1787,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1755,7 +1803,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1771,7 +1819,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1787,7 +1835,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1803,7 +1851,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1819,7 +1867,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1835,7 +1883,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1851,7 +1899,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1867,7 +1915,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1883,7 +1931,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1899,7 +1947,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1915,7 +1963,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1931,7 +1979,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1947,7 +1995,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1963,7 +2011,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1979,7 +2027,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -1995,7 +2043,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2011,7 +2059,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2027,7 +2075,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2043,7 +2091,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2059,7 +2107,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2075,7 +2123,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2091,7 +2139,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2107,7 +2155,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2123,7 +2171,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2139,7 +2187,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2155,7 +2203,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2171,7 +2219,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2187,7 +2235,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2203,7 +2251,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2219,7 +2267,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2235,7 +2283,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2251,7 +2299,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2267,7 +2315,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2283,7 +2331,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2299,7 +2347,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2315,7 +2363,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2331,7 +2379,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2347,7 +2395,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2363,7 +2411,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2379,7 +2427,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2395,7 +2443,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2411,7 +2459,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2427,7 +2475,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2443,7 +2491,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2459,7 +2507,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2475,7 +2523,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2491,7 +2539,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2507,7 +2555,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2523,7 +2571,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2539,7 +2587,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2555,7 +2603,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2571,7 +2619,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2587,7 +2635,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2603,7 +2651,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2619,7 +2667,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2635,7 +2683,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2651,7 +2699,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2667,7 +2715,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2683,7 +2731,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2699,7 +2747,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2715,7 +2763,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2731,7 +2779,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2747,7 +2795,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2763,7 +2811,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2779,7 +2827,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2795,7 +2843,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2811,7 +2859,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2827,7 +2875,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2843,7 +2891,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2859,7 +2907,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2875,7 +2923,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2891,7 +2939,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2907,7 +2955,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2923,7 +2971,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2939,7 +2987,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2955,7 +3003,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2971,7 +3019,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -2987,7 +3035,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -3003,7 +3051,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -3019,7 +3067,7 @@
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
       "vendors": [
         "Vercel hosting",
-        "Google or Microsoft OAuth",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
         "Cloudflare D1"
       ],
       "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
@@ -3897,16 +3945,476 @@
       "approval": "PENDING organization/vendor/retention review"
     },
     {
-      "field": "identity-provider.account-session",
+      "field": "database.chat_messages.id",
+      "type": "text(\"id\").primaryKey()",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.team_id",
+      "type": "text(\"team_id\").notNull()",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.sender_id",
+      "type": "text(\"sender_id\").notNull()",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.recipient_id",
+      "type": "text(\"recipient_id\").notNull().default(\"\")",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.body",
+      "type": "text(\"body\").notNull()",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.created",
+      "type": "text(\"created\").notNull()",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_messages.removed",
+      "type": "integer(\"removed\").notNull().default(0)",
+      "purpose": "Support chat_messages authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Adult-admin configured 1–30 days (30 default), with activity and secret-protected daily cleanup; operator must verify scheduling",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_settings.team_id",
+      "type": "text(\"team_id\").primaryKey()",
+      "purpose": "Support chat_settings authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_settings.dm_enabled",
+      "type": "integer(\"dm_enabled\").notNull().default(0)",
+      "purpose": "Support chat_settings authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_settings.retention_days",
+      "type": "integer(\"retention_days\").notNull().default(30)",
+      "purpose": "Support chat_settings authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_settings.updated",
+      "type": "text(\"updated\").notNull()",
+      "purpose": "Support chat_settings authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_blocks.team_id",
+      "type": "text(\"team_id\").notNull()",
+      "purpose": "Support chat_blocks authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_blocks.user_id",
+      "type": "text(\"user_id\").notNull()",
+      "purpose": "Support chat_blocks authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_blocks.blocked_user_id",
+      "type": "text(\"blocked_user_id\").notNull()",
+      "purpose": "Support chat_blocks authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.chat_blocks.created",
+      "type": "text(\"created\").notNull()",
+      "purpose": "Support chat_blocks authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Group messages: current authorized team. DMs: participants in app; explicit reported copy: adult operators. Infrastructure access is not end-to-end encrypted.",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel hosting",
+        "Cloudflare D1"
+      ],
+      "retention": "Until unblock or authorized team erasure; approved team operating schedule",
+      "deletion": "Sender may permanently remove message content; adult reviewers may moderate group content. Team erasure removes messaging tables. Reports, exports and host backups follow separate handling.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_users.id",
+      "type": "text(\"id\").primaryKey()",
+      "purpose": "Support auth_users authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_users.email",
+      "type": "text(\"email\").notNull().unique()",
+      "purpose": "Support auth_users authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_users.email_verified",
+      "type": "integer(\"email_verified\")",
+      "purpose": "Support auth_users authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_users.created",
+      "type": "integer(\"created\").notNull()",
+      "purpose": "Support auth_users authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_accounts.provider",
+      "type": "text(\"provider\").notNull()",
+      "purpose": "Support auth_accounts authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_accounts.provider_account_id",
+      "type": "text(\"provider_account_id\").notNull()",
+      "purpose": "Support auth_accounts authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_accounts.user_id",
+      "type": "text(\"user_id\").notNull()",
+      "purpose": "Support auth_accounts authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Authentication lookup email and minimal provider links remain for account operation until authorized operator account erasure; approved retention procedure pending",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_verification_tokens.identifier",
+      "type": "text(\"identifier\").notNull()",
+      "purpose": "Support auth_verification_tokens authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Single-use hashed tokens, 15-minute expiry, deleted on use or configured cleanup",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_verification_tokens.token",
+      "type": "text(\"token\").notNull()",
+      "purpose": "Support auth_verification_tokens authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Single-use hashed tokens, 15-minute expiry, deleted on use or configured cleanup",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_verification_tokens.expires",
+      "type": "integer(\"expires\").notNull()",
+      "purpose": "Support auth_verification_tokens authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Single-use hashed tokens, 15-minute expiry, deleted on use or configured cleanup",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_email_rate.id",
+      "type": "text(\"id\").primaryKey()",
+      "purpose": "Support auth_email_rate authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Hashed recipient rate counters retained up to 24 hours plus cleanup interval",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_email_rate.recipient_hash",
+      "type": "text(\"recipient_hash\").notNull()",
+      "purpose": "Support auth_email_rate authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Hashed recipient rate counters retained up to 24 hours plus cleanup interval",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "database.auth_email_rate.created",
+      "type": "integer(\"created\").notNull()",
+      "purpose": "Support auth_email_rate authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authentication server only; never returned in team roster responses",
+      "storage": "Cloudflare D1",
+      "vendors": [
+        "Vercel",
+        "Cloudflare D1",
+        "Enabled identity providers",
+        "Resend for sign-in emails"
+      ],
+      "retention": "Hashed recipient rate counters retained up to 24 hours plus cleanup interval",
+      "deletion": "Not deleted by one-team erasure because an authentication identity can serve other teams. Responsible operator must verify account-erasure authority and remove the auth lookup/links/tokens plus provider copies through the reviewed process.",
+      "approval": "PENDING organization/vendor/retention review"
+    },
+    {
+      "field": "browser.robot-lab",
       "type": "external/runtime",
-      "purpose": "Provider-scoped Google/Microsoft account identifier and essential OAuth/session cookies; provider profile processed during sign-in but name/email/image removed from app JWT and session",
+      "purpose": "Numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions and route poses",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Role/host/provider dependent; verify before enabling",
-      "storage": "Auth.js encrypted session on Vercel (configured eight-hour lifetime); Google or Microsoft identity provider; never app localStorage",
+      "storage": "Browser tab memory; no upload to a hosted model or robot connection",
+      "vendors": [],
+      "retention": "Until reset/navigation/account scope change or tab close; downloaded Java/JSON/CSV stays on the user's device",
+      "deletion": "Until reset/navigation/account scope change or tab close; downloaded Java/JSON/CSV stays on the user's device",
+      "approval": "PENDING"
+    },
+    {
+      "field": "identity-provider.account-session",
+      "type": "external/runtime",
+      "purpose": "Provider-scoped Google/Microsoft/Apple or internal email account identifier and essential OAuth/session cookies; provider profile processed during sign-in but name/email/image removed from app JWT and session",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Role/host/provider dependent; verify before enabling",
+      "storage": "Auth.js encrypted session on Vercel (configured eight-hour lifetime); configured OAuth provider or Resend email delivery; never app localStorage",
       "vendors": [
         "Vercel",
         "Google",
-        "Microsoft"
+        "Microsoft",
+        "Apple",
+        "Resend"
       ],
       "retention": "Provider/host-controlled; terms, age suitability, retention, location and deletion need review",
       "deletion": "Provider/host-controlled; terms, age suitability, retention, location and deletion need review",
@@ -3923,6 +4431,8 @@
         "Vercel",
         "Google",
         "Microsoft",
+        "Apple",
+        "Resend",
         "Cloudflare"
       ],
       "retention": "Operator must obtain actual inventory, retention, encryption, breach and deletion commitments; unknown is a release blocker",

@@ -11,8 +11,8 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
  const mine=data.tasks.filter(task=>task.owner===myOwner&&task.status!=="Done").length;
  const roleName=role==="admin"?"Team admin":role==="mentor"?"Mentor / coach":role==="lead"?"Student lead":"Student";
  const groups=[
-  {label:"Workspace",pages:["home","team","tasks","calendar","resources"]},
-  {label:"Team",pages:["pit","evidence","grants","sponsors","opportunities"]},
+  {label:"Workspace",pages:["home","team","tasks","calendar","resources","robotlab"]},
+  {label:"Team",pages:["awards","pit","evidence","grants","sponsors","opportunities"]},
  ];
  const accountName=cloud.shared?(cloud.shared.members.find(member=>member.userId===myOwner)?.name||"Team member"):"Demo workspace";
  const initials=accountName.split(/\s+/).filter(Boolean).slice(0,2).map(word=>word[0]).join("").toUpperCase();
@@ -20,13 +20,13 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
  const PageIcon=current?.icon||Settings2;
  return <>
   <aside className="workspace-sidebar" aria-label="Workspace sidebar">
-   <button className="workspace-name" onClick={()=>setPage("settings")} aria-label={`Team settings for ${data.teamName||"your team"}`}>
+   <button className="workspace-name" onClick={()=>setPage("settings")}>
     <span className="team-symbol" aria-hidden="true">M</span>
     <span><strong>{data.teamName||"Your team"}</strong><small>{data.teamNumber&&data.teamNumber!=="DEMO"?`FTC ${data.teamNumber}`:"MyFTCSpace"}</small></span>
     <ChevronDown size={14} aria-hidden="true"/>
    </button>
    <div className="sidebar-quick-actions">
-    <button className="workspace-search" aria-label="Search workspace (Control K)" onClick={onSearch}><Search size={16} aria-hidden="true"/><span>Search</span><kbd>Ctrl K</kbd></button>
+    <button className="workspace-search" aria-label="Search Ctrl K — search workspace" onClick={onSearch}><Search size={16} aria-hidden="true"/><span>Search</span> <kbd>Ctrl K</kbd></button>
     <button className="sidebar-utility sidebar-inbox" aria-label="Team updates" onClick={onUpdates}><Bell size={16} aria-hidden="true"/>Team updates</button>
    </div>
    <div className="sidebar-navigation-scroll">

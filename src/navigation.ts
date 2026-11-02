@@ -7,6 +7,8 @@ import {
   Sprout,
   Users,
   MessagesSquare,
+  Trophy,
+  FlaskConical,
 } from "lucide-react";
 import type { Page } from "./types";
 export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
@@ -14,6 +16,8 @@ export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
   { page: "team", label: "Team hub", icon: MessagesSquare },
   { page: "tasks", label: "Tasks", icon: CheckCheck },
   { page: "calendar", label: "Schedule", icon: CalendarDays },
+  { page: "awards", label: "Awards", icon: Trophy },
+  { page: "robotlab", label: "Robot Lab", icon: FlaskConical },
   { page: "resources", label: "Robot & resources", icon: BookOpen },
   { page: "grants", label: "Grants", icon: Sprout },
   { page: "sponsors", label: "Outreach", icon: Users },
@@ -26,6 +30,8 @@ export const pageLabels: Record<Page, string> = {
   team: "Team hub",
   tasks: "Tasks",
   calendar: "Schedule",
+  awards: "Awards & deadlines",
+  robotlab: "Robot Lab",
   resources: "Robot & resources",
   grants: "Grant register",
   sponsors: "Sponsor outreach",

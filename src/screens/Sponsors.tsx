@@ -418,7 +418,9 @@ export default function SponsorsPage() {
                     <td>
                       <button
                         className={`contact-pill ${s.contacted ? "contacted" : ""}`}
-                        aria-label={`Mark ${s.name} ${s.contacted ? "not contacted" : "contacted"}`}
+                        aria-label={`${s.contacted ? "Yes" : "No"} — ${s.name} contacted; mark ${s.contacted ? "not contacted" : "contacted"}`}
+                        data-contact-sponsor={s.id}
+                        aria-pressed={s.contacted}
                         onClick={() => toggleContact(s)}
                         disabled={s.status === "Do Not Contact"}
                       >

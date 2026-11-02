@@ -12,7 +12,7 @@ Production requires the operator-managed `MYFTC_READINESS_RECORD` runtime secret
 
 ## Team use
 
-1. On an approved release, choose **Google** or **Microsoft** sign-in. Unapproved or paused releases show the review hold. Approved signed-in users choose a team; a single existing team reopens automatically. The former `/demo` URL redirects to this entry point.
+1. On an approved release, choose a configured **Google**, **Microsoft**, **Apple**, or **email link** sign-in method. Unapproved or paused releases show the review hold. Approved signed-in users choose a team; a single existing team reopens automatically. The former `/demo` URL redirects to this entry point.
 2. An approved adult creates a reviewed private team using a preapproved team slot and display alias, or an approved account joins using a one-use invitation code. Another school or team must receive its own scope review before real data is accepted.
 3. An admin invites students, student leads, and mentors. Invitations expire in 48 hours. Roles are assigned by the admin and enforced by the server.
 4. Add tasks, events, robot notes, parts, funding records, and evidence. Watch the sync status before closing a tab.
@@ -27,7 +27,7 @@ Production requires the operator-managed `MYFTC_READINESS_RECORD` runtime secret
 - Student workbench: personal next task, due dates, priority, explicit and dependency blockers, upcoming events, in-app reminders, task and resource shortcuts.
 - Build tracking: owners, work areas, named robot subsystems, priority, status, effort, completion criteria, dependency-cycle checks, task comments, build sessions and optional focus timer.
 - Schedule: upcoming agenda across months, month/season views, date/time/location/agenda/owner, registration deadlines, personal RSVPs, calendar imports/exports, and separate team-created/source-review/mentor-verified states. Imports never automatically verify an event.
-- Funding: sponsor contacts, county filters, owners, relationship history, follow-ups, requested/confirmed support, recognition restrictions and mentor-approved message drafts; grants include eligibility, source, check date, deadlines, application steps, owner and manual status tracking. No email or application is sent.
+- Funding: sponsor contacts, county filters, owners, relationship history, follow-ups, requested/confirmed support, recognition restrictions and mentor-approved message drafts; grants include eligibility, source, check date, deadlines, application steps, owner and manual status tracking. No sponsor outreach email or grant application is sent.
 - Robot knowledge: searchable/filterable CAD, code, wiring, build logs, official resources, troubleshooting and startup notes, resource archive and a searchable parts/spares list.
 - Evidence: outreach and engineering records, county, date, owner, impact, measured reach and method, award links, consent scope/reference, review receipt, private attachments, archive, and a mentor-only export of evidence approved for external use. The export is an editable Markdown evidence draft, not a validated portfolio PDF.
 - Delaware: sourced New Castle, Kent, Sussex and statewide resources. Check dates and access caveats are visible. Conflicting event dates remain unverified. Grant eligibility is not assumed for a team.
@@ -37,9 +37,15 @@ Production requires the operator-managed `MYFTC_READINESS_RECORD` runtime secret
 - Official setup: clean teams with empty task/event/funding/evidence records and scoped public reference links; no fictional members, robot notes, announcements, or sample tasks. The empty workbench opens the first-task form directly.
 - Privacy & data help: `/privacy` describes actual access, storage, consent, retention, maps and rights routes. Settings supports private requests and coach/mentor review, disabled-by-default uploads, team pause, evidence withdrawal, team erasure and recoverable cleanup receipts.
 
+- Team messages: group chat and optional participant-only DMs, per-user blocking, explicit safety reports, multiple reviewed adult operators, and 1?30-day retention. DMs default off.
+- Awards: shared, sourced deadlines with time zones, submission state and mentor review; students and adults see the same dates.
+- Robot Lab: public local CSV motor-model training, simulated PID search, route preview and disabled Java scaffold export at `/robot-lab`. Real telemetry and hardware validation are required.
+
+See [provider setup](docs/provider-setup.md) for Apple/email credentials, database migration and scheduled cleanup requirements.
+
 ## Privacy model
 
-The review hold, approved login and privacy-information pages contain no team records. Team data requires the release/roster checks, a provider-scoped Google/Microsoft identity and current membership/role checks. Provider-scoped account IDs identify accounts; sign-in emails and full profile names are not copied into team membership rows. Membership aliases are visible to teammates.
+The review hold, approved login and privacy-information pages contain no team records. Team data requires the release/roster checks, an approved provider-scoped identity and current membership/role checks. Provider-scoped account IDs identify accounts; sign-in emails and full profile names are not copied into team membership rows. Membership aliases are visible to teammates.
 
 Student responses exclude sponsor contact records, private grants, private/unapproved resources and other students' private/unapproved evidence. Students may update assigned tasks, append comments, RSVP, record personal learning progress, add pit notes, prepare the pit checklist and manage their own evidence. Leads manage team work; mentors/admins approve external use and skills; only admins manage membership/invitations and restore revisions.
 
@@ -81,14 +87,14 @@ Official and local directory entries were checked on October 31, 2026. Recheck s
 
 ## Development
 
-Node >=22.13, npm and Git are required. Run `npm ci`, `npm run dev`, `npm run check`, and `npm run build`. This release targets Vercel with the Next.js runtime and Auth.js Google/Microsoft sign-in. Configure the callbacks, Vercel environment variables, Cloudflare D1 API and private R2 S3 credentials as described in [the Vercel deployment guide](docs/vercel-deployment.md).
+Node >=22.13, npm and Git are required. Run `npm ci`, `npm run dev`, `npm run check`, and `npm run build`. This release targets Vercel with the Next.js runtime and Auth.js Google/Microsoft/Apple or email-link sign-in. Configure the callbacks, Vercel environment variables, Cloudflare D1 API and private R2 S3 credentials as described in [the Vercel deployment guide](docs/vercel-deployment.md).
 
-Production sign-in uses Google and Microsoft OAuth, backed by encrypted Auth.js sessions. No mock identity is included in production. Vercel hosts the app; Cloudflare D1 and private R2 continue to hold shared data. The Vercel Functions connect to them using server-only credentials. Drizzle schema/migrations are tracked; confirm migrations against the target D1 database before release.
+Production sign-in supports Google, Microsoft and Apple OAuth and email links, backed by encrypted Auth.js sessions. No mock identity is included in production. Vercel hosts the app; Cloudflare D1 and private R2 continue to hold shared data. The Vercel Functions connect to them using server-only credentials. Drizzle schema/migrations are tracked; confirm migrations against the target D1 database before release.
 
 `src/screens/` contains app screens; it deliberately avoids Next's `pages/` reserved directory. `app/api/[...segments]/route.ts` obtains trusted identity and delegates to `server/service.ts`. `server/policy.ts` performs filtering, authorization, validation and conflict merging. No source tokens, auth secrets or private records belong in Git.
 
 ## Verification status
 
-On November 2, 2026, all 163 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 259-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the public welcome page, privacy page, enrollment setup message, maintenance entry, session gate, and security headers. Automated accessibility semantics passed, but visual/responsive/screen-reader review remains outstanding.
+On November 2, 2026, all 174 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 291-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the public welcome page, privacy page, enrollment setup message, maintenance entry, session gate, and security headers. Isolated Chromium simulations also passed rendered contrast/semantics, mobile/tablet/desktop reflow, 200%/400% reflow equivalents and keyboard checks with fictional records. An actual screen-reader review, real devices and hosted provider flows remain outstanding.
 
 The GitHub remote is `https://github.com/qkzp/delaware-ftc-hq.git` and its listed website is `https://delaware-ftc-hq.vercel.app`. The GitHub Vercel status reported success for the existing main commit on November 2, 2026. This workspace has no local Vercel project link or OAuth/Cloudflare credentials; provider configuration and real data flows are not verified by that deployment status. Hosted two-account/device acceptance, phone/tablet/desktop, zoom/contrast and screen-reader review, vendor deletion/backup attestations and signed approvals remain outstanding. The release fingerprint is generated in `server/release-manifest.json` by `npm run build`.

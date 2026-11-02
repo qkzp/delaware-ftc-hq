@@ -254,7 +254,7 @@ test("workspace tabs, exact-record search, and role changes keep the redesigned 
     const task = ownTask(app.context.data);
     await app.update(() =>
       app.root
-        .findByProps({ "aria-label": "Search workspace (Control K)" })
+        .findByProps({ "aria-label": "Search Ctrl K — search workspace" })
         .props.onClick(),
     );
     await app.update(() =>
@@ -732,7 +732,7 @@ test("a lead adds a sponsor, marks it contacted, and finds an overdue follow-up 
     assert.equal(sponsor.contacted, false);
     const contacted = app.root
       .findAllByType("button")
-      .find((b) => b.props["aria-label"] === `Mark ${sponsor.name} contacted`);
+      .find((b) => b.props["data-contact-sponsor"] === sponsor.id);
     await app.update(() => contacted.props.onClick());
     sponsor = app.context.data.sponsors.find((s) => s.id === sponsor.id);
     assert.equal(sponsor.contacted, true);
@@ -1308,7 +1308,7 @@ test("workstream selection filters the queue, pins a real task, and opens its bu
   initial.tasks.push(secondTask);
   await fixture({ initial, page: pages.Home }, async (app) => {
     const programmingMapButton = app.root.findByProps({
-      "aria-label": "Filter Programming workstream",
+      "data-workstream": "Programming",
     });
     assert.ok(
       programmingMapButton,
@@ -1410,7 +1410,7 @@ test("student workbench keeps other-owner work read-only and hides private fundi
       /HANDOFFS TO MAKE|Sponsor follow-ups? due|Applications? to review/,
     );
     const electricalMapButton = app.root.findByProps({
-      "aria-label": "Filter Electrical workstream",
+      "data-workstream": "Electrical",
     });
     assert.ok(electricalMapButton);
     await app.update(() => electricalMapButton.props.onClick());

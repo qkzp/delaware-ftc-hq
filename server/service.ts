@@ -3,6 +3,7 @@ import { createWorkspaceData } from "../src/workspace-data";
 import { validateData } from "../src/persistence";
 import { ApiError, manages, reviews, view, visibleEvidence, mergeWorkspace, rebaseWorkspace, assertTaskGraph, type Envelope } from "./policy";
 import { actorHash, collectionAuthorized, handlePrivacy, privacySettings, pruneRetention, teamErasing, eraseTeam, assertNoErasedEvidence, removeErasedEvidence } from "./privacy";
+import {handleChat} from "./chat";
 type User = {userId: string};
 export type ServiceScope = {allowedTeamIds:string[];teamCreationAccountIds:string[];adultAccountIds:string[]};
 const roles = ["student", "lead", "mentor", "admin"];
@@ -84,6 +85,7 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
   }
   const privacy=await privacySettings(db,teamId);
   if(privacy.paused&&!(path.length===2&&request.method==="GET"))throw new ApiError(423,"The team admin paused normal operations. Privacy requests and erasure remain available.");
+  if(path[2]==="chat")return await handleChat({request,db,teamId,userId:user.userId,member,path,input:['GET','HEAD','DELETE'].includes(request.method)?{}:await body(request)});
   const members=async()=> (await db.prepare("SELECT user_id AS userId,name,role FROM memberships WHERE team_id=? ORDER BY name").bind(teamId).all<Member>()).results;
   const accessGuard=" AND EXISTS(SELECT 1 FROM memberships AS actor WHERE actor.team_id=? AND actor.user_id=? AND actor.role=?) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=?) AND NOT EXISTS(SELECT 1 FROM team_privacy WHERE team_id=? AND paused=1)";
   const accessArgs=[teamId,user.userId,member.role,teamId,teamId];
@@ -110,7 +112,7 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
   if(path[2]==="invites") {
    if(member.role!=="admin") throw new ApiError(403,"Only a team admin can manage invitations.");
    if(request.method==="GET") return json({invites:(await db.prepare("SELECT id,role,expires,used_by IS NOT NULL AS used FROM invitations WHERE team_id=? ORDER BY expires DESC").bind(teamId).all()).results});
-   if(request.method==="POST") {const input=await body(request); if(!roles.includes(input.role) || input.role==="admin") throw new ApiError(400,"Invite a student, student lead, or mentor."); const token=crypto.randomUUID()+crypto.randomUUID(),id=crypto.randomUUID(),expires=new Date(Date.now()+48*3600000).toISOString(); const result=await db.prepare("INSERT INTO invitations(id,team_id,hash,role,expires,created_by) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM teams WHERE id=?)"+accessGuard).bind(id,teamId,await hash(token),input.role,expires,user.userId,teamId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Team access changed before invitation creation."); return json({token,expires});}
+   if(request.method==="POST") {const input=await body(request); if(!roles.includes(input.role)) throw new ApiError(400,"Choose a student, lead, coach or adult operator role."); const token=crypto.randomUUID()+crypto.randomUUID(),id=crypto.randomUUID(),expires=new Date(Date.now()+48*3600000).toISOString(); const result=await db.prepare("INSERT INTO invitations(id,team_id,hash,role,expires,created_by) SELECT ?,?,?,?,?,? WHERE EXISTS(SELECT 1 FROM teams WHERE id=?)"+accessGuard).bind(id,teamId,await hash(token),input.role,expires,user.userId,teamId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Team access changed before invitation creation."); return json({token,expires});}
    if(request.method==="DELETE") {await db.prepare("DELETE FROM invitations WHERE id=? AND team_id=? AND used_by IS NULL"+accessGuard).bind(path[3],teamId,...accessArgs).run(); return json({ok:true});}
   }
   if(path[2]==="members" && request.method==="PUT") {

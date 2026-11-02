@@ -65,6 +65,8 @@ const Context = createContext<HQContext | null>(null);
 const validPages: Page[] = [
   "home",
   "team",
+  "awards",
+  "robotlab",
   "tasks",
   "calendar",
   "sponsors",

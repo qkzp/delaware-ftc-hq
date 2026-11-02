@@ -63,7 +63,7 @@ async function fixture({signedIn=true,member=true,demoMode=false}={},check){
 test('signed-out accounts see a real sign-in link; signed-in nonmembers see team setup without sample records',async()=>{
  await fixture({signedIn:false},async app=>{
   assert.match(app.text,/Sign in to your team/);assert.doesNotMatch(app.text,/PRIVATE TEAM SENTINEL|Main navigation/);
-  const signIn=app.root.findAllByType('a').find(a=>a.props.href==='/api/auth/signin/google');
+  const signIn=app.root.findAllByType('a').find(a=>a.props.href==='/signin');
   assert.ok(signIn);assert.deepEqual(app.writes,[]);
  });
  await fixture({member:false},async app=>{assert.match(app.text,/Create private team|Join team/);assert.doesNotMatch(app.text,/PRIVATE TEAM SENTINEL|Main navigation/);assert.deepEqual(app.writes,[]);});

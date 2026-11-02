@@ -2,6 +2,8 @@ export type Role = "student" | "lead" | "mentor" | "admin";
 export type Page =
   | "home"
   | "team"
+  | "awards"
+  | "robotlab"
   | "tasks"
   | "calendar"
   | "sponsors"
@@ -37,6 +39,9 @@ export interface Task extends Base {
   comments: { text: string; date: string; author: string }[];
 }
 export interface TeamEvent extends Base {
+  awardName?:string;
+  awardSubmitted?:boolean;
+  awardTimezone?:string;
   verification?: "team-created" | "needs-review" | "verified";
   verifiedAt?: string;
   verifiedBy?: string;

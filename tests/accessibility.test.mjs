@@ -98,8 +98,7 @@ test("the redesigned sign-in page has accessible landmarks and a clear approved-
  const {default:SignIn}=await vite.ssrLoadModule("/src/components/SignIn.tsx");
  await mounted(React.createElement(SignIn),async container=>{
   assert.ok(container.querySelector('main'));
-  assert.ok(container.querySelector('a[href="/api/auth/signin/google"]'));
-  assert.ok(container.querySelector('a[href="/api/auth/signin/azure-ad"]'));
+  assert.ok(container.querySelector('a[href="/signin"]'));
   assert.match(container.textContent,/13–18/);await audit(container);
  });
 });

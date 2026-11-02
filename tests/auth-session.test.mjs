@@ -2,7 +2,7 @@ import test, {after} from "node:test";
 import assert from "node:assert/strict";
 import {createServer} from "vite-legacy";
 
-const vite=await createServer({configFile:false,server:{middlewareMode:true,watch:null,hmr:false},appType:"custom",logLevel:"silent"});
+const vite=await createServer({configFile:false,cacheDir:".sites-runtime/test-cache-"+process.pid,server:{middlewareMode:true,watch:null,hmr:false},appType:"custom",logLevel:"silent"});
 after(()=>vite.close());
 const {minimizeIdentityToken,privateSessionUser}=await vite.ssrLoadModule("/server/auth-profile.ts");
 

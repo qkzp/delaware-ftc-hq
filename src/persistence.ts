@@ -118,6 +118,7 @@ export function validateData(value: unknown): value is AppData {
   )
     return false;
   const events = v.events as ObjectValue[];
+  if(events.some(e=>e.awardName!==undefined&&(!(typeof e.awardName==="string"&&e.awardName.trim().length>0&&e.awardName.length<=120)||e.type!=="Deadline"||!optionalBoolean(e.awardSubmitted)||!oneOf(e.awardTimezone,["America/New_York","America/Chicago","America/Denver","America/Los_Angeles","UTC"])||typeof e.source!=="string"||!e.source.startsWith("https://"))))return false;
   if (!events.every(e => (e.latitude === undefined && e.longitude === undefined) || (typeof e.latitude === "number" && Number.isFinite(e.latitude) && Math.abs(e.latitude) <= 90 && typeof e.longitude === "number" && Number.isFinite(e.longitude) && Math.abs(e.longitude) <= 180))) return false;
   if (!(v.tasks as ObjectValue[]).every(t => (t.subsystem === undefined || typeof t.subsystem === "string") && (t.blockedReason === undefined || typeof t.blockedReason === "string"))) return false;
   if (!events.every(e => (e.verification === undefined || oneOf(e.verification, ["team-created", "needs-review", "verified"])) && (e.verifiedAt === undefined || day(e.verifiedAt)) && (e.verifiedBy === undefined || typeof e.verifiedBy === "string") && (e.deadline === undefined || day(e.deadline)))) return false;

@@ -1,0 +1,11 @@
+import React from "react";
+import {createRoot} from "react-dom/client";
+import App from "../../src/App";
+import PublicRobotLab from "../../src/components/PublicRobotLab";
+import PublicWelcome from "../../src/components/PublicWelcome";
+import "../../src/fonts.css";
+import "../../src/styles.css";
+import "../../src/redesign.css";
+import "../../src/surfaces.css";
+const mode=new URLSearchParams(location.search).get("mode"),account=mode==="account";
+createRoot(document.getElementById("root")!).render(mode==="publiclab"?<PublicRobotLab/>:mode==="welcome"?<PublicWelcome accessReady={false}/>:<App accountMode={account} demoMode={!account}/>);

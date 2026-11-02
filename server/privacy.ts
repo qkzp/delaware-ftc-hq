@@ -56,7 +56,7 @@ export async function eraseTeam(request:Request,db:D1Database,bucket:R2Bucket,te
  if(job.status==="complete")return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});
  if(!await deleteObjects(db,bucket,teamId))return response({ok:true,status:"pending",pendingCleanup:true,jobId:job.job_id,message:"Team access is blocked. Storage cleanup will need a retry."},202);
  await db.batch([
- ...["revisions","invitations","files","privacy_requests","evidence_erasures","team_privacy","memberships"].map(table=>db.prepare("DELETE FROM "+table+" WHERE team_id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job!.job_id,digest)),
+ ...["revisions","invitations","files","privacy_requests","evidence_erasures","team_privacy","chat_messages","chat_settings","chat_blocks","memberships"].map(table=>db.prepare("DELETE FROM "+table+" WHERE team_id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job!.job_id,digest)),
  db.prepare("DELETE FROM teams WHERE id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job.job_id,digest),
  db.prepare("UPDATE team_erasures SET status='complete',completed=? WHERE team_id=? AND job_id=? AND actor_hash=?").bind(new Date().toISOString(),teamId,job.job_id,digest)]);
  return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});

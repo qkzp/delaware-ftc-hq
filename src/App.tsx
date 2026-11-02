@@ -9,6 +9,8 @@ import Home from "./screens/Home";
 import TeamHub from "./screens/TeamHub";
 import Tasks from "./screens/Tasks";
 import Calendar from "./screens/Calendar";
+import Awards from "./screens/Awards";
+import RobotLab from "./screens/RobotLab";
 import Sponsors from "./screens/Sponsors";
 import Grants from "./screens/Grants";
 import Resources from "./screens/Resources";
@@ -39,7 +41,9 @@ export function Workspace() {
   const [help, setHelp] = useState(false);
   const [account, setAccount] = useState(false);
   const [hubVisited,setHubVisited]=useState(page==="team");
+  const [labVisited,setLabVisited]=useState(page==="robotlab");
   useEffect(()=>{if(page==="team")setHubVisited(true);},[page]);
+  useEffect(()=>{if(page==="robotlab")setLabVisited(true);},[page]);
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
@@ -68,7 +72,8 @@ export function Workspace() {
         )}
         <div key={role} className="page-surface">
           <div className="team-hub-surface" hidden={page!=="team"}>{(hubVisited||page==="team")&&<TeamHub/>}</div>
-          {page === "team" ? null : page === "evidence" ? <EvidencePage /> : page === "opportunities" ? <Opportunities /> : page === "home" ? (
+          <div hidden={page!=="robotlab"}>{(labVisited||page==="robotlab")&&<RobotLab/>}</div>
+          {page === "team" || page === "robotlab" ? null : page === "awards" ? <Awards/> : page === "evidence" ? <EvidencePage /> : page === "opportunities" ? <Opportunities /> : page === "home" ? (
             <Home />
           ) : page === "tasks" ? (
             <Tasks />
@@ -101,7 +106,7 @@ export function Workspace() {
       {quickTask && <QuickTask onClose={() => setQuickTask(false)} />}
       {account && <Modal title="Your account" onClose={()=>setAccount(false)}>
         <div className="stack">
-          {cloud.session.user ? <><h3>{cloud.shared ? memberName(myOwner) === "You" ? cloud.shared.members.find(m=>m.userId===myOwner)?.name || "Signed in" : memberName(myOwner) : "Signed in with Google or Microsoft"}</h3><p>{cloud.shared ? `${data.teamName} · ${role === 'admin' ? 'Team admin' : role === 'mentor' ? 'Mentor / coach' : role === 'lead' ? 'Student lead' : 'Student'}` : "Choose or create a private team to save shared records."}</p><button className="btn btn-secondary" onClick={()=>{navigate('settings');setAccount(false);}}>Team access & settings</button><a className="btn btn-primary" href="#sign-out" onClick={async e=>{e.preventDefault();if(cloud.hasUnsaved()){notify("Wait for your changes to save, or download them in Settings before signing out.");return;}const {signOut}=await import("next-auth/react");await signOut({callbackUrl:"/"});}}>Sign out</a></> : <><p>You’re exploring the demo. Sign in to create or join a private team.</p><a className="btn btn-primary" href="/api/auth/signin/google?callbackUrl=%2F">Continue with Google</a><a className="btn btn-secondary" href="/api/auth/signin/azure-ad?callbackUrl=%2F">Continue with Microsoft</a></>}
+          {cloud.session.user ? <><h3>{cloud.shared ? memberName(myOwner) === "You" ? cloud.shared.members.find(m=>m.userId===myOwner)?.name || "Signed in" : memberName(myOwner) : "Signed in with your approved account"}</h3><p>{cloud.shared ? `${data.teamName} · ${role === 'admin' ? 'Team admin' : role === 'mentor' ? 'Mentor / coach' : role === 'lead' ? 'Student lead' : 'Student'}` : "Choose or create a private team to save shared records."}</p><button className="btn btn-secondary" onClick={()=>{navigate('settings');setAccount(false);}}>Team access & settings</button><a className="btn btn-primary" href="#sign-out" onClick={async e=>{e.preventDefault();if(cloud.hasUnsaved()){notify("Wait for your changes to save, or download them in Settings before signing out.");return;}const {signOut}=await import("next-auth/react");await signOut({callbackUrl:"/"});}}>Sign out</a></> : <><p>You’re exploring the demo. Sign in to create or join a private team.</p><a className="btn btn-primary" href="/signin">Choose a sign-in method</a></>}
           <p className="privacy-note">Private records are limited to your team. Account passwords are handled by your sign-in provider.</p>
         </div>
       </Modal>}
@@ -180,7 +185,7 @@ export function Workspace() {
               </button>
             ))}
             <div className="settings-info">
-              {cloud.shared ? "Team records save to your private shared workspace. Your role is enforced by the server. Use Settings for invitations, backups, and member access." : "The demo saves in this browser. Open Settings and sign in with Google or Microsoft to create or join a private shared team."}
+              {cloud.shared ? "Team records save to your private shared workspace. Your role is enforced by the server. Use Settings for invitations, backups, and member access." : "The demo saves in this browser. Open Settings and sign in with an approved account to create or join a private shared team."}
             </div>
           </div>
         </Modal>

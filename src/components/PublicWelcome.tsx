@@ -17,13 +17,14 @@ export default function PublicWelcome({ accessReady, support }: { accessReady: b
           <h1 id="welcome-title">Your team.<br/>One place to build.</h1>
           <p className="welcome-lede">Bring the season together. Plan the work, keep robot knowledge close, and turn team activities into a record you can use.</p>
           <a className="welcome-explore" href="#workspace-features">Explore the workspace <ArrowRight size={17} aria-hidden="true"/></a>
+          <a className="welcome-explore" style={{marginLeft:24}} href="/robot-lab">Open Robot Lab <ArrowRight size={17} aria-hidden="true"/></a>
           <div className="welcome-principles"><span>Private team spaces</span><span>Coach and mentor oversight</span></div>
         </div>
         <div className="welcome-account" aria-labelledby="welcome-account-title">
           <div className="welcome-account-heading"><img src="/favicon.svg" width="36" height="36" alt=""/><span>MYFTCSpace / Team access</span></div>
           <h2 id="welcome-account-title">{accessReady ? "Sign in to your team." : "Start with your team."}</h2>
-          <p>{accessReady ? "Use the Google or Microsoft account approved for your team." : "A coach or mentor sets up your team's private workspace and approves member access."}</p>
-          {accessReady ? <div className="welcome-actions"><a className="welcome-button welcome-button-dark" href="/api/auth/signin/google">Continue with Google <ArrowRight size={16} aria-hidden="true"/></a><a className="welcome-button welcome-button-light" href="/api/auth/signin/azure-ad">Continue with Microsoft <ArrowRight size={16} aria-hidden="true"/></a></div> : <>
+          <p>{accessReady ? "Use the sign-in method approved for your team." : "A coach or mentor sets up your team's private workspace and approves member access."}</p>
+          {accessReady ? <div className="welcome-actions"><a className="welcome-button welcome-button-dark" href="/signin">Choose a sign-in method <ArrowRight size={16} aria-hidden="true"/></a><p>Google, Microsoft, Apple or an email link, as enabled by your organization.</p></div> : <>
             <div className="welcome-access-status"><span aria-hidden="true"/>Team access is being configured</div>
             <p className="welcome-status-note">The workspace will open after the responsible organization completes setup and the required review.</p>
             <a className="welcome-button welcome-button-dark" href="/enroll">Coach or mentor setup <ArrowRight size={16} aria-hidden="true"/></a>

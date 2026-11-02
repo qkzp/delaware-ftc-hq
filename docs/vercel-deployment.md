@@ -1,6 +1,6 @@
 # Vercel deployment
 
-MyFTCSpace now uses the Next.js runtime expected by Vercel. Vercel hosts the app and its Node.js server functions. Google and Microsoft provide sign-in. The existing Cloudflare D1 database and private R2 bucket remain the data stores and are called from server code only. This avoids an unreviewed database migration, but adds Vercel, Google/Microsoft OAuth and Cloudflare API access to the actual provider review.
+MyFTCSpace now uses the Next.js runtime expected by Vercel. Vercel hosts the app and its Node.js server functions. Configured Google, Microsoft and Apple providers or email links provide sign-in. The existing Cloudflare D1 database and private R2 bucket remain the data stores and are called from server code only. This avoids an unreviewed database migration, but adds Vercel, enabled identity providers and transactional email and Cloudflare API access to the actual provider review.
 
 ## Vercel project settings
 
@@ -30,6 +30,10 @@ Set these in the Vercel project's encrypted environment settings. Do not commit 
 | `MYFTC_READINESS_RECORD` | Private JSON record after all human approvals and hosted checks are complete |
 
 Google OAuth redirect URI: `https://<production-host>/api/auth/callback/google`. Microsoft redirect URI: `https://<production-host>/api/auth/callback/azure-ad`. Register the final HTTPS domain with both identity providers. The app uses the provider-scoped identity (`google:<subject>` or `azure-ad:<subject>`) as its account identifier; email and full name are not stored in team membership rows.
+
+## Additional providers and messaging migration
+
+Follow [provider setup](provider-setup.md) for Apple Developer credentials, Resend verified-domain authentication mail, the private `CRON_SECRET`, and exact callback URLs. Apply `drizzle/0002_messaging_and_email.sql` only after checking and backing up the intended D1 database. Vercel does not apply these migrations automatically. Verify the daily retention cron in the deployed project.
 
 ## Safe activation sequence
 

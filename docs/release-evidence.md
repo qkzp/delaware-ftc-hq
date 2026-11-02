@@ -6,11 +6,19 @@ Prepared November 2, 2026 for the supplied MyFTCSpace Official Review Readiness 
 
 ## Vercel target change (November 2, 2026)
 
-The deployment target changed from the Sites/Cloudflare Worker runtime to Vercel Next.js. The current source adds Auth.js Google/Microsoft OAuth and Vercel server functions. It keeps the existing Cloudflare D1 and private R2 stores, accessed through Cloudflare's D1 HTTP API and R2's S3 API using server-only environment secrets. The hosting, identity and storage vendor flow has materially changed; all 43 decisions must be reviewed again against the exact deployment and current provider contracts. See [Vercel deployment guide](vercel-deployment.md).
+The deployment target changed from the Sites/Cloudflare Worker runtime to Vercel Next.js. The current source adds Auth.js Google/Microsoft/Apple OAuth and email links and Vercel server functions. It keeps the existing Cloudflare D1 and private R2 stores, accessed through Cloudflare's D1 HTTP API and R2's S3 API using server-only environment secrets. The hosting, identity and storage vendor flow has materially changed; all 43 decisions must be reviewed again against the exact deployment and current provider contracts. See [Vercel deployment guide](vercel-deployment.md).
 
 OAuth account IDs are provider-scoped and differ from Sites-provided ChatGPT account IDs. Existing team membership IDs and readiness allowlists will not automatically transfer. If the current database contains real or retained team records, an organization-approved identity/data migration is required before those users regain access. If not, launch with newly reviewed accounts and clean teams. The prior approval fingerprint is invalidated by this source change. GitHub origin is now `qkzp/delaware-ftc-hq`, with a successful Vercel status reported for the existing main commit on November 2, 2026. The listed production website is `https://delaware-ftc-hq.vercel.app`. There is no local Vercel project link or configured OAuth/Cloudflare credential in this workspace; production provider settings, migration and hosted acceptance remain unverified.
 
 ## Responsibilities and review scope
+
+The current source adds multiple adult operators through the existing reviewed mentor/admin roles; adult-admin invitations now permit another operator to join, subject to the same production adult roster. No member can self-certify adulthood. Team chat is scoped to current team membership. Private DMs require adult-admin enablement, are participant-only in the app, support blocking and explicit safety reports, and are not end-to-end encrypted. Operators cannot silently browse unrelated DMs; an explicit report copies only the selected message into the adult privacy/safety queue. Message text is limited to 2000 characters and sending is rate-bounded. Sender removal clears message content; reported/exported copies follow separate procedures. Chat retention is 1–30 days (30 default), pruned on activity and by a secret-protected daily job that the hosting operator must verify.
+
+Apple sign-in and 15-minute single-use email links are supported when configured. iCloud Mail is an email address option, distinct from Apple ID. The D1 authentication adapter retains necessary email lookup and minimal provider-link records, excludes profile names/images and OAuth access tokens, and atomically consumes hashed verification tokens. Resend is a new transactional authentication-mail provider requiring review. There is no sponsor-outreach sender. New schema migration `0002_messaging_and_email.sql`, provider credentials and cron setup must be applied and verified before these features are activated. See [provider setup](provider-setup.md).
+
+Awards use shared schedule records with award name, deadline, time zone, owner, official source, submission status and mentor review. Students see the same deadlines; unknown dates are not invented. The Robot Lab fits a local first-order motor-velocity model from numerical CSV telemetry, searches PID gains in simulation, previews drivetrain routes and exports disabled Java scaffolds. Synthetic training is labeled and is never used as measured calibration in Java. Robot dimensions do not identify wheel/encoder conversion, motor dynamics, slip, localization or obstacles. No telemetry is uploaded to a hosted AI service or sent to hardware. Generated Java is unverified against the team's installed SDK and robot. The standalone numerical tool is public; team records remain subject to release controls.
+
+Automated evidence for this source includes real SQLite migration/API tests of chat privacy, blocks, reports, removal, rate limits, revoked in-flight senders, multiple adult operators, email-token expiry/single use and local model/route behavior. Isolated Chromium simulations check rendered accessibility and reflow using fictional records, keyboard operation, contrast, role-dependent award visibility, separate chat drafts and Robot Lab exports. These are simulations and do not prove live OAuth/mail/D1/R2 configuration, real assistive-technology usability, physical robot performance or legal approval.
 
 November 2 public entry update: the homepage now presents the product and team setup without a prominent release-review notice. When data access is not approved, the account panel accurately says setup is incomplete and offers adult setup and privacy help; server access checks remain closed. The approved sign-in page uses the same layout. The privacy page identifies the operator when configured and discloses essential authentication cookies. Authentication callbacks remove provider name, email and image from new/refreshed JWTs and client session responses, retaining a provider-scoped ID. Enrollment and maintenance pages are marked not for indexing. These changes do not create an operator identity, vendor agreement, school permission or legal approval.
 
@@ -24,7 +32,7 @@ The FTC COPPA guidance, Education Department FERPA regulations, Delaware student
 | Education records, school contracts and accessibility | Applicable school/district privacy, IT and administration reviewers | Written scope-specific approval or signed, justified N/A |
 | Legal applicability and binding notification deadlines | Qualified counsel or authorized organization reviewer | Written decisions for audience, jurisdictions and actual provider contracts |
 
-Each organization and additional team needs its approved scope, members, adult accounts, data fields and vendors recorded before real data is accepted. No school or organization is presumed approved because another team was approved. Team membership is private; this release adds no public student profiles, public uploads, email sending, donations or payments.
+Each organization and additional team needs its approved scope, members, adult accounts, data fields and vendors recorded before real data is accepted. No school or organization is presumed approved because another team was approved. Team membership is private; this release adds no public student profiles, public uploads, sponsor email sending, donations or payments; transactional sign-in email is separately configured and reviewed.
 
 ## Release controls and verification
 
@@ -53,7 +61,7 @@ Approved existing members can use `/maintenance` after a page reload, even while
 
 ```mermaid
 flowchart LR
-  A[Approved account] --> B[Google or Microsoft sign in]
+  A[Approved account] --> B[Configured OAuth or email sign in]
   B --> C[Server release and roster checks]
   C --> D[Team membership and role checks]
   D --> E[D1 private records and bounded revisions]
@@ -110,7 +118,8 @@ Coaches review task comments, notes, evidence and resources for student safety a
 | Provider/content | Observed use | Required review |
 | --- | --- | --- |
 | Vercel | Next.js hosting/functions and authenticated app session | Exact contract/subprocessors, region/function/log/cookie settings, MFA/unique adult accounts, data-use rights, retention, encryption, backup protection and incident route |
-| Google / Microsoft | OAuth account authentication; app receives provider-scoped account ID and selected team alias/role | Exact application scopes, age terms, identity data, tenant restrictions, MFA, logs, locations, deletion, contractual terms and support route |
+| Resend | Transactional single-use authentication email; necessary recipient and link delivery | Verified sender, authentication-link tracking disabled, logs/retention, subprocessors, contractual terms, incident and deletion procedures |
+| Google / Microsoft / Apple | OAuth account authentication; app receives provider-scoped account ID and selected team alias/role | Exact application scopes, age terms, identity data, tenant restrictions, MFA, logs, locations, deletion, contractual terms and support route |
 | Cloudflare D1 / R2 | Private records, bounded revisions and private attachments, accessed from Vercel through the Cloudflare D1 HTTP API and R2 S3 API | Cross-host API credentials, exact contract chain, regions, encryption, backups, retention, access auditing and deletion propagation |
 | OpenStreetMap | Tiles only after explicit user opt-in; receives IP/network metadata and viewed venue area | School/provider approval and attribution; list works without tiles; device geolocation disabled for shared student workspaces |
 | Linked source/CAD/code/document/directions providers | Visitor-initiated navigation; no automatic upload of student records | Inventory each actually used provider, sharing/access/age/retention terms and intellectual-property permissions |
@@ -118,7 +127,7 @@ Coaches review task comments, notes, evidence and resources for student safety a
 | Lucide and Leaflet | Local UI icons and map code; dependency license notices | Retain package licenses and OpenStreetMap attribution |
 | FIRST and organizer reference links | Names used to identify official external sources; no endorsement claimed | Current trademark/brand rules and any necessary written permission; no copied manual/media approval inferred from a link |
 
-No app-level analytics SDK, ads, AI processing, bulk email, scraping, payments or donation processing is enabled. This does not establish what the host logs or processes. Any addition triggers review before collection/use. Public information links do not make private document sharing safe by default.
+No app-level analytics SDK, ads, hosted AI processing, bulk email, scraping, payments or donation processing is enabled. Robot Lab numerical learning runs locally; email sending is limited to configured transactional sign-in links. This does not establish what the host logs or processes. Any addition triggers review before collection/use. Public information links do not make private document sharing safe by default.
 
 Technical security evidence includes server membership/role enforcement, explicit production release/roster checks, no private workspace or token payloads in browser localStorage, same-origin mutation checks, streaming request limits, bounded revision handling, private file downloads, no-store private responses, MIME sniffing protection, suppressed referrers, HTTPS HSTS and disabled production camera/microphone/device geolocation. Encryption at rest, backup protection, account MFA and provider access logging still require actual vendor evidence. Report vulnerabilities through the configured adult support route; never send passwords, invitation tokens or student records in bug reports.
 
@@ -172,7 +181,7 @@ Every row remains subject to a real reviewer decision and signature. “Implemen
 | 3.5 | No restricted demographic fields; aliases; no shared device location | Moderation/minimization review of actual free text/media |
 | 3.6 | Requests, correction/export, withdrawal, erasure and retry receipts | Requester verification, vendor/export/backup propagation and timed rehearsal |
 | 3.7 | Bounded revisions/invites/closed requests; retention table | Approved active/inactive/orphan/log/backup/tombstone schedule and maintenance |
-| 3.8 | No app analytics/ads/AI; opt-in maps; gate for changes | Host cookies/logs/provider terms and school review |
+| 3.8 | No app analytics/ads or hosted AI; local numeric learning; opt-in maps; gate for changes | Host cookies/logs/provider terms and school review |
 | 4.1 | Server scope/role/file checks; team-isolated UI | Hosted independent-account acceptance and current Vercel access settings |
 | 4.2 | Delegated sign-in; no app passwords | Unique adult accounts and actual MFA settings |
 | 4.3 | Private-memory storage and request/header controls | Inspect exact release, host logs and provider telemetry |
@@ -187,7 +196,7 @@ Every row remains subject to a real reviewer decision and signature. “Implemen
 | 5.4 | Server-issued collection review before media; visibility approval | Actual approved releases and review process for every identifiable person |
 | 5.5 | Student-filtered business sponsor fields, source/owner controls | Coach verifies appropriate business-only contacts and follow-up |
 | 5.6 | No automatic outreach/scraping/donations/payments/public sponsor publishing | Reviewer confirms exact configuration and initials applicable decision |
-| 5.7 | No sender implementation | Authorized and initialed N/A unless separately reviewed sending is added |
+| 5.7 | No sponsor outreach sender; transactional sign-in links are separate | Reviewer confirms sending scope and provider/age/notice review; justified N/A applies only to outreach |
 | 6.1 | Draft-preserving errors/conflicts and responsive interface | Actual phone/tablet/desktop review |
 | 6.2 | Automated semantics and dialog/keyboard tests | Contrast/zoom/screen-reader/media review with dated evidence |
 | 6.3 | Accessibility acceptance procedure | School/district standard/applicability and remediation decision |
