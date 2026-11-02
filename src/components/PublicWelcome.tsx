@@ -1,51 +1,28 @@
 import DisplayPreferences from "./DisplayPreferences";
-import { ArrowRight, CalendarDays, ClipboardList, FolderOpen, Wrench } from "lucide-react";
+import {ArrowRight,ChevronRight,CalendarDays,Check,ClipboardList,Wrench} from "lucide-react";
 import "./welcome.css";
-
-type Support = { supportEmail: string; privacyEmail: string };
-
-export default function PublicWelcome({ accessReady, support }: { accessReady: boolean; support?: Support | null }) {
-  return <div className="public-welcome">
-    <a className="welcome-skip" href="#welcome-main">Skip to main content</a>
-    <header className="welcome-header">
-      <a className="welcome-brand" href="/" aria-label="MyFTCSpace home"><img src="/favicon.svg" width="30" height="30" alt=""/><span>MyFTCSpace</span></a>
-      <nav aria-label="Welcome navigation"><a href="#workspace-features">The workspace</a><a href="/privacy">Privacy &amp; data</a><a className="welcome-member-link" href="/maintenance">Member help <ArrowRight size={15} aria-hidden="true"/></a></nav>
-    </header>
-    <main id="welcome-main">
-      <details className="welcome-display-options"><summary>Display settings</summary><DisplayPreferences/></details>
-      <section className="welcome-hero" aria-labelledby="welcome-title">
-        <div className="welcome-intro">
-          <p className="welcome-eyebrow">A workspace for Delaware FTC teams</p>
-          <h1 id="welcome-title">Your team.<br/>One place to build.</h1>
-          <p className="welcome-lede">Bring the season together. Plan the work, keep robot knowledge close, and turn team activities into a record you can use.</p>
-          <a className="welcome-explore" href="#workspace-features">Explore the workspace <ArrowRight size={17} aria-hidden="true"/></a>
-          <a className="welcome-explore" style={{marginLeft:24}} href="/robot-lab">Open Robot Lab <ArrowRight size={17} aria-hidden="true"/></a>
-          <div className="welcome-principles"><span>Private team spaces</span><span>Coach and mentor oversight</span></div>
-        </div>
-        <div className="welcome-account" aria-labelledby="welcome-account-title">
-          <div className="welcome-account-heading"><img src="/favicon.svg" width="36" height="36" alt=""/><span>MYFTCSpace / Team access</span></div>
-          <h2 id="welcome-account-title">{accessReady ? "Sign in to your team." : "Start with your team."}</h2>
-          <p>{accessReady ? "Use the sign-in method approved for your team." : "A coach or mentor sets up your team's private workspace and approves member access."}</p>
-          {accessReady ? <div className="welcome-actions"><a className="welcome-button welcome-button-dark" href="/signin">Choose a sign-in method <ArrowRight size={16} aria-hidden="true"/></a><p>Google, Microsoft, Apple or an email link, as enabled by your organization.</p></div> : <>
-            <div className="welcome-access-status"><span aria-hidden="true"/>Team access is being configured</div>
-            <p className="welcome-status-note">The workspace will open after the responsible organization completes setup and the required review.</p>
-            <a className="welcome-button welcome-button-dark" href="/enroll">Coach or mentor setup <ArrowRight size={16} aria-hidden="true"/></a>
-          </>}
-          <a className="welcome-account-help" href="/maintenance">Existing member? Get access or data help</a>
-          <div className="welcome-account-note">Students use their own approved accounts. Student access is limited to ages 13–18 with the required permission; adult coaches and mentors use their own accounts.</div>
-        </div>
-      </section>
-      <section className="welcome-features" id="workspace-features" aria-labelledby="welcome-features-title">
-        <div className="welcome-section-heading"><p className="welcome-eyebrow">From the first meeting to competition day</p><h2 id="welcome-features-title">Keep the whole season connected.</h2></div>
-        <div className="welcome-feature-grid">
-          <article><ClipboardList size={24} strokeWidth={1.6} aria-hidden="true"/><h3>Know what comes next</h3><p>Assign tasks, track dependencies, and keep build conversations with the work.</p></article>
-          <article><Wrench size={24} strokeWidth={1.6} aria-hidden="true"/><h3>Keep robot knowledge</h3><p>Organize parts, startup notes, CAD and code links, and troubleshooting references.</p></article>
-          <article><CalendarDays size={24} strokeWidth={1.6} aria-hidden="true"/><h3>Plan the season</h3><p>Bring meetings and competitions into one team schedule with source and review details.</p></article>
-          <article><FolderOpen size={24} strokeWidth={1.6} aria-hidden="true"/><h3>Document the work</h3><p>Collect activity evidence and consent references, with coach and mentor review controls.</p></article>
-        </div>
-      </section>
-      <section className="welcome-oversight" aria-labelledby="welcome-oversight-title"><div><p className="welcome-eyebrow">Built around the team</p><h2 id="welcome-oversight-title">Clear roles. Shared work.</h2></div><p>Students contribute to their team. Team leads coordinate the work. Coaches and mentors oversee access, evidence, and privacy or safety concerns. Team records are available only to authorized members.</p></section>
-    </main>
-    <footer className="welcome-footer"><div><a className="welcome-brand" href="/"><img src="/favicon.svg" width="24" height="24" alt=""/><span>MyFTCSpace</span></a><p>Independent software for FTC teams. No FIRST or school endorsement is claimed.</p></div><nav aria-label="Site information"><a href="/privacy">Privacy &amp; data help</a><a href="/third-party-notices.txt">Open source notices</a>{support&&<a href={`mailto:${support.supportEmail}`}>Contact support</a>}</nav></footer>
-  </div>;
+type Support={supportEmail:string;privacyEmail:string};
+function RobotDrawing(){return <svg className="product-robot" viewBox="0 0 900 380" role="img" aria-label="Illustration of a four-wheel robot and a planned route on a field. This is an example, not a live robot connection.">
+ <g className="drawing-grid" fill="none" stroke="currentColor" strokeWidth="1">{[100,200,300,400,500,600,700,800].map(x=><path key={x} d={`M${x} 24V350`}/>)}{[60,130,200,270,340].map(y=><path key={y} d={`M50 ${y}H850`}/>)}</g>
+ <path d="M170 260H320Q380 260 380 200V110Q380 70 440 70H710" fill="none" stroke="var(--accent)" strokeWidth="3" strokeDasharray="7 8"/>
+ <circle cx="170" cy="260" r="9" fill="var(--paper)" stroke="var(--accent)" strokeWidth="3"/><circle cx="710" cy="70" r="9" fill="var(--accent)"/>
+ <g transform="translate(420 110) rotate(-12 150 100)"><ellipse cx="150" cy="220" rx="152" ry="15" fill="currentColor" opacity=".06"/>
+ {[15,245].map(x=><g key={x} fill="#34363a" stroke="#111214" strokeWidth="3">{[38,143].map(y=><g key={y}><rect x={x} y={y} width="40" height="64" rx="13"/>{[12,25,38,51].map(d=><path key={d} d={`M${x+6} ${y+d}l28 -7`} stroke="#777b82" strokeWidth="5"/>)}</g>)}</g>)}
+ <path d="M58 35L244 35 244 200 58 200Z" fill="var(--robot-metal)" stroke="var(--robot-stroke)" strokeWidth="3"/>
+ <path d="M70 47H232V188H70Z" fill="var(--paper)" stroke="var(--robot-stroke)" strokeWidth="2"/>
+ <path d="M58 62H244M58 172H244M95 35V200M206 35V200" stroke="var(--robot-stroke)" strokeWidth="9"/>
+ {[78,111,144,177,210].map(x=><g key={x} fill="var(--paper)"><circle cx={x} cy="62" r="3"/><circle cx={x} cy="172" r="3"/></g>)}
+ <rect x="113" y="77" width="75" height="79" rx="7" fill="#0969da"/><rect x="123" y="89" width="55" height="13" rx="3" fill="#a6d2ff"/>
+ <path d="M132 117H169M132 128H160" stroke="#b5dcff" strokeWidth="4" strokeLinecap="round"/><circle cx="172" cy="144" r="4" fill="#c0e4ff"/>
+ <path d="M112 139Q74 139 80 110M190 112Q224 112 220 145" fill="none" stroke="#e5a333" strokeWidth="3"/>
+ </g><g fill="var(--muted)" fontFamily="inherit" fontSize="12"><text x="155" y="300">START</text><text x="730" y="75">FINISH</text><text x="65" y="365">ROUTE STUDY / ILLUSTRATION</text></g></svg>;}
+export default function PublicWelcome({accessReady,support}:{accessReady:boolean;support?:Support|null}){
+ return <div className="public-welcome apple-welcome"><a className="welcome-skip" href="#welcome-main">Skip to main content</a>
+ <header className="welcome-header"><a className="welcome-brand" href="/" aria-label="MyFTCSpace home"><img src="/favicon.svg" width="24" height="24" alt=""/><span>MyFTCSpace</span></a><nav aria-label="Welcome navigation"><a href="#workspace-features">Workspace</a><a href="/robot-lab">Robot Lab</a><a href="/privacy">Privacy</a><a className="welcome-member-link" href="/maintenance">Member help <ChevronRight size={14} aria-hidden="true"/></a></nav></header>
+ <div className="welcome-service-note">{accessReady?"Your team. Your own approved account.":"Team access is being configured. Robot Lab is available to explore."} <a href={accessReady?"/signin":"/enroll"}>{accessReady?"Sign in":"Coach or mentor setup"}<ChevronRight size={13} aria-hidden="true"/></a></div>
+ <main id="welcome-main"><section className="welcome-product-hero" aria-labelledby="welcome-title"><p className="product-kicker">MyFTCSpace</p><h1 id="welcome-title">Less busywork.<br/><span>More robot.</span></h1><p className="product-lede">A place for your people, your plans,<br className="desktop-break"/> and everything you’re building.</p><div className="product-actions"><a className="product-button" href="/robot-lab">Explore Robot Lab <ChevronRight size={16} aria-hidden="true"/></a><a className="product-text-link" href="#workspace-features">Meet your workspace <ChevronRight size={16} aria-hidden="true"/></a></div><div className="product-visual"><RobotDrawing/></div><p className="product-caption">Plan it. Build it. Make it better. <span>Made for FTC teams.</span></p></section>
+ <section className="product-features" id="workspace-features" aria-labelledby="welcome-features-title"><header><p className="product-kicker">One workspace. The whole season.</p><h2 id="welcome-features-title">Great teams build together.</h2><p>Keep the next step clear, from the first sketch to the competition field.</p></header><div className="product-feature-grid"><article><ClipboardList size={26} aria-hidden="true"/><p className="feature-label">THE WORK</p><h3>A little more focus.<br/>A lot more progress.</h3><p>Tasks with owners, shared conversations and a schedule everyone can follow.</p><div className="feature-task-sample" aria-label="Illustrative task checklist"><span><Check size={16} aria-hidden="true"/>Check the drivetrain</span><span><span className="sample-check"/>Test the autonomous route</span><small>Illustrative tasks</small></div><a href="#team-access">Meet your team workspace <ChevronRight size={15} aria-hidden="true"/></a></article><article><Wrench size={26} aria-hidden="true"/><p className="feature-label">THE ROBOT</p><h3>Know your hardware.<br/>Find your next move.</h3><p>Motor and servo tracking, wheel-speed calculations, PID experiments and route planning.</p><div className="feature-transmission" aria-hidden="true"><i/><span>··········</span><i/></div><a href="/robot-lab">Open Robot Lab <ChevronRight size={15} aria-hidden="true"/></a></article><article><CalendarDays size={26} aria-hidden="true"/><p className="feature-label">THE SEASON</p><h3>Big moments.<br/>Fewer missed dates.</h3><p>Awards, grants, competition preparation and sponsorship follow-ups in one place.</p><div className="feature-calendar-sample"><span>PLAN AHEAD</span><strong>Meet. Build. Compete.</strong><small>Shared deadlines. Clear next steps.</small></div><a href="#team-access">Get your team ready <ChevronRight size={15} aria-hidden="true"/></a></article></div></section>
+ <section className="product-access" id="team-access" aria-labelledby="welcome-account-title"><div><p className="product-kicker">Your people. Your space.</p><h2 id="welcome-account-title">{accessReady?"Sign in to your team.":"Start with your team."}</h2><p>A coach or mentor sets up your private workspace. Students and team leads contribute, while approved adults oversee access and review.</p><p className="access-small">Student access is limited to ages 13–18 with the required permission. Adults use their own accounts. Team records are available only to authorized members.</p></div><div className="product-access-actions">{accessReady?<a className="product-button" href="/signin">Choose a sign-in method <ArrowRight size={16} aria-hidden="true"/></a>:<><span className="access-state"><i/>Team access is being configured</span><p>Access opens after the responsible organization completes setup and the required review.</p><a className="product-button" href="/enroll">Coach or mentor setup <ArrowRight size={16} aria-hidden="true"/></a></>}<a className="product-text-link" href="/maintenance">Existing member? Access &amp; data help <ChevronRight size={15} aria-hidden="true"/></a></div></section>
+ <details className="welcome-display-options"><summary>Display settings</summary><DisplayPreferences/></details></main>
+ <footer className="welcome-footer"><div><a className="welcome-brand" href="/"><span>MyFTCSpace</span></a><p>Independent software for FTC teams. No FIRST or school endorsement is claimed.</p></div><nav aria-label="Site information"><a href="/privacy">Privacy &amp; data help</a><a href="/third-party-notices.txt">Open source notices</a>{support&&<a href={`mailto:${support.supportEmail}`}>Contact support</a>}</nav></footer></div>;
 }

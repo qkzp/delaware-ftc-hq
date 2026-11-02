@@ -14,14 +14,16 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
  const mine=data.tasks.filter(task=>task.owner===myOwner&&task.status!=="Done").length;
  const roleName=role==="admin"?"Team admin":role==="mentor"?"Mentor / coach":role==="lead"?"Student lead":"Student";
  const groups=[
-  {label:"Workspace",pages:["home","team","tasks","calendar","resources","robotlab"]},
-  {label:"Team",pages:["awards","pit","evidence","grants","sponsors","opportunities"]},
+  {label:"Every day",pages:["home","team","tasks","calendar"]},
+  {label:"Build & compete",pages:["robotlab","resources","awards","pit","evidence"]},
+  {label:"Beyond the robot",pages:["grants","sponsors","opportunities"]},
  ];
  const accountName=cloud.shared?(cloud.shared.members.find(member=>member.userId===myOwner)?.name||"Team member"):"Demo workspace";
  const initials=accountName.split(/\s+/).filter(Boolean).slice(0,2).map(word=>word[0]).join("").toUpperCase();
  const current=navigation.find(item=>item.page===page);
  const PageIcon=current?.icon||Settings2;
  return <>
+  <div className="product-globalbar"><button onClick={()=>setPage("home")} className="product-wordmark" aria-label="MyFTCSpace home"><img src="/favicon.svg" width="23" height="23" alt=""/>MyFTCSpace</button><span className="globalbar-context">{cloud.shared?"Team workspace":"Demo workspace / Fictional records"}</span><button className="globalbar-help" onClick={onHelp}>Workspace guide <HelpCircle size={15} aria-hidden="true"/></button></div>
   <aside className="workspace-sidebar" aria-label="Workspace sidebar">
    <button className="workspace-name" onClick={()=>setPage("settings")}>
     <span className="team-symbol" aria-hidden="true">M</span>

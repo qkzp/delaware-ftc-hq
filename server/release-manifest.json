@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:36245faa0bebb2b290a7ed145e9a332a03a3159d201d510f36a6dde5e221ad1b",
+  "releaseId": "sha256:f1c39b3411ae225557aec1fa688114f6a88cf2af872d3786fc2d219ebaff233a",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -11,8 +11,8 @@
       "sha256": "d4b98c237b432e7944b29e8357874edacbf27b72200271bda55fe8519a10d175"
     },
     "README.md": {
-      "bytes": 18906,
-      "sha256": "b4c7a6c0bbb41650ed2c63ed8140d7a642bbbf570f07e52c063a96667da23735"
+      "bytes": 19539,
+      "sha256": "2f6551803e7d886e6427ac610454de05a337dfd1e7c6fb04ffcd0d0deea6e99d"
     },
     "app/api/[...segments]/route.ts": {
       "bytes": 2052,
@@ -47,8 +47,8 @@
       "sha256": "82218f497b759d9d8753190f751be1c654b4c328682d8e788e32f2b88816d6a1"
     },
     "app/layout.tsx": {
-      "bytes": 969,
-      "sha256": "5560e248a62b637d550eb435e35b2edb0d4d859c76807bd6102be7b264045ce2"
+      "bytes": 998,
+      "sha256": "97d2192403faa5b0db5a3847cfbc91ffd4c4a1351eb0309baac0624f88f252fa"
     },
     "app/loading.tsx": {
       "bytes": 223,
@@ -406,6 +406,10 @@
       "bytes": 2068,
       "sha256": "53aeba0a4d0d585defa967161fc969dcb35a58e2a50cc54b8bb03790c012f1a8"
     },
+    "src/atelier.css": {
+      "bytes": 26284,
+      "sha256": "01fdb5ae30e984fe62af568c0bfbc059c8a01ca8bb4d9d1ab932f6f0f2bb8657"
+    },
     "src/cloud.ts": {
       "bytes": 13069,
       "sha256": "2cb66392d752b9e55dac846a08995d32174fba6a080c4fcc892496b434ac687f"
@@ -471,8 +475,8 @@
       "sha256": "ef2d7fcb0a1e69d9a4c78047c88260b658a3e86532c0d402b971597b837aa6ac"
     },
     "src/components/PublicWelcome.tsx": {
-      "bytes": 5683,
-      "sha256": "608d97e8222240a28182e6b9cf1ae31a33a46e2cfca7ffb69d8b6e4bf4a41f42"
+      "bytes": 7842,
+      "sha256": "7d763ab6a02bc04688c0c6cb01030cece8f97f6f01479039c49638cb4e5ebee9"
     },
     "src/components/ResourceSpaces.css": {
       "bytes": 9226,
@@ -535,8 +539,8 @@
       "sha256": "1f6eac492f164023ca096defa99908f422bce920a368e7bb33485c4af503fb35"
     },
     "src/components/WorkspaceChrome.tsx": {
-      "bytes": 6293,
-      "sha256": "791c1e745202e8d16e9ace8543feaba532e5bab1b2bfbae5b7a36c5d61262924"
+      "bytes": 6786,
+      "sha256": "414cbc395d6b78ec59c9422f8c6c969585fe8115df7b7cbb199d02a4fd1461c2"
     },
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
@@ -595,8 +599,8 @@
       "sha256": "6511e240273e975c7d600412d08d1e63c3766314afbe0b8393463d0003ef2008"
     },
     "src/main.tsx": {
-      "bytes": 303,
-      "sha256": "e39917f74718107f21bd89b81a4d4e1a340eb408699d2f2d812ef1596b4eec6a"
+      "bytes": 354,
+      "sha256": "d627815e3f9771e0ba3d34a21b915116055128cd72f00a608dad9f2fbfd97d1e"
     },
     "src/navigation.ts": {
       "bytes": 1439,
@@ -667,8 +671,8 @@
       "sha256": "912e013f02c025a50892a103a6bd67e5980aeb3861298b35c86c42c2127b8983"
     },
     "src/screens/Overview.tsx": {
-      "bytes": 15917,
-      "sha256": "27f965193f38b6d10c59862afa2d4fd1223395cf81494da1caf84ca3c6ce462c"
+      "bytes": 16627,
+      "sha256": "ec257316fd7f4beee6804678d4b4e6f9885a7adbbb9790ed01c874b17915917b"
     },
     "src/screens/Pit.tsx": {
       "bytes": 14478,
@@ -776,9 +780,6 @@
     }
   },
   "sourceChanges": [
-    "docs/launch-acceptance.md",
-    "scripts/release-fingerprint.mjs",
-    "scripts/release-preflight.mjs",
-    "vercel.json"
+    "src/atelier.css"
   ]
 }

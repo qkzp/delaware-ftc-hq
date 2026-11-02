@@ -11,6 +11,7 @@ import "../../src/styles.css";
 import "../../src/redesign.css";
 import "../../src/surfaces.css";
 import "../../src/experience.css";
+import "../../src/atelier.css";
 const mode=new URLSearchParams(location.search).get("mode"),account=mode==="account";
 if(mode==="fresh")localRepository.write(createWorkspaceData({teamName:"New fictional team"}));
 createRoot(document.getElementById("root")!).render(<><ExperienceRuntime/>{mode==="publiclab"?<PublicRobotLab/>:mode==="welcome"?<PublicWelcome accessReady={false}/>:<App accountMode={account} demoMode={!account}/>}</>);
