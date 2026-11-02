@@ -24,7 +24,7 @@ function clock(milliseconds: number) {
 }
 
 export function FocusSession({ taskId, onClose }: FocusSessionProps) {
-  const { data, canManage, saveRecord, notify, openRecord, storageError, myOwner, memberName, cloud } =
+  const { data, draftScope, canManage, saveRecord, notify, openRecord, storageError, myOwner, memberName, cloud } =
     useHQ();
   const task = data.tasks.find((item) => item.id === taskId);
   const canEdit = !!task && (canManage || task.owner === myOwner);
@@ -97,7 +97,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
   function saveNote() {
     const current = dataRef.current.tasks.find((item) => item.id === taskId);
     if (!current || !canEdit || !note.trim()) return;
-    saveRecord("tasks", {
+    if (!saveRecord("tasks", {
       ...current,
       comments: [
         ...current.comments,
@@ -107,7 +107,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
           date: new Date().toISOString(),
         },
       ],
-    });
+    }, {original:current,scope:draftScope})) return;
     setNote("");
     setDiscardPrompt(false);
     notify("Build note added to the task conversation.");
@@ -134,7 +134,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
           },
         ]
       : current.comments;
-    saveRecord("tasks", { ...current, comments, status: "Done" });
+    if (!saveRecord("tasks", { ...current, comments, status: "Done" }, {original:current,scope:draftScope})) return;
     setNote("");
     setRunning(false);
     setCompletedHere(true);

@@ -12,7 +12,7 @@ import {
   Repeat2,
   Users,
 } from "lucide-react";
-import { useHQ } from "../store";
+import { useHQ, useRecordDraft } from "../store";
 import { Badge, EmptyState, Field, Modal, PageHeader } from "../components/ui";
 import type { TeamEvent } from "../types";
 import CompetitionMap from "../components/CompetitionMap";
@@ -235,6 +235,7 @@ function parseImport(
 export default function CalendarPage() {
   const {
     data,
+    draftScope,
     canManage,
     canReview,
     myOwner,
@@ -251,7 +252,7 @@ export default function CalendarPage() {
   const [view, setView] = useState<"Month" | "Agenda" | "Season" | "Map">("Agenda");
   const [typeFilter, setTypeFilter] = useState("All events");
   const [selected, setSelected] = useState<TeamEvent | null>(null);
-  const [editing, setEditing] = useState<TeamEvent | null>(null);
+  const [editing, setEditing, saveDraft] = useRecordDraft("events");
   const [deleting, setDeleting] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importRecords, setImportRecords] = useState<TeamEvent[]>([]);
@@ -340,7 +341,7 @@ export default function CalendarPage() {
     const isNew = !data.events.some((e) => e.id === editing.id);
     const record = { ...editing, title: editing.title.trim() };
     if (!record.title) return;
-    saveRecord("events", record);
+    if (!saveDraft(record)) return;
     if (isNew && record.recurring === "Weekly")
       for (let i = 1; i < 8; i++) {
         const d = new Date(`${record.date}T12:00:00`);
@@ -363,7 +364,7 @@ export default function CalendarPage() {
     );
   };
   const rsvp = (event: TeamEvent) => {
-    saveRecord("events", { ...event, rsvp: !event.rsvp });
+    if (!saveRecord("events", { ...event, rsvp: !event.rsvp }, {original:event,scope:draftScope})) return;
     if (selected?.id === event.id) setSelected({ ...event, rsvp: !event.rsvp });
     notify(event.rsvp ? "RSVP removed." : "RSVP saved.");
   };

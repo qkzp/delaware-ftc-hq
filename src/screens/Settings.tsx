@@ -14,11 +14,13 @@ import { Badge, Field, Modal, PageHeader } from "../components/ui";
 import { localRepository } from "../persistence";
 import { downloadFile } from "../utils";
 import TeamAccess from "../components/TeamAccess";
+import PrivacyControls from "../components/PrivacyControls";
 import { api } from "../cloud";
 export default function Settings() {
   const {
     data,
-    setData,
+    saveWorkspace,
+    draftScope,
     role,
     setRole,
     canManage,
@@ -34,6 +36,9 @@ export default function Settings() {
   const [confirm, setConfirm] = useState<"reset" | "fresh" | null>(null);
   const [restore, setRestore] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const teamDetails = () => ({teamName:data.teamName,teamNumber:data.teamNumber,county:data.county,seasonName:data.seasonName});
+  const detailsOrigin = useRef({original:teamDetails(),scope:draftScope});
+  if(detailsOrigin.current.scope !== draftScope) detailsOrigin.current = {original:teamDetails(),scope:draftScope};
   return (
     <>
       <PageHeader
@@ -42,6 +47,7 @@ export default function Settings() {
         description="Team access, roles, details, and recoverable records."
       />
       <TeamAccess />
+      <PrivacyControls />
       <div className="settings-layout">
         <div className="stack">
           <section className="card settings-section">
@@ -58,16 +64,17 @@ export default function Settings() {
                 e.preventDefault();
                 if (!canManage) return;
                 const f = new FormData(e.currentTarget);
-                setData((d) => ({
-                  ...d,
+                const patch = {
                   teamName: String(f.get("teamName")).trim(),
                   teamNumber: String(f.get("teamNumber")).trim(),
                   county: String(f.get("county")),
                   seasonName: String(f.get("seasonName")).trim(),
-                }));
+                };
+                if (!saveWorkspace(patch, detailsOrigin.current.original, detailsOrigin.current.scope)) return;
+                detailsOrigin.current.original = patch;
                 notify("Team details saved.");
               }}
-              key={data.teamId + data.teamName}
+              key={draftScope}
             >
               <Field label="Team name">
                 <input

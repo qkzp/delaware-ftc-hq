@@ -1,0 +1,221 @@
+/* Compact product surfaces, based on Linear's light app and Notion's databases. */
+.app-shell .tc-task-summary {
+  display:flex; align-items:center; gap:28px; padding:12px 0; margin:0 0 18px;
+  border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent;
+}
+.app-shell .tc-task-summary>div:not(.tc-summary-progress) {display:flex; min-width:0; align-items:center; gap:8px; padding:0; border:0}
+.app-shell .tc-summary-icon {display:none}
+.app-shell .tc-task-summary strong {font:600 18px/1.3 var(--body); letter-spacing:-.3px}
+.app-shell .tc-task-summary div>span:not(.tc-summary-icon) {font:12px/1.5 var(--body); margin:0; color:var(--muted)}
+.app-shell .tc-summary-progress {padding:0; flex:1; max-width:220px; margin-left:auto}
+.app-shell .tc-summary-progress small {font-size:11px; margin-top:5px}
+.app-shell .tc-task-toolbar {align-items:center; border-bottom:1px solid var(--line); gap:16px; padding:0; margin-bottom:12px}
+.app-shell .tc-task-tabs {border:0}
+.app-shell .tc-view-switch {border:1px solid var(--line); border-radius:5px; padding:2px; gap:2px; background:#fff; margin:0 0 6px}
+.app-shell .tc-view-switch button {border-radius:3px; background:transparent; min-width:30px; height:28px; color:var(--muted)}
+.app-shell .tc-view-switch button.active {background:#eeeeF1; color:var(--ink)}
+.app-shell .tc-tab-count {font-size:11px; margin-left:6px}
+.app-shell .tc-task-filters {background:transparent; border:0; padding:0; border-radius:0; margin-bottom:18px; gap:8px}
+.app-shell .tc-filter-search {border-radius:5px; border-color:var(--line); min-height:32px; background:#fff; max-width:320px}
+.app-shell .tc-filter-search input {font-size:12px; min-height:30px!important}
+.app-shell .tc-task-filters select {border-color:var(--line); border-radius:5px; font-size:12px; min-height:32px; min-width:130px; background:#fff; padding:5px 25px 5px 9px}
+.app-shell .tc-board {gap:18px; grid-template-columns:repeat(3,minmax(0,1fr))}
+.app-shell .tc-board-column,.app-shell .tc-board-column:nth-child(2),.app-shell .tc-board-column:nth-child(3) {background:#fafafb; border:0; border-radius:6px; padding:12px 10px; min-width:0}
+.app-shell .tc-column-heading {border:0; padding:0 3px 12px; margin-bottom:0; gap:8px}
+.app-shell .tc-column-heading h2 {font:600 12px var(--body); text-transform:none; letter-spacing:0}
+.app-shell .tc-column-heading>span {font:11px var(--body)}
+.app-shell .tc-status-dot,.app-shell .tc-column-heading>.tc-status-dot {border-radius:50%}
+.app-shell .tc-task-card {border:1px solid #e2e2e7; border-radius:5px; background:#fff; padding:13px; margin-bottom:8px; box-shadow:none}
+.app-shell .tc-task-card:hover {transform:none; border-color:#c8c8d0; box-shadow:none}
+.app-shell .tc-task-title {font:500 13px/1.5 var(--body); text-transform:none; letter-spacing:0}
+.app-shell .tc-card-meta {font-size:11px; line-height:1.5; color:var(--muted)}
+.app-shell .tc-card-description {font-size:12px; line-height:1.6}
+.app-shell .tc-card-footer {font-size:11px; border-color:var(--line); padding-top:10px}
+.app-shell .tc-card-footer .avatar {border-radius:50%; font-size:10px; background:#efedf5; color:#565064}
+.app-shell .tc-task-list {background:#fff; border:1px solid var(--line); border-radius:5px; overflow:auto}
+.app-shell .tc-task-list table {font-size:12px}
+.app-shell .tc-task-list th {background:#fafafb; font:500 11px var(--body); color:var(--muted); padding:10px 12px; text-transform:none; letter-spacing:0}
+.app-shell .tc-task-list td {padding:12px; border-color:var(--line)}
+.app-shell .tc-task-list tbody tr:hover {background:#fafafb}
+
+/* Schedule */
+.app-shell .tc-calendar-top {gap:16px; margin-bottom:16px}
+.app-shell .tc-calendar-month h2 {font:600 18px var(--body); text-transform:none; letter-spacing:-.3px}
+.app-shell .tc-calendar-legend {font-size:11px; gap:12px}
+.app-shell .tc-calendar {border:1px solid var(--line); border-radius:5px; background:#fff; overflow:hidden}
+.app-shell .tc-weekdays {background:#fafafb; font:500 11px var(--body); color:var(--muted); text-transform:none; letter-spacing:0}
+.app-shell .tc-calendar-cell {background:#fff; border-color:var(--line); min-height:118px}
+.app-shell .tc-calendar-cell.today {background:#f5f4fb}
+.app-shell .tc-day-number {font:12px var(--body); color:var(--muted)}
+.app-shell .tc-calendar-event {font-size:11px; border-radius:3px; background:#efedf7; color:#575077; padding:4px 6px; line-height:1.4}
+.app-shell .tc-agenda-list {display:grid; gap:0; border-top:1px solid var(--line)}
+.app-shell .tc-agenda-date {display:grid; grid-template-columns:64px minmax(0,1fr); gap:20px; padding:20px 0; background:#fff; border:0; border-bottom:1px solid var(--line); border-radius:0}
+.app-shell .tc-date-tile {background:transparent; border:0; border-radius:0; align-self:start; padding:0 10px 0 0; border-right:1px solid var(--line)}
+.app-shell .tc-date-tile strong {font:600 23px var(--body)}
+.app-shell .tc-agenda-info h3 {font:600 15px var(--body); letter-spacing:-.2px}
+.app-shell .tc-agenda-details {font-size:12px; line-height:1.6; color:var(--muted)}
+.app-shell .tc-season-month {background:#fff; border:0; border-top:1px solid var(--line); border-radius:0; padding:18px 0; margin-bottom:10px}
+.app-shell .tc-season-label {font:600 13px var(--body); border-color:var(--line); text-transform:none; letter-spacing:0}
+.app-shell .tc-season-event {border-color:var(--line); border-radius:4px; padding:12px}
+.app-shell .tc-event-detail-block {padding:16px; border:1px solid var(--line); border-radius:5px; background:#fafafb}
+.app-shell .tc-event-detail-block h3 {font-size:14px}
+.app-shell .tc-event-detail-meta {font-size:12px}
+.app-shell .tc-event-source {background:#f5f5f7; border-radius:5px; color:var(--muted)}
+.app-shell .tc-import-panel {background:#fafafb; border-radius:5px; border-color:var(--line)}
+
+/* Outreach uses the same table and board vocabulary as tasks. */
+.app-shell .funding-summary {display:flex; border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; margin:0 0 18px; gap:28px; overflow:visible}
+.app-shell .funding-summary>.card,.app-shell .funding-summary>.card:first-child {display:flex; align-items:center; gap:10px; flex:1; padding:14px 0; border:0; border-radius:0; background:transparent; min-width:0}
+.app-shell .funding-summary strong {font:600 20px/1.3 var(--body); letter-spacing:-.3px}
+.app-shell .funding-summary span:not(.funding-stat-icon) {font:12px/1.5 var(--body); color:var(--muted); margin-top:2px}
+.app-shell .funding-stat-icon {display:none}
+.app-shell .funding-stat-button.is-selected {box-shadow:inset 0 -2px var(--accent); background:transparent}
+.app-shell .funding-filters {background:transparent; border:0; border-radius:0; padding:0; gap:8px}
+.app-shell .funding-filters select {font-size:12px; min-height:32px; padding:5px 25px 5px 9px}
+.app-shell .funding-search {background:#fff; border:1px solid var(--line); border-radius:5px; min-height:32px; max-width:340px}
+.app-shell .funding-search input {font-size:12px; min-height:30px!important}
+.app-shell .funding-view-toolbar {padding:0 0 12px; border-color:var(--line); gap:12px}
+.app-shell .funding-view-switch {border:1px solid var(--line); border-radius:5px; background:#fff; padding:2px; gap:2px}
+.app-shell .funding-view-switch button {font-size:12px; padding:6px 10px; border-radius:3px}
+.app-shell .funding-view-switch button.active {background:#eeeef1; color:var(--ink)}
+.app-shell .funding-table {border:1px solid var(--line); border-radius:5px; background:#fff; overflow:auto}
+.app-shell .funding-table th {font:500 11px var(--body); color:var(--muted); background:#fafafb; border-color:var(--line); padding:10px 12px; text-transform:none; letter-spacing:0}
+.app-shell .funding-table td {font-size:12px; border-color:var(--line); padding:12px}
+.app-shell .funding-table tbody tr:hover {background:#fafafb}
+.app-shell .funding-board {gap:16px}
+.app-shell .funding-board-column {background:#fafafb; border:0; border-radius:5px; padding:12px 10px}
+.app-shell .funding-board-heading {font-family:var(--body); text-transform:none; border:0; padding-bottom:12px}
+.app-shell .funding-board-heading h3 {font:600 12px var(--body); text-transform:none; letter-spacing:0}
+.app-shell .funding-board-card {border:1px solid #e2e2e7; border-radius:5px; background:#fff; padding:13px; box-shadow:none}
+.app-shell .funding-board-card:hover {transform:none; border-color:#c8c8d0; box-shadow:none}
+.app-shell .funding-board-card h3 {font:500 13px/1.5 var(--body); text-transform:none; letter-spacing:0}
+.app-shell .funding-private-note {border-radius:5px; background:#f7f7f8; border:1px solid var(--line); color:var(--muted); font-size:12px; padding:10px 12px; margin:14px 0}
+.app-shell .funding-detail-grid {gap:16px}
+.app-shell .funding-detail-section {padding:16px; background:#fafafb; border:1px solid var(--line); border-radius:5px}
+.app-shell .funding-detail-section h3 {font:600 14px var(--body); text-transform:none; letter-spacing:0}
+
+/* Knowledge, onboarding and the pit checklist are readable documents. */
+.app-shell .library-note {border:1px solid var(--line); border-radius:5px; background:#f7f7f8; padding:13px 15px; color:var(--muted); font-size:12px}
+.app-shell .robot-reference-head {border:0; border-bottom:1px solid var(--line); border-radius:0; background:#fff; padding:8px 0 22px; gap:14px}
+.app-shell .robot-reference-head h2 {font:600 22px var(--body); text-transform:none; letter-spacing:-.4px}
+.app-shell .robot-reference-head p {font-size:13px; color:var(--muted); line-height:1.65}
+.app-shell .robot-reference-icon {background:transparent; border:0; border-radius:0; color:var(--muted); width:34px; height:34px}
+.app-shell .robot-links {gap:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.app-shell .robot-link {border:0; border-right:1px solid var(--line); border-radius:0; background:#fff; padding:18px}
+.app-shell .robot-link:last-child {border-right:0}
+.app-shell .robot-link h3 {font:600 14px var(--body); letter-spacing:0; text-transform:none}
+.app-shell .robot-link p {font-size:12px; color:var(--muted); line-height:1.6}
+.app-shell .robot-reference-grid {gap:24px}
+.app-shell .robot-reference-section {border:0; border-top:1px solid var(--line); border-radius:0; background:#fff; padding:20px 0}
+.app-shell .robot-reference-section h3 {font:600 15px var(--body); text-transform:none; letter-spacing:0}
+.app-shell .robot-reference-section p {font-size:13px; line-height:1.75; white-space:pre-wrap; color:var(--muted)}
+.app-shell .resource-detail-meta {background:#fafafb; border:1px solid var(--line); border-radius:5px; padding:14px; font-size:12px}
+.app-shell .resource-content {font-size:13px; line-height:1.8; color:var(--ink)}
+.app-shell .resource-detail h2 {font-size:23px; letter-spacing:-.4px}
+.app-shell .rookie-welcome {background:#fff; border:0; border-bottom:1px solid var(--line); border-radius:0; padding:12px 0 24px}
+.app-shell .rookie-welcome h2 {font:600 23px var(--body); text-transform:none; letter-spacing:-.4px}
+.app-shell .rookie-welcome p {font-size:13px; line-height:1.7; color:var(--muted)}
+.app-shell .rookie-spark {background:transparent; color:var(--muted); border-radius:0}
+.app-shell .rookie-step {border:0; border-bottom:1px solid var(--line); border-radius:0; background:#fff; padding:20px 0; margin-bottom:0}
+.app-shell .rookie-step h3 {font:600 15px var(--body); text-transform:none; letter-spacing:0}
+.app-shell .rookie-step p {font-size:13px; color:var(--muted); line-height:1.65}
+.app-shell .rookie-time {font:11px var(--body); color:var(--muted)}
+.app-shell .rookie-step-check,.app-shell .rookie-step-done {border-radius:4px}
+.app-shell .rookie-tip,.app-shell .rookie-next {background:#f7f7f8; border:1px solid var(--line); border-radius:5px; font-size:12px; color:var(--muted)}
+.app-shell .pit-hero {background:#fff; border:0; border-bottom:1px solid var(--line); border-radius:0; padding:10px 0 22px}
+.app-shell .pit-hero h2 {font:600 23px var(--body); text-transform:none; letter-spacing:-.4px}
+.app-shell .pit-checklist,.app-shell .pit-notes,.app-shell .pit-instructions {border:1px solid var(--line); border-radius:5px; background:#fff; padding:18px}
+.app-shell .pit-group-heading {font:600 13px var(--body); text-transform:none; letter-spacing:0}
+.app-shell .pit-check-row {padding:11px 0; font-size:13px; border-color:var(--line)}
+.app-shell .pit-no-notes {font-size:12px; color:var(--muted)}
+.app-shell .pit-note {border-color:var(--line); font-size:12px}
+
+/* Guided help retains all diagnostics, using a neutral settings layout. */
+.app-shell .support-center {padding:22px; border:1px solid var(--line); border-radius:5px; box-shadow:none}
+.app-shell .support-center-heading h2 {font-size:20px; letter-spacing:-.3px}
+.app-shell .support-center-label {border-radius:4px; font:11px var(--body); background:#f0eff6; color:#5b547a; padding:4px 7px; letter-spacing:0; text-transform:none}
+.app-shell .support-center>p {font-size:13px; color:var(--muted)}
+.app-shell .support-center-grid {grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:24px}
+.app-shell .support-center-diagnostics {border-radius:5px; background:#fafafb; padding:18px; border-color:var(--line)}
+.app-shell .support-center-diagnostics>h3 {font-size:14px}
+.app-shell .support-center-diagnostics>p {font-size:12px; line-height:1.6}
+.app-shell .support-center-status {font-size:12px}
+.app-shell .support-center-next ol {list-style:decimal; padding-left:20px}
+.app-shell .support-center-next li {padding:10px 0 10px 3px; margin:0; border-bottom:1px solid var(--line); font-size:12px; line-height:1.6}
+.app-shell .support-center-next li:before {content:none}
+.app-shell .support-center-escalation {padding:16px; background:#fafafb; border:1px solid var(--line); border-radius:5px}
+.app-shell .support-center-escalation p {font-size:12px; color:var(--muted); line-height:1.6}
+.app-shell .support-center-summary {font-size:11px; background:#fff; line-height:1.8}
+.app-shell .support-center-result {font-size:12px}
+
+/* Competition map and its results form one split view. */
+.app-shell .competition-explorer {color:var(--ink); margin-top:16px}
+.app-shell .competition-intro h2 {font:600 21px/1.3 var(--body); letter-spacing:-.4px}
+.app-shell .competition-intro p {font-size:13px; color:var(--muted)}
+.app-shell .competition-controls {background:transparent; border:0; border-radius:0; padding:0 0 16px; gap:12px}
+.app-shell .competition-controls label {font-size:11px; font-weight:500}
+.app-shell .competition-controls select,.app-shell .competition-controls input {border-radius:5px; border-color:var(--line); font-size:12px; color:var(--ink); min-height:32px}
+.app-shell .competition-search>div {border-radius:5px; border-color:var(--line)}
+.app-shell .competition-privacy,.app-shell .competition-coverage {font-size:12px; color:var(--muted); line-height:1.6}
+.app-shell .competition-layout {border-radius:5px; border-color:var(--line)}
+.app-shell .competition-map {font-family:var(--body); background:#f0f0f2}
+.app-shell .competition-map-column {background:#f7f7f8}
+.app-shell .competition-pin-team>span,.app-shell .competition-map-caption .team-dot {background:var(--accent)}
+.app-shell .competition-results {border-color:var(--line)}
+.app-shell .competition-result-heading {background:#fafafb; border-color:var(--line); padding:13px 16px}
+.app-shell .competition-result-heading h3 {font-size:14px}
+.app-shell .competition-result-heading>span {font:11px var(--body)}
+.app-shell .competition-result-list button {padding:14px 16px; font-size:12px}
+.app-shell .competition-result-list button:hover,.app-shell .competition-result-list button.selected {background:#f3f2f8}
+.app-shell .competition-result-list strong {font-size:13px}
+.app-shell .competition-result-list small {font-size:11px}
+.app-shell .competition-result-distance {color:var(--muted); font:11px var(--body)}
+.app-shell .competition-result-number {border-radius:4px; border-color:var(--line); font:11px var(--body); background:#f7f7f8}
+.app-shell .competition-detail {background:#fafafb; border-color:var(--line)}
+.app-shell .competition-detail h3 {font-size:18px}
+.app-shell .competition-detail-top,.app-shell .competition-detail p {font-size:12px}
+.app-shell .competition-detail-top .text-btn {color:var(--accent)}
+.app-shell .competition-message {border-radius:5px; background:#f7f7f8; color:var(--muted); font-size:12px}
+.app-shell .competition-unmapped {border:1px solid var(--line); border-radius:5px; background:#fff}
+.app-shell .competition-coordinate-fields {border-radius:5px; border-color:var(--line); font-size:12px}
+
+@media(max-width:1050px) {
+  .app-shell .tc-board {gap:12px}
+  .app-shell .tc-board-column {padding:10px 8px}
+  .app-shell .funding-summary {gap:18px}
+  .app-shell .tc-task-summary {gap:20px}
+}
+@media(max-width:760px) {
+  .app-shell .tc-task-summary {flex-wrap:wrap; gap:14px 24px}
+  .app-shell .tc-summary-progress {min-width:130px; max-width:none}
+  .app-shell .tc-task-filters select {flex:1; min-width:130px}
+  .app-shell .tc-filter-search {max-width:none}
+  .app-shell .funding-summary {gap:12px}
+  .app-shell .funding-summary>.card {align-items:flex-start}
+  .app-shell .funding-summary strong {font-size:18px}
+  .app-shell .funding-summary span:not(.funding-stat-icon) {font-size:11px}
+  .app-shell .support-center-grid {grid-template-columns:1fr; gap:20px}
+  .app-shell .support-center {padding:18px}
+  .app-shell .competition-controls {grid-template-columns:1fr 1fr}
+  .app-shell .robot-links,.app-shell .robot-reference-grid {grid-template-columns:1fr}
+  .app-shell .robot-link {border-right:0; border-bottom:1px solid var(--line); padding:16px 0}
+  .app-shell .robot-link:last-child {border-bottom:0}
+  .app-shell .tc-agenda-date {grid-template-columns:50px minmax(0,1fr); gap:15px; padding:17px 0}
+  .app-shell .tc-calendar-month h2 {font-size:17px}
+  .app-shell .tc-calendar-cell {min-height:90px}
+  .app-shell .tc-calendar-event {font-size:10px; padding:3px 4px}
+  .app-shell .tc-date-tile strong {font-size:21px}
+}
+@media(max-width:540px) {
+  .app-shell .tc-board {grid-template-columns:1fr; gap:18px}
+  .app-shell .tc-task-summary {gap:13px 18px}
+  .app-shell .tc-summary-progress {flex-basis:100%; max-width:none; padding-top:4px}
+  .app-shell .tc-task-toolbar {flex-wrap:wrap}
+  .app-shell .funding-summary {flex-wrap:wrap; gap:0 20px}
+  .app-shell .funding-summary>.card,.app-shell .funding-summary>.card:first-child {flex:1 1 100px; padding:10px 0}
+  .app-shell .competition-controls {grid-template-columns:1fr}
+  .app-shell .support-center-diagnostics {padding:15px}
+  .app-shell .tc-calendar-cell {min-height:80px}
+  .app-shell .tc-weekdays {font-size:10px}
+  .app-shell .tc-calendar-event {font-size:9px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+}

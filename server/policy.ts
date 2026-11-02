@@ -1,5 +1,6 @@
 import type { AppData, Role, Evidence } from "../src/types";
 import { validateData } from "../src/persistence";
+import { collectionAuthorized, consentContext } from "./privacy";
 export type Envelope = { workspace: AppData; rsvps: Record<string, string[]>; learning: Record<string, {steps: string[]; skills: string[]}> };
 export class ApiError extends Error { constructor(public status: number, message: string) { super(message); } }
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
@@ -110,12 +111,17 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
    if (key === "sponsors" && record.draftStatus === "Approved" && (!previous || record.draft !== previous.draft || previous.draftStatus !== "Approved") && !reviews(role)) throw new ApiError(403, "A mentor must approve outreach drafts.");
    if (key === "grants" && record.confirmed && (!record.source || !record.checked)) throw new ApiError(400, "Eligibility confirmation requires its official source and check date.");
    if (key === "evidence") {
+    // Collection authorization is server-issued and tied to the reviewed record.
+    const consentChanged = !previous || consentContext(record) !== consentContext(previous);
+    updated.consentReviewedBy = consentChanged ? "" : previous.consentReviewedBy || "";
+    updated.consentReviewedAt = consentChanged ? "" : previous.consentReviewedAt || "";
     updated.reviewedBy = previous?.reviewedBy || ""; updated.reviewedAt = previous?.reviewedAt || "";
+    if ((updated.fileId && updated.fileId !== previous?.fileId || updated.mediaUrl && updated.mediaUrl !== previous?.mediaUrl) && !collectionAuthorized(updated)) throw new ApiError(400, "A mentor must review collection consent before attaching media. Save the record and request consent review first.");
     if (record.reach > 0 && !record.measurement.trim()) throw new ApiError(400, "Explain how outreach reach was measured.");
     const changed = !previous || !same({...record,approved:previous.approved,reviewedAt:previous.reviewedAt,reviewedBy:previous.reviewedBy},previous);
     if (changed || !previous?.approved) {
      updated.approved = !!record.approved && reviews(role);
-     if (updated.approved && (record.consent === "Not recorded" || !record.consentNote.trim())) throw new ApiError(400, "Record consent and its reference before approval.");
+     if (updated.approved && !collectionAuthorized(updated)) throw new ApiError(400, "A mentor must review collection consent and its reference before approval.");
      if (updated.approved && record.visibility === "public" && record.consent !== "External use permitted") throw new ApiError(400, "External-use approval requires external-use consent.");
      updated.reviewedAt = updated.approved ? now.slice(0,10) : "";
      updated.reviewedBy = updated.approved ? userId : "";

@@ -1,0 +1,30 @@
+.support-center { padding: 28px; min-width: 0; }
+.support-center > p { max-width: 78ch; color: var(--muted); line-height: 1.6; }
+.support-center-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
+.support-center-heading h2 { margin: 4px 0 0; }
+.support-center-heading .eyebrow { margin: 0; }
+.support-center-label { border: 1px solid var(--line); border-radius: 20px; padding: 6px 12px; font-size: 12px; color: var(--muted); }
+.support-center-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; margin: 24px 0; }
+.support-center-guide, .support-center-diagnostics { min-width: 0; display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
+.support-center-guide > .btn, .support-center-diagnostics > .btn { align-self: flex-start; }
+.support-center-diagnostics { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.support-center h3, .support-center-diagnostics > p { margin: 0; }
+.support-center-diagnostics > p { font-size: 13px; line-height: 1.6; }
+.support-center-next { min-width: 0; }
+.support-center-next p { color: var(--muted); line-height: 1.6; }
+.support-center-next ol { margin: 12px 0 0; padding-left: 22px; }
+.support-center-next li { padding-left: 4px; margin-bottom: 12px; line-height: 1.65; overflow-wrap: anywhere; }
+.support-center-status { margin: 0; display: grid; gap: 0; }
+.support-center-status > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.support-center-status dt { color: var(--muted); }
+.support-center-status dd { margin: 0; font-weight: 550; text-align: right; overflow-wrap: anywhere; }
+.support-center-escalation { margin: 8px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.support-center-escalation p { max-width: 85ch; line-height: 1.65; }
+.support-center-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.support-center-links a { display: inline-flex; align-items: center; min-height: 44px; }
+.support-center-summary { width: 100%; min-height: 240px; resize: vertical; font-family: var(--mono); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.support-center select, .support-center .btn { min-height: 44px; max-width: 100%; }
+.support-center .btn { white-space: normal; }
+.support-center > .btn { margin-top: 12px; }
+.support-center-result { min-height: 1.6em; line-height: 1.6; margin: 8px 0 0; font-size: 13px; }
+@media (max-width: 720px) { .support-center { padding: 20px; } .support-center-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; } .support-center-status dd { text-align: left; } }

@@ -11,7 +11,7 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
-import { useHQ } from "../store";
+import { useHQ, useRecordDraft } from "../store";
 import {
   PageHeader,
   Modal,
@@ -83,7 +83,7 @@ export default function GrantsPage() {
   const [county, setCounty] = useState("All counties");
   const [status, setStatus] = useState("All statuses");
   const [rookie, setRookie] = useState(false);
-  const [editing, setEditing] = useState<Grant | null>(null);
+  const [editing, setEditing, saveDraft] = useRecordDraft("grants");
   const [step, setStep] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
@@ -194,7 +194,7 @@ export default function GrantsPage() {
       );
       return;
     }
-    saveRecord("grants", { ...editing, name: editing.name.trim() });
+    if (!saveDraft({ ...editing, name: editing.name.trim() })) return;
     setEditing(null);
     notify("Grant application saved.");
   }

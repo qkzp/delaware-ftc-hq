@@ -1,0 +1,147 @@
+/* Channels and task threads share a single workspace, as in Slack. */
+.team-hub-surface[hidden] {display:none!important}
+.team-hub-views {display:flex; flex-wrap:wrap; gap:8px; margin:0 0 20px; border-bottom:1px solid var(--line); background:transparent; width:100%; padding:0; border-radius:0}
+.team-hub-views button {position:relative; min-height:40px; padding:9px 12px; border:0; border-bottom:2px solid transparent; border-radius:0; background:transparent; color:var(--muted); font:500 12px var(--body); cursor:pointer}
+.team-hub-views button:hover {color:var(--ink); background:#fafafb}
+.team-hub-views button.is-active {border-bottom-color:var(--ink); background:transparent; color:var(--ink); box-shadow:none}
+.team-hub-layout {display:grid; grid-template-columns:170px minmax(0,1fr); gap:0; align-items:start; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:#fff}
+.team-hub-channels {position:sticky; top:64px; min-width:0; border:0; border-right:1px solid var(--line); background:#fafafb; border-radius:0; padding:18px 10px 24px; align-self:stretch}
+.team-hub-channels h2 {font:600 12px var(--body); text-transform:none; letter-spacing:0; margin:0 8px 9px; color:var(--ink)}
+.team-hub-channels>p {font-size:11px; color:var(--muted); line-height:1.6; margin:0 8px 18px}
+.team-hub-channels [role=group] {display:grid; gap:2px}
+.team-hub-channels button {display:flex; align-items:center; text-align:left; gap:7px; min-height:34px; width:100%; border:0; border-radius:4px; background:transparent; color:var(--muted); padding:8px; font:400 12px var(--body); cursor:pointer}
+.team-hub-channels button span {flex:1; overflow-wrap:anywhere}
+.team-hub-channels button svg {flex:none; width:14px; height:14px}
+.team-hub-channels button small {font:11px var(--body); color:inherit; background:transparent; min-width:17px; text-align:center}
+.team-hub-channels button:hover {background:#f0f0f3; color:var(--ink)}
+.team-hub-channels button.is-active {border:0; background:#eae9f2; color:#514b70; font-weight:600}
+.team-hub-channel-note {display:flex; gap:7px; margin:20px 8px 0; border-top:1px solid var(--line); padding-top:14px; color:var(--muted)}
+.team-hub-channel-note svg {flex:none; color:var(--muted); width:14px; height:14px}
+.team-hub-channel-note p {margin:0; font-size:11px; line-height:1.65}
+.team-hub-conversations {display:grid; grid-template-columns:minmax(200px,.8fr) minmax(0,1.2fr); gap:0; min-width:0; align-items:start}
+.team-hub-section-head {display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; border-bottom:1px solid var(--line); padding-bottom:12px}
+.team-hub-section-head h2 {font:600 15px var(--body); letter-spacing:-.2px; margin:0; color:var(--ink)}
+.team-hub-section-head>span {font:11px var(--body); color:var(--muted)}
+.team-hub-conversations>.team-hub-section-head {grid-column:1/-1; margin:0; padding:16px 18px; min-height:50px}
+.team-hub-conversations>.field {grid-column:1; grid-row:2; min-width:0; margin:0; padding:14px 12px; border-right:1px solid var(--line); background:#fcfcfd}
+.team-hub-conversations>.field>span {font-size:11px; margin-bottom:6px}
+.team-hub-conversations>.field input {min-width:0; font-size:12px; min-height:32px; padding:7px 9px}
+.team-hub-task-list {grid-column:1; grid-row:3; display:grid; align-content:start; gap:0; margin:0; border:0; border-right:1px solid var(--line); border-top:1px solid var(--line); border-radius:0; overflow:auto; max-height:620px; min-height:430px; background:#fcfcfd; min-width:0}
+.team-hub-task-list>button {position:relative; text-align:left; border:0; border-bottom:1px solid var(--line); border-left:2px solid transparent; border-radius:0; min-width:0; padding:13px 12px; background:transparent; display:grid; gap:7px; font:inherit; cursor:pointer}
+.team-hub-task-list>button:last-child {border-bottom:0}
+.team-hub-task-list>button:hover {background:#f3f3f6}
+.team-hub-task-list>button.is-selected {background:#eeeef4; border-left-color:var(--accent)}
+.team-hub-task-list>button>span {font-size:11px; color:var(--muted); line-height:1.5}
+.team-hub-task-heading {display:flex; gap:6px; align-items:flex-start; flex-wrap:wrap}
+.team-hub-task-heading strong {font-size:12px; font-weight:500; color:var(--ink); overflow-wrap:anywhere; line-height:1.5}
+.team-hub-thread-count {display:flex; align-items:center; gap:5px; font:11px var(--body)!important}
+.team-hub-thread-count svg {width:12px; height:12px}
+.team-hub-thread,.team-hub-thread-empty {grid-column:2; grid-row:2/4; min-width:0; align-self:stretch}
+.team-hub-thread {display:flex; flex-direction:column; border:0; border-radius:0; padding:20px; margin:0; background:#fff; overflow:hidden}
+.team-hub-thread>header {display:flex; justify-content:space-between; gap:12px; align-items:start; background:#fff; color:var(--ink); margin:-20px -20px 16px; padding:16px 20px; border-bottom:1px solid var(--line)}
+.team-hub-thread header .eyebrow {color:var(--muted); font:11px var(--body); letter-spacing:0; text-transform:none; margin:0}
+.team-hub-thread h3 {margin:6px 0 0; font:600 16px/1.4 var(--body); color:var(--ink); letter-spacing:-.2px; overflow-wrap:anywhere}
+.team-hub-thread>p {font-size:13px; color:var(--muted); white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.65}
+.team-hub-thread header .text-link {white-space:nowrap; font-size:11px; color:var(--muted); min-height:28px; flex:none}
+.team-hub-thread header .text-link:hover {color:var(--ink)}
+.team-hub-replies {margin:10px 0 20px; display:grid; gap:0; max-height:400px; overflow:auto; flex:1}
+.team-hub-replies article {border:0; border-bottom:1px solid var(--line); border-radius:0; padding:14px 0; background:transparent}
+.team-hub-replies article:last-child {border-bottom:0}
+.team-hub-replies article>div {display:flex; align-items:baseline; justify-content:flex-start; flex-wrap:wrap; gap:8px; font-size:12px}
+.team-hub-replies time {font:11px var(--body); color:var(--muted)}
+.team-hub-replies p {font-size:13px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; margin:6px 0 0}
+.team-hub-thread form {border-top:1px solid var(--line); padding-top:16px; margin-top:auto}
+.team-hub-thread .field {margin:0}
+.team-hub-thread .field>span {font-size:12px}
+.team-hub-thread .field-hint {font-size:11px; color:var(--muted)}
+.team-hub-thread textarea {font-size:13px; line-height:1.6; min-height:100px; border-color:#d9d9e0; border-radius:5px}
+.team-hub-reply-actions {display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px}
+.team-hub-reply-actions a {font-size:11px; color:var(--muted); text-decoration:underline; text-underline-offset:3px}
+.team-hub-reply-actions .btn {font-size:12px; min-height:34px; padding:7px 11px}
+.team-hub-thread-empty {display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff; border:0; border-radius:0; padding:30px; text-align:center; margin:0; color:var(--muted); min-height:500px}
+.team-hub-thread-empty>svg {color:#9998a3; stroke-width:1.5}
+.team-hub-thread-empty h3 {font-size:15px; color:var(--ink); margin:14px 0 7px}
+.team-hub-thread-empty p {font-size:12px; line-height:1.65; max-width:32ch; margin:0}
+.team-hub-context {grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:0; min-width:0; border-top:1px solid var(--line)}
+.team-hub-context .card {padding:18px 20px; border-radius:0; background:#fff; border:0; border-right:1px solid var(--line); min-width:0; box-shadow:none}
+.team-hub-context .card:last-child {border-right:0}
+.team-hub-context h2 {display:flex; gap:7px; align-items:center; font:600 12px var(--body); text-transform:none; letter-spacing:0; margin:0 0 15px; padding:0; border:0}
+.team-hub-context h2 svg {width:14px; height:14px; color:var(--muted)}
+.team-hub-context dl {margin:0 0 14px; display:flex; gap:22px; flex-wrap:wrap}
+.team-hub-context dl>div {display:flex; align-items:baseline; gap:7px; padding:0; border:0}
+.team-hub-context dt {font-size:11px; color:var(--muted); line-height:1.5}
+.team-hub-context dd {font:600 15px var(--body); margin:0; color:var(--ink)}
+.team-hub-context .text-link {font-size:12px}
+.team-hub-context p {font-size:12px; color:var(--muted); line-height:1.65}
+.team-hub-resource {display:grid; gap:4px; padding:9px 0; border:0; border-bottom:1px solid var(--line); background:transparent; text-align:left; width:100%; color:var(--ink); cursor:pointer}
+.team-hub-resource strong {font-size:12px; font-weight:500; line-height:1.5; overflow-wrap:anywhere}
+.team-hub-resource span {font:11px var(--body); color:var(--muted)}
+.team-hub-resource:last-of-type {margin-bottom:12px}
+.team-hub-resource:hover strong {text-decoration:underline; text-underline-offset:3px}
+.team-hub-brief-grid {display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:28px}
+.team-hub-brief-grid>.card {padding:0; min-width:0; border:0; border-radius:0; background:#fff; box-shadow:none}
+.team-hub-brief-grid h3 {font:600 14px var(--body); margin:24px 0 9px; color:var(--ink)}
+.team-hub-prose {white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.8}
+.team-hub-brief-grid .team-hub-section-head {margin:0 0 16px; padding:0 0 12px; background:transparent; border-radius:0}
+.team-hub-brief-grid .team-hub-section-head h2 {font-size:15px}
+.team-hub-update {border:0; border-bottom:1px solid var(--line); border-radius:0; padding:18px 0; margin-top:0; background:transparent}
+.team-hub-update>div {display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.team-hub-update time,.team-hub-update small {font:11px var(--body); color:var(--muted)}
+.team-hub-update h3 {margin-top:12px; color:var(--ink)}
+.team-hub-feedback {padding:11px 13px; background:#f5f4f9; color:#514c6c; border:1px solid #e1dfea; border-radius:5px; font-size:12px; margin-bottom:16px; line-height:1.6}
+.team-hub-activity {padding:0; border:0; border-radius:0; background:#fff; box-shadow:none}
+.team-hub-activity>article {display:flex; gap:12px; border-bottom:1px solid var(--line); padding:18px 0}
+.team-hub-activity>article:last-child {border-bottom:0}
+.team-hub-activity>article>div:last-child {min-width:0; flex:1}
+.team-hub-activity-icon {width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:#f4f4f6; border:0; color:var(--muted); flex:none}
+.team-hub-activity-meta {display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12px}
+.team-hub-activity-meta span,.team-hub-activity-meta time {font:11px var(--body); color:var(--muted)}
+.team-hub-activity h3 {font-size:14px; font-weight:500; margin:8px 0}
+.team-hub-activity .text-link {font-size:12px}
+:is(.team-hub-views,.team-hub-channels,.team-hub-task-list,.team-hub-thread,.team-hub-context,.team-hub-activity) :is(button,a):focus-visible {outline:2px solid var(--accent); outline-offset:3px}
+@media(min-width:1750px) {
+  .team-hub-layout {grid-template-columns:170px minmax(0,1fr) 220px}
+  .team-hub-context {grid-column:3; grid-row:1; grid-template-columns:1fr; border-top:0; border-left:1px solid var(--line); align-self:stretch; align-content:start}
+  .team-hub-context .card {border-right:0; border-bottom:1px solid var(--line)}
+  .team-hub-context dl {display:grid; gap:10px}
+  .team-hub-context dl>div {justify-content:space-between}
+}
+@media(max-width:1200px) {
+  .team-hub-layout {grid-template-columns:150px minmax(0,1fr)}
+  .team-hub-conversations {grid-template-columns:minmax(0,1fr)}
+  .team-hub-conversations>.team-hub-section-head,.team-hub-conversations>.field,.team-hub-task-list,.team-hub-thread,.team-hub-thread-empty {grid-column:1; grid-row:auto}
+  .team-hub-conversations>.field {border-right:0}
+  .team-hub-task-list {max-height:250px; min-height:0; border-right:0; border-bottom:1px solid var(--line); grid-template-columns:repeat(2,minmax(0,1fr))}
+  .team-hub-task-list>button:nth-child(odd) {border-right:1px solid var(--line)}
+  .team-hub-task-list>button:last-child {border-bottom:1px solid var(--line)}
+  .team-hub-thread-empty {min-height:260px}
+  .team-hub-thread {min-height:360px}
+}
+@media(max-width:760px) {
+  .team-hub-layout {grid-template-columns:minmax(0,1fr)}
+  .team-hub-channels {position:static; padding:14px; border-right:0; border-bottom:1px solid var(--line)}
+  .team-hub-channels>p {margin-bottom:12px}
+  .team-hub-channels [role=group] {display:flex; flex-wrap:wrap; gap:4px}
+  .team-hub-channels button {width:auto; min-height:36px; padding:8px 9px; gap:6px}
+  .team-hub-channel-note {margin:13px 0 0; padding-top:12px}
+  .team-hub-brief-grid {grid-template-columns:minmax(0,1fr); gap:24px}
+  .team-hub-context {grid-template-columns:minmax(0,1fr)}
+  .team-hub-context .card {border-right:0; border-bottom:1px solid var(--line)}
+  .team-hub-context .card:last-child {border-bottom:0}
+  .team-hub-views {gap:0}
+  .team-hub-views button {flex:1 1 auto; padding-inline:10px; font-size:12px; min-height:42px}
+  .team-hub-thread>header {flex-wrap:wrap}
+  .team-hub-thread header .text-link {min-height:30px}
+  .team-hub-section-head {align-items:flex-start}
+}
+@media(max-width:480px) {
+  .team-hub-task-list {grid-template-columns:minmax(0,1fr); max-height:280px}
+  .team-hub-task-list>button:nth-child(odd) {border-right:0}
+  .team-hub-thread {padding:16px}
+  .team-hub-thread>header {margin:-16px -16px 14px; padding:14px 16px}
+  .team-hub-views button {flex:1 1 45%; text-align:left}
+  .team-hub-activity .team-hub-section-head {flex-direction:column}
+  .team-hub-reply-actions {align-items:flex-start; flex-direction:column}
+  .team-hub-context dl {gap:12px}
+  .team-hub-channels button {font-size:11px}
+}

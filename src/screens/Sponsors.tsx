@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   Users,
 } from "lucide-react";
-import { useHQ } from "../store";
+import { useHQ, useRecordDraft } from "../store";
 import {
   PageHeader,
   Modal,
@@ -78,6 +78,7 @@ const tone = (s: Sponsor["status"]) =>
 export default function SponsorsPage() {
   const {myOwner, memberName, cloud,
     data,
+    draftScope,
     canManage,
     canReview,
     saveRecord,
@@ -90,7 +91,7 @@ export default function SponsorsPage() {
   const [status, setStatus] = useState("All statuses");
   const [view, setView] = useState<"list" | "board">("list");
   const [followOnly, setFollowOnly] = useState(false);
-  const [editing, setEditing] = useState<Sponsor | null>(null);
+  const [editing, setEditing, saveDraft] = useRecordDraft("sponsors");
   const [error, setError] = useState("");
   useEffect(() => {
     if (focusRecord?.page !== "sponsors") return;
@@ -179,7 +180,7 @@ export default function SponsorsPage() {
         date: today(),
         text: `Status changed from ${previous.status} to ${editing.status}.`,
       });
-    saveRecord("sponsors", { ...editing, name: editing.name.trim(), history });
+    if (!saveDraft({ ...editing, name: editing.name.trim(), history })) return;
     setEditing(null);
     notify(previous ? "Sponsor record updated." : "Sponsor prospect added.");
   }
@@ -194,7 +195,7 @@ export default function SponsorsPage() {
       return;
     }
     const contacted = !s.contacted;
-    saveRecord("sponsors", {
+    if (!saveRecord("sponsors", {
       ...s,
       contacted,
       status: contacted ? "Contacted" : "Researching",
@@ -207,7 +208,7 @@ export default function SponsorsPage() {
             : "Contacted flag cleared.",
         },
       ],
-    });
+    }, {original:s,scope:draftScope})) return;
     notify(
       contacted
         ? "Marked contacted. Set a follow-up to keep the conversation moving."

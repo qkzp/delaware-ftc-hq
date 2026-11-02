@@ -25,12 +25,14 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
     onClose();
   };
   const results = [
+    ...data.announcements.map(update=>({id:update.id,title:update.title,detail:`Team ${update.type.toLowerCase()}`,searchText:update.body,page:"team" as Page,icon:BookOpen})),
     ...(data.evidence || []).filter(e=>canManage||e.owner===myOwner||(e.approved&&e.visibility!=='private')).map(e=>({id:e.id,title:e.title,detail:`Evidence · ${e.county} · ${e.awards.join(', ')}`,page:'evidence' as Page,icon:BookOpen})),
     ...(data.parts || []).map(p=>({id:'robot-reference',title:p.name,detail:`Part · ${p.subsystem} · ${p.location}`,page:'resources' as Page,icon:BookOpen})),
     ...data.tasks.map((t) => ({
       id: t.id,
       title: t.title,
       detail: `Task · ${t.area} · ${t.owner}`,
+      searchText: [t.description,...t.comments.map(comment=>comment.text)].join(" "),
       page: "tasks" as Page,
       icon: CheckCheck,
     })),
@@ -47,6 +49,7 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
         id: r.id,
         title: r.title,
         detail: `Resource · ${r.category}`,
+        searchText: r.description+" "+r.content,
         page: "resources" as Page,
         icon: BookOpen,
       })),
@@ -69,7 +72,7 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
         }))
       : []),
   ]
-    .filter((r) => (r.title + " " + r.detail).toLowerCase().includes(q))
+    .filter((r) => (r.title + " " + r.detail+" "+("searchText" in r?r.searchText:"")).toLowerCase().includes(q))
     .slice(0, 8);
   return (
     <Modal title="Search workspace" onClose={onClose}>
@@ -136,7 +139,8 @@ export function SearchDialog({ onClose }: { onClose: () => void }) {
   );
 }
 export function QuickTask({ onClose }: { onClose: () => void }) {
-  const {myOwner, memberName, cloud, data, saveRecord, canManage, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, saveRecord, canManage, notify, draftScope } = useHQ();
+  const [originScope] = useState(draftScope);
   return (
     <Modal title="New task" onClose={onClose}>
       <form
@@ -161,7 +165,7 @@ export function QuickTask({ onClose }: { onClose: () => void }) {
             dependencies: [],
             comments: [],
           };
-          saveRecord("tasks", task);
+          if (!saveRecord("tasks", task, {original:null,scope:originScope})) return;
           notify("Task added.");
           onClose();
         }}

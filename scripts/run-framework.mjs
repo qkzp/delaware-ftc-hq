@@ -5,6 +5,7 @@ import { readExecutionProfile } from "./execution-profile.mjs";
 const [command, ...args] = process.argv.slice(2);
 if (!["dev", "build"].includes(command)) throw new Error("Expected dev or build.");
 const managedLinux = readExecutionProfile() === "managed-linux";
+if(command === "build") { const {writeReleaseFingerprint} = await import("./release-fingerprint.mjs"); writeReleaseFingerprint(fileURLToPath(new URL("..", import.meta.url))); }
 
 if (managedLinux && command === "build") {
   const result = spawnSync("bash", [

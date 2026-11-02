@@ -95,12 +95,13 @@ function eventDate(date: string) {
   });
 }
 export default function PitPage() {
-  const { data, setData, setPage, openRecord, notify, canReview, cloud } = useHQ();
+  const { data, setData, setPage, openRecord, notify, canReview, cloud, draftScope, saveWorkspace } = useHQ();
   const [note, setNote] = useState("");
   const [noteType, setNoteType] = useState("Robot issue");
   const [match, setMatch] = useState("");
   const [editCoach, setEditCoach] = useState(false);
   const [instructions, setInstructions] = useState(data.coachInstructions);
+  const [instructionOrigin,setInstructionOrigin] = useState({original:data.coachInstructions,scope:draftScope});
   const [online, setOnline] = useState(navigator.onLine);
   useEffect(() => {
     const update = () => setOnline(navigator.onLine);
@@ -327,6 +328,7 @@ export default function PitPage() {
                 className="btn btn-ghost"
                 onClick={() => {
                   setInstructions(data.coachInstructions);
+                setInstructionOrigin({original:data.coachInstructions,scope:draftScope});
                   setEditCoach(true);
                 }}
               >
@@ -386,10 +388,7 @@ export default function PitPage() {
             className="stack"
             onSubmit={(e) => {
               e.preventDefault();
-              setData((s) => ({
-                ...s,
-                coachInstructions: instructions.trim(),
-              }));
+              if (!saveWorkspace({coachInstructions:instructions.trim()}, {coachInstructions:instructionOrigin.original}, instructionOrigin.scope)) return;
               setEditCoach(false);
               notify("Coach instructions saved.");
             }}

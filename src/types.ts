@@ -1,6 +1,7 @@
 export type Role = "student" | "lead" | "mentor" | "admin";
 export type Page =
   | "home"
+  | "team"
   | "tasks"
   | "calendar"
   | "sponsors"
@@ -194,6 +195,8 @@ export interface Evidence extends Base {
   fileId: string;
   consent: "Not recorded" | "Team use only" | "External use permitted";
   consentNote: string;
+  consentReviewedBy?: string;
+  consentReviewedAt?: string;
   visibility: Visibility;
   approved: boolean;
   reviewedBy: string;

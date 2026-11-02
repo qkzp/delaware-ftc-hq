@@ -21,6 +21,8 @@ import {
 import { downloadFile, dateKey } from "./utils";
 import { useCloud, type Cloud } from "./cloud";
 import { createWorkspaceData } from "./workspace-data";
+import { mergeDraft } from "./drafts";
+export type DraftOrigin<T> = { original: T | null; scope: string };
 type Notice = {
   message: string;
   action?: () => void;
@@ -45,7 +47,10 @@ interface HQContext {
   saveRecord: <K extends Collection>(
     collection: K,
     record: RecordFor<K>,
-  ) => void;
+    origin?: DraftOrigin<RecordFor<K>>,
+  ) => boolean;
+  draftScope: string;
+  saveWorkspace: (patch: Partial<AppData>, original: Partial<AppData>, scope: string) => boolean;
   removeRecord: (collection: Collection, id: string) => void;
   notify: (message: string, action?: () => void, actionLabel?: string) => void;
   notice: Notice | null;
@@ -59,6 +64,7 @@ interface HQContext {
 const Context = createContext<HQContext | null>(null);
 const validPages: Page[] = [
   "home",
+  "team",
   "tasks",
   "calendar",
   "sponsors",
@@ -99,7 +105,13 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
   const cloud = useCloud(data, updateData, {enabled:!demoMode, autoOpen:accountMode});
   const myOwner = cloud.session.user && cloud.shared ? cloud.session.user.userId : "Alex (you)";
   const memberName = (owner: string) => owner === myOwner ? "You" : cloud.shared?.members.find(m => m.userId === owner)?.name || owner;
-  const setData: React.Dispatch<React.SetStateAction<AppData>> = (action) => { cloud.markDirty(); updateData(action); };
+  const dataRef = useRef(data);
+  dataRef.current = data;
+  const setData: React.Dispatch<React.SetStateAction<AppData>> = (action) => {
+    const next = typeof action === "function" ? action(dataRef.current) : action;
+    dataRef.current = next;
+    cloud.markDirty(); updateData(next);
+  };
   const [previewRole, setPreviewRole] = useState<Role>("lead");
   const role = cloud.shared?.role || previewRole;
   const setRole = (next: Role) => { if (!cloud.shared) setPreviewRole(next); };
@@ -115,6 +127,9 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
   const counter = useRef(0);
   const canManage = role !== "student";
   const canReview = role === "mentor" || role === "admin";
+  const draftScope = JSON.stringify([cloud.session.user?.userId, cloud.shared?.id, data.teamId, data.seasonId, role]);
+  const scopeRef = useRef(draftScope);
+  scopeRef.current = draftScope;
   const notify = (message: string, action?: () => void, actionLabel = "Undo") =>
     setNotice({ message, action, actionLabel, id: ++counter.current });
   useEffect(() => {
@@ -156,7 +171,22 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
   function saveRecord<K extends Collection>(
     collection: K,
     record: RecordFor<K>,
+    origin?: DraftOrigin<RecordFor<K>>,
   ) {
+    const data = dataRef.current;
+    if ((origin?.scope ?? draftScope) !== scopeRef.current) {
+      notify("Your account, team, season, or permissions changed. Your draft was kept.");
+      return false;
+    }
+    const current = (data[collection] as RecordFor<K>[] | undefined)?.find(item => item.id === record.id);
+    if (origin) {
+      if (origin.original && !current) { notify("This record was removed by a teammate. Your draft was kept and has not recreated it."); return false; }
+      if (!origin.original && current) { notify("A record with this identifier already exists. Your draft was kept."); return false; }
+      if (origin.original && current) {
+        try { record = mergeDraft(origin.original, record, current); }
+        catch (error) { notify((error as Error).message); return false; }
+      }
+    }
     if (collection === "tasks") {
       const incoming = record as RecordFor<"tasks">;
       const current = data.tasks.find(t=>t.id===incoming.id);
@@ -164,7 +194,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
     }
     if (record.teamId !== data.teamId || record.seasonId !== data.seasonId) {
       notify("This record belongs to another team or season.");
-      return;
+      return false;
     }
     if (!canManage) {
       const existingEvent =
@@ -183,12 +213,12 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
           (record as RecordFor<"tasks">).owner !== myOwner
         ) {
           notify("A student lead or mentor can make this change.");
-          return;
+          return false;
         }
         const previous = data.tasks.find((t) => t.id === record.id);
         if (previous && previous.owner !== myOwner) {
           notify("You can update tasks assigned to you.");
-          return;
+          return false;
         }
       }
     }
@@ -199,7 +229,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
       !canReview
     ) {
       notify("A mentor or team admin must approve public content.");
-      return;
+      return false;
     }
     if (collection === "sponsors" && !canReview) {
       const incoming = record as RecordFor<"sponsors">;
@@ -210,7 +240,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
           previous.draft !== incoming.draft)
       ) {
         notify("A mentor or team admin must approve this communication draft.");
-        return;
+        return false;
       }
     }
     setData((previous) => ({
@@ -223,8 +253,21 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
           )
         : [record, ...(previous[collection] || [])],
     }));
+    return true;
+  }
+  function saveWorkspace(patch: Partial<AppData>, original: Partial<AppData>, scope: string) {
+    if (scope !== scopeRef.current) { notify("Your account, team, season, or permissions changed. Your draft was kept."); return false; }
+    if (!canManage) { notify("A student lead or mentor can make this change."); return false; }
+    try {
+      const current = Object.fromEntries(Object.keys(patch).map(key => [key, dataRef.current[key as keyof AppData]]));
+      const merged = mergeDraft(original, patch, current);
+      setData(previous => ({...previous, ...merged}));
+      return true;
+    } catch (error) { notify((error as Error).message); return false; }
   }
   function removeRecord(collection: Collection, id: string) {
+    if (draftScope !== scopeRef.current) { notify("Your account, team, season, or permissions changed. Reopen the record before removing it."); return; }
+    const data = dataRef.current;
     if (collection === "tasks" && data.tasks.some(t=>t.dependencies.includes(id))) { notify("Unlink this task from its dependent tasks before removing it."); return; }
     if (!canManage) {
       notify("A student lead or mentor can remove records.");
@@ -240,12 +283,15 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
         (r) => r.id !== id,
       ),
     }));
-    notify("Record removed.", () =>
+    const removedScope = draftScope;
+    notify("Record removed.", () => {
+      if (removedScope !== scopeRef.current) { notify("This undo belongs to a different account, team, season, or permission scope. No record was restored."); return; }
+      if (((dataRef.current[collection] || []) as {id:string}[]).some(record => record.id === id)) { notify("This record already exists. Reopen its current version before making changes."); return; }
       setData((prev) => ({
         ...prev,
         [collection]: [...(prev[collection] || []), removed],
-      })),
-    );
+      }));
+    });
   }
   const exportData = () => {
     if (!canReview) {
@@ -350,6 +396,8 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
         canManage,
         canReview,
         saveRecord,
+        draftScope,
+        saveWorkspace,
         removeRecord,
         notify,
         notice,
@@ -369,4 +417,22 @@ export function useHQ() {
   const value = useContext(Context);
   if (!value) throw Error("HQProvider is required");
   return value;
+}
+/** Capture the record and access scope when its editor opens, not when it saves. */
+export function useRecordDraft<K extends Collection>(collection: K) {
+  const {data, draftScope, saveRecord} = useHQ();
+  const [value, updateValue] = useState<RecordFor<K> | null>(null);
+  const valueRef = useRef(value);
+  const origin = useRef<DraftOrigin<RecordFor<K>>>({original:null,scope:draftScope});
+  const setValue: React.Dispatch<React.SetStateAction<RecordFor<K> | null>> = action => {
+    const next = typeof action === "function" ? action(valueRef.current) : action;
+    if (next && (!valueRef.current || next.id !== valueRef.current.id)) {
+      const original = (data[collection] as RecordFor<K>[] | undefined)?.find(item => item.id === next.id) || null;
+      origin.current = {original:original ? structuredClone(original) : null, scope:draftScope};
+    }
+    valueRef.current = next;
+    updateValue(next);
+  };
+  const save = (record: RecordFor<K>) => saveRecord(collection, record, origin.current);
+  return [value, setValue, save] as const;
 }

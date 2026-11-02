@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { LocateFixed, MapPin, Navigation, Search } from "lucide-react";
 import type { TeamEvent } from "../types";
+import {useHQ} from "../store";
 import { hasCoordinates, mapOrigins, nearbyCompetitions, publicCompetitions, sourceNeedsReview, type CompetitionListing, type Point } from "../competition-map";
 import "leaflet/dist/leaflet.css";
 import "./CompetitionMap.css";
@@ -14,6 +15,9 @@ export default function CompetitionMap({ events, county, canManage, onOpen, onAd
   events: TeamEvent[]; county: string; canManage: boolean;
   onOpen: (event: TeamEvent) => void; onAdd: (event: CompetitionListing) => void;
 }) {
+  const {cloud} = useHQ();
+  const allowGeolocation = !cloud.shared;
+  const [mapEnabled, setMapEnabled] = useState(false);
   const initialCounty = `${county.replace(/ County$/, "")} County`;
   const [area, setArea] = useState(mapOrigins[initialCounty] ? initialCounty : "New Castle County");
   const [position, setPosition] = useState<Point | null>(null);
@@ -44,6 +48,7 @@ export default function CompetitionMap({ events, county, canManage, onOpen, onAd
     map.current?.setView([event.latitude, event.longitude], 12, { animate: false });
   }
   useEffect(() => {
+    if (!mapEnabled) return;
     let cancelled = false;
     let observer: ResizeObserver | undefined;
     let instance: LeafletMap | undefined;
@@ -74,9 +79,10 @@ export default function CompetitionMap({ events, county, canManage, onOpen, onAd
       if (typeof ResizeObserver !== "undefined") { observer = new ResizeObserver(()=>instance?.invalidateSize()); observer.observe(host.current); }
     }).catch(() => { if(!cancelled) setMapError("The interactive map could not load. Use the event list below."); });
     return () => { cancelled=true; observer?.disconnect(); instance?.remove(); if(map.current === instance) map.current=null; };
-  }, [origin, area, position, radius, results]);
+  }, [origin, area, position, radius, results, mapEnabled]);
 
   function locate() {
+    if (!allowGeolocation) return;
     if (!navigator.geolocation) { setLocationMessage("Location is unavailable in this browser. Choose a county starting point."); return; }
     const request = ++locationRequest.current;
     setLocating(true); setLocationMessage("");
@@ -91,7 +97,7 @@ export default function CompetitionMap({ events, county, canManage, onOpen, onAd
   }
 
   return <section className="competition-explorer" aria-labelledby="competition-map-title">
-    <div className="competition-intro"><div><h2 id="competition-map-title">Find your next competition.</h2><p>Explore scrimmages and qualifiers, then bring the dates into your team’s schedule.</p></div><button className="btn btn-primary" disabled={locating} onClick={locate}><LocateFixed size={17}/>{locating ? "Finding your location…" : "Use my location"}</button></div>
+    <div className="competition-intro"><div><h2 id="competition-map-title">Find your next competition.</h2><p>Explore scrimmages and qualifiers, then bring the dates into your team’s schedule.</p></div>{allowGeolocation && <button className="btn btn-primary" disabled={locating} onClick={locate}><LocateFixed size={17}/>{locating ? "Finding your location…" : "Use my location"}</button>}</div>
     <div className="competition-controls">
       <label>Starting point<select value={position ? "My approximate location" : area} onChange={e=>{ locationRequest.current++; setLocating(false); setPosition(null); setArea(e.target.value); setLocationMessage(""); setChosen(null); }}>{position && <option>My approximate location</option>}{Object.keys(mapOrigins).map(a=><option key={a}>{a}</option>)}</select></label>
       <label>Within<select value={radius} onChange={e=>setRadius(Number(e.target.value))}>{[25,50,100,250].map(r=><option value={r} key={r}>{r} miles</option>)}</select></label>
@@ -99,14 +105,15 @@ export default function CompetitionMap({ events, county, canManage, onOpen, onAd
       <label className="competition-search">Search events<div><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Event, venue, or city"/></div></label>
     </div>
     {locationMessage && <p role="status" className="competition-message">{locationMessage}</p>}
-    <p className="competition-privacy">Location is optional and stays out of team records. OpenStreetMap receives your IP address and viewed map area when loading tiles. Distances are straight-line estimates, not driving distances.</p>
+    <p className="competition-privacy">Choose a county starting point; shared workspaces do not request device location. Map tiles stay off until you choose to load them. OpenStreetMap then receives your IP address and viewed map area. Distances are straight-line estimates, not driving distances.</p>
     <div className="competition-layout">
-      <div className="competition-map-column"><div ref={host} className="competition-map" role="region" aria-label="Competition map. Use the adjacent event list for equivalent details."/><div className="competition-map-caption"><span><i/> Organizer listing</span><span><i className="team-dot"/> Team schedule</span><span>Blue circle: search radius</span></div>{mapError && <p role="status" className="competition-message">{mapError}</p>}</div>
+      <div className="competition-map-column">{!mapEnabled && <div className="competition-empty"><p>The event list works without external map requests.</p><button type="button" className="btn btn-secondary" onClick={()=>setMapEnabled(true)}>Load map tiles from OpenStreetMap</button></div>}<div ref={host} className="competition-map" role="region" aria-label="Competition map. Use the adjacent event list for equivalent details."/><div className="competition-map-caption"><span><i/> Organizer listing</span><span><i className="team-dot"/> Team schedule</span><span>Blue circle: search radius</span></div>{mapError && <p role="status" className="competition-message">{mapError}</p>}</div>
       <div className="competition-results" ref={resultPanel}>
         <div className="competition-result-heading"><h3>Nearby events</h3><span role="status">{results.length} found</span></div>
         {selected && <article className="competition-detail" aria-label="Selected competition">
           <div className="competition-detail-top"><span>{selected.kind}</span><button className="text-btn" onClick={()=>setChosen(null)} aria-label="Close selected competition details">Close</button></div>
           <h3>{selected.title}</h3><p><strong>{date(selected.date)}</strong> · {time(selected.time)}{selected.endTime && `–${time(selected.endTime)}`} (venue local time)</p><p><MapPin size={15}/>{selected.location}</p>
+          {selected.yearInferred && <p className="competition-message">Year inferred from the current season; confirm the full date with the organizer.</p>}
           <p>{selected.teamEvent ? selected.teamEvent.verification === "verified" ? "Mentor verified" : "Team-created · needs source verification" : "Organizer source checked"}{selected.checkedAt && ` · ${date(selected.checkedAt)}`}{sourceNeedsReview(selected.checkedAt,today) && " · Recheck before planning"}</p>
           <p>{selected.deadline ? `Registration deadline: ${date(selected.deadline)}${selected.deadline < today ? " · Passed; ask the organizer about availability" : ""}` : "Registration deadline not confirmed. Check with the organizer."}</p>
           <div className="competition-detail-actions">{selected.source.startsWith("https://") && <a href={selected.source} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm">Official source ↗</a>}<a className="btn btn-secondary btn-sm" target="_blank" rel="noreferrer" href={`https://www.google.com/maps/dir/?api=1&destination=${selected.latitude},${selected.longitude}`}><Navigation size={14}/>Directions</a>{selected.teamEvent ? <button className="btn btn-primary btn-sm" onClick={()=>onOpen(selected.teamEvent!)}>Open team event</button> : canManage && <button className="btn btn-primary btn-sm" onClick={()=>onAdd(selected)}>Review & add to schedule</button>}</div>

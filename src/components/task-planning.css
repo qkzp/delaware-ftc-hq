@@ -1,0 +1,72 @@
+/* A workload table and dated task groups, rather than a dashboard of cards. */
+.task-planning {border:0; padding-top:4px; min-width:0}
+.task-plan-heading {display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:18px}
+.task-plan-heading h2 {font:600 20px/1.3 var(--body); letter-spacing:-.3px; margin:4px 0 9px}
+.task-plan-heading p:not(.eyebrow) {max-width:720px; margin:0; color:var(--muted); font-size:12px; line-height:1.6}
+.task-plan-heading>.btn {flex:none; min-height:32px}
+.task-plan-workload {display:grid; grid-template-columns:1fr; gap:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.task-plan-owner {display:grid; grid-template-columns:minmax(160px,1fr) 100px minmax(240px,1.2fr); gap:20px; align-items:center; text-align:left; padding:11px 12px; border:0; border-bottom:1px solid var(--line); border-left:2px solid transparent; background:#fff; border-radius:0; min-width:0; cursor:pointer; color:var(--ink)}
+.task-plan-owner:last-child {border-bottom:0}
+.task-plan-owner:hover {background:#fafafb}
+.task-plan-owner.is-selected {border-left-color:var(--accent); background:#f2f1f8}
+.task-plan-owner-heading {display:flex; align-items:baseline; justify-content:space-between; gap:10px; font-size:12px}
+.task-plan-owner-heading strong {overflow-wrap:anywhere; font-weight:500}
+.task-plan-owner-heading>span {white-space:nowrap; font:11px var(--body); color:var(--muted)}
+.task-plan-load-track {display:block; height:4px; background:#ececf0; margin:0; overflow:hidden; border-radius:2px}
+.task-plan-load-track>span {display:block; height:100%; background:#8e87bd; border-radius:2px}
+.task-plan-owner-counts {display:flex; justify-content:flex-end; gap:6px 15px; flex-wrap:wrap; font-size:11px; color:var(--muted); line-height:1.5}
+.task-plan-selection {font-size:11px; color:var(--muted); margin:14px 0 24px; line-height:1.6}
+.task-plan-group {display:grid; grid-template-columns:155px minmax(0,1fr); gap:24px; padding:20px 0; border-top:1px solid var(--line); background:#fff; border-radius:0; margin:0}
+.task-plan-group-heading h3 {display:flex; align-items:center; gap:9px; font:600 13px var(--body); margin:0 0 8px}
+.task-plan-group-heading h3>span {font:11px var(--body); color:var(--muted); padding:2px 5px; border-radius:3px; background:#f5f5f7}
+.task-plan-group-heading p {font-size:11px; color:var(--muted); line-height:1.6; margin:0}
+.task-plan-group-overdue .task-plan-group-heading,.task-plan-group-blocked .task-plan-group-heading {border-left:0; padding-left:0}
+.task-plan-group-overdue .task-plan-group-heading h3,.task-plan-group-blocked .task-plan-group-heading h3 {color:#946a28}
+.task-plan-group ul,.task-plan-completed ul {padding:0; margin:0; list-style:none; min-width:0}
+.task-plan-row {display:grid; grid-template-columns:85px minmax(0,1fr) auto; gap:14px; padding:13px 0; border-bottom:1px solid var(--line); align-items:start; min-width:0}
+.task-plan-row:first-child {padding-top:0}
+.task-plan-row:last-child {border-bottom:0; padding-bottom:0}
+.task-plan-due {display:flex; flex-direction:column; gap:5px; font-size:12px; line-height:1.5}
+.task-plan-due>span {font-size:11px; color:var(--muted)}
+.task-plan-task-title {border:0; padding:0; background:none; font:500 13px/1.5 var(--body); text-transform:none; text-align:left; display:inline-flex; align-items:flex-start; gap:7px; overflow-wrap:anywhere; color:var(--ink)}
+.task-plan-task-title svg {flex:none; margin-top:3px; color:var(--muted); width:12px; height:12px}
+.task-plan-task-title:hover {text-decoration:underline; text-underline-offset:3px}
+.task-plan-detail {min-width:0}
+.task-plan-detail>p {font-size:12px; color:var(--muted); line-height:1.6; margin:5px 0 8px; overflow-wrap:anywhere}
+.task-plan-labels {display:flex; flex-wrap:wrap; gap:5px}
+.task-plan-detail>.task-plan-blocked {font-size:11px; color:#946a28; padding-left:0; border:0; margin-top:8px}
+.task-plan-focus {font-size:11px!important; min-height:30px!important; padding:5px 9px!important; gap:5px; border-radius:4px!important}
+.task-plan-empty {border:1px solid var(--line); border-radius:5px; padding:20px; background:#fafafb}
+.task-plan-empty h3 {font:600 14px var(--body); margin:0 0 8px}
+.task-plan-empty p {font-size:12px; margin:0 0 8px; color:var(--muted); line-height:1.6}
+.task-plan-completed {border-top:1px solid var(--line); padding:16px 0 0; margin-top:10px; background:transparent; border-radius:0}
+.task-plan-completed summary {cursor:pointer; font-size:12px; font-weight:500; min-height:30px}
+.task-plan-completed ul {margin-top:16px}
+.task-planning :is(button,summary):focus-visible {outline:2px solid var(--accent); outline-offset:3px}
+.tc-view-switch .task-plan-view-button {width:auto; padding:0 9px; display:flex; align-items:center; gap:5px; font-size:12px}
+@media(max-width:1100px) {
+ .task-plan-owner {grid-template-columns:minmax(150px,1fr) 85px minmax(200px,1.1fr); gap:14px}
+ .task-plan-group {grid-template-columns:125px minmax(0,1fr); gap:18px}
+ .task-plan-owner-counts {gap:5px 10px}
+}
+@media(max-width:760px) {
+ .task-plan-group {grid-template-columns:1fr; gap:15px}
+ .task-plan-heading {gap:12px}
+ .task-plan-heading h2 {font-size:19px}
+ .task-plan-row {grid-template-columns:74px minmax(0,1fr); gap:12px}
+ .task-plan-focus {grid-column:2; justify-self:start; min-height:38px!important; min-width:80px}
+ .task-plan-task-title,.task-plan-completed summary {min-height:36px}
+ .task-plan-owner {grid-template-columns:minmax(0,1fr) 100px; gap:8px 18px; padding:12px 10px}
+ .task-plan-owner-counts {grid-column:1/-1; justify-content:flex-start; gap:12px}
+ .task-plan-owner-heading {font-size:12px}
+}
+@media(max-width:440px) {
+ .task-plan-heading {flex-direction:column}
+ .task-plan-row {grid-template-columns:1fr; gap:8px}
+ .task-plan-due {flex-direction:row; justify-content:space-between}
+ .task-plan-focus {grid-column:1}
+ .task-plan-heading>.btn {min-height:36px}
+ .tc-task-toolbar .tc-view-switch {flex:none}
+ .tc-view-switch .task-plan-view-button {padding:0 7px}
+ .task-plan-owner {grid-template-columns:minmax(0,1fr) 64px; gap:8px 12px}
+}

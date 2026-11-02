@@ -23,7 +23,18 @@ const worker = {
         },
       };
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    return runWithConnectorBinding(binding, async () => {
+      const response = await handler.fetch(request, env, ctx);
+      const secured = new Response(response.body, response);
+      secured.headers.set("X-Content-Type-Options", "nosniff");
+      secured.headers.set("Referrer-Policy", "no-referrer");
+      const pathname = new URL(request.url).pathname;
+      if (pathname === "/" || pathname === "/privacy" || pathname === "/maintenance" || pathname.startsWith("/api/")) secured.headers.set("Cache-Control", "no-store, private");
+      secured.headers.set("Content-Security-Policy", [response.headers.get("Content-Security-Policy"), "object-src 'none'; base-uri 'self'; form-action 'self'"].filter(Boolean).join("; "));
+      if (!import.meta.env.DEV) secured.headers.set("Permissions-Policy", "geolocation=(), camera=(), microphone=()");
+      if (new URL(request.url).protocol === "https:") secured.headers.set("Strict-Transport-Security", "max-age=31536000");
+      return secured;
+    });
   },
 };
 

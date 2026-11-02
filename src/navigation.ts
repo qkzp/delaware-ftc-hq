@@ -6,10 +6,12 @@ import {
   Home,
   Sprout,
   Users,
+  MessagesSquare,
 } from "lucide-react";
 import type { Page } from "./types";
 export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
-  { page: "home", label: "Workbench", icon: Home },
+  { page: "home", label: "My work", icon: Home },
+  { page: "team", label: "Team hub", icon: MessagesSquare },
   { page: "tasks", label: "Tasks", icon: CheckCheck },
   { page: "calendar", label: "Schedule", icon: CalendarDays },
   { page: "resources", label: "Robot & resources", icon: BookOpen },
@@ -20,7 +22,8 @@ export const navigation: { page: Page; label: string; icon: typeof Home }[] = [
   { page: "opportunities", label: "Delaware", icon: Sprout },
 ];
 export const pageLabels: Record<Page, string> = {
-  home: "Workbench",
+  home: "My work",
+  team: "Team hub",
   tasks: "Tasks",
   calendar: "Schedule",
   resources: "Robot & resources",

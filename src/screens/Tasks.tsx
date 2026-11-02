@@ -5,6 +5,7 @@ import {
   CheckCircle2,
   Circle,
   Clock3,
+  CalendarDays,
   Columns3,
   Flag,
   List,
@@ -12,7 +13,7 @@ import {
   Plus,
   Search,
 } from "lucide-react";
-import { useHQ } from "../store";
+import { useHQ, useRecordDraft } from "../store";
 import {
   Avatar,
   Badge,
@@ -23,6 +24,8 @@ import {
   Progress,
 } from "../components/ui";
 import type { Task } from "../types";
+import TaskPlanning from "../components/task-planning";
+import { FocusSession } from "../components/FocusSession";
 import "./tasks-calendar.css";
 
 const statuses: Task["status"][] = ["To do", "In progress", "Done"];
@@ -65,6 +68,7 @@ const tone = (priority: Task["priority"]) =>
 export default function TasksPage() {
   const {myOwner, memberName, cloud,
     data,
+    draftScope,
     role,
     canManage,
     saveRecord,
@@ -75,13 +79,14 @@ export default function TasksPage() {
     clearFocusRecord,
   } = useHQ();
   const members = cloud.shared ? [...cloud.shared.members.map(m => m.userId), "Unassigned"] : demoMembers;
-  const [view, setView] = useState<"board" | "list">("board");
+  const [view, setView] = useState<"board" | "list" | "plan">("board");
+  const [focusTask, setFocusTask] = useState<{id:string;scope:string}|null>(null);
   const [scope, setScope] = useState("All tasks");
   const [query, setQuery] = useState("");
   const [area, setArea] = useState("All work areas");
   const [statusFilter, setStatusFilter] = useState("All statuses");
   const [subsystem, setSubsystem] = useState("All subsystems");
-  const [editing, setEditing] = useState<Task | null>(null);
+  const [editing, setEditing, saveDraft] = useRecordDraft("tasks");
   const [comment, setComment] = useState("");
   const [deleting, setDeleting] = useState(false);
   const canEdit = (task: Task) =>
@@ -127,7 +132,7 @@ export default function TasksPage() {
       notify("Finish this task’s dependencies before marking it done.");
       return;
     }
-    saveRecord("tasks", { ...task, status });
+    if (!saveRecord("tasks", { ...task, status }, {original:task, scope:draftScope})) return;
     notify(
       status === "Done"
         ? "Task completed."
@@ -183,7 +188,7 @@ export default function TasksPage() {
       done: editing.done.trim(),
     };
     if (!record.title || !record.done) return;
-    saveRecord("tasks", record);
+    if (!saveDraft(record)) return;
     notify(
       data.tasks.some((t) => t.id === record.id)
         ? "Task updated."
@@ -247,11 +252,12 @@ export default function TasksPage() {
         </div>
       </div>
       <div className="tc-task-toolbar">
-        <div className="filter-tabs" aria-label="Task scope">
+        <div className="filter-tabs" role="group" aria-label="Task scope">
           {["All tasks", "My tasks"].map((s) => (
             <button
               key={s}
               className={scope === s ? "active" : ""}
+              aria-pressed={scope === s}
               onClick={() => setScope(s)}
             >
               {s}
@@ -267,7 +273,7 @@ export default function TasksPage() {
             </button>
           ))}
         </div>
-        <div className="tc-view-switch" aria-label="Task view">
+        <div className="tc-view-switch" role="group" aria-label="Task view">
           <button
             title="Board view"
             aria-label="Board view"
@@ -285,6 +291,15 @@ export default function TasksPage() {
             className={view === "list" ? "active" : ""}
           >
             <List size={18} />
+          </button>
+          <button
+            title="Plan view"
+            aria-label="Plan view"
+            aria-pressed={view === "plan"}
+            onClick={() => setView("plan")}
+            className={`task-plan-view-button ${view === "plan" ? "active" : ""}`}
+          >
+            <CalendarDays size={17} aria-hidden="true" />Plan
           </button>
         </div>
       </div>
@@ -341,6 +356,20 @@ export default function TasksPage() {
               Clear filters
             </button>
           }
+        />
+      ) : view === "plan" ? (
+        <TaskPlanning
+          key={draftScope}
+          tasks={filtered}
+          allTasks={data.tasks}
+          members={members}
+          today={day()}
+          memberName={memberName}
+          canWork={canEdit}
+          onOpen={open}
+          onFocus={(task) => {
+            if (canEdit(task) && task.status !== "Done") setFocusTask({id:task.id,scope:draftScope});
+          }}
         />
       ) : view === "board" ? (
         <div className="tc-board">
@@ -514,6 +543,7 @@ export default function TasksPage() {
           ? "You can update your own tasks. Ask a student lead to reassign work."
           : "Every task includes an owner and a definition of done."}
       </p>
+      {focusTask?.scope === draftScope && <FocusSession key={`${draftScope}:${focusTask.id}`} taskId={focusTask.id} onClose={()=>setFocusTask(null)}/>}
       {editing && (
         <Modal
           title={
@@ -761,7 +791,8 @@ export default function TasksPage() {
                   e.preventDefault();
                   if (!comment.trim()) return;
                   const current =
-                    data.tasks.find((t) => t.id === editing.id) || editing;
+                    data.tasks.find((t) => t.id === editing.id);
+                  if (!current) { notify("This task was removed. Your comment was kept."); return; }
                   const updated = {
                     ...current,
                     comments: [
@@ -773,7 +804,7 @@ export default function TasksPage() {
                       },
                     ],
                   };
-                  saveRecord("tasks", updated);
+                  if (!current || !saveRecord("tasks", updated, {original:current,scope:draftScope})) return;
                   setEditing({ ...editing, comments: updated.comments });
                   setComment("");
                   notify("Comment added.");

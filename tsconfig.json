@@ -21,13 +21,27 @@
     "types": [
       "@cloudflare/workers-types",
       "node"
+    ],
+    "allowJs": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
     ]
   },
   "include": [
     "src",
     "app",
+    "auth.ts",
+    "types/**/*.d.ts",
     "server",
     "db",
-    "cloudflare-env.d.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

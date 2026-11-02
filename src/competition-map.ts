@@ -4,7 +4,7 @@ export type Point = { latitude: number; longitude: number };
 export type CompetitionListing = Point & {
   id: string; title: string; date: string; time: string; endTime: string;
   kind: string; location: string; source: string; checkedAt: string;
-  deadline?: string; teamEvent?: TeamEvent;
+  deadline?: string; teamEvent?: TeamEvent; yearInferred?: boolean;
 };
 
 export const mapOrigins: Record<string, Point> = {
@@ -39,10 +39,10 @@ export function sourceNeedsReview(checkedAt: string, today: string) {
 // DE coordinates come from the organizer's linked venue maps.
 const pa = "https://www.ftcpenn.org/ftc-events/2026-2027-season/";
 export const publicCompetitions: CompetitionListing[] = [
-  { id: "usde-archmere-2026", title: "FTC BIOBUZZ Kickoff Scrimmage", date: "2026-11-21", time: "09:00", endTime: "14:00", kind: "Scrimmage", location: "Archmere Academy · 3600 Philadelphia Pike, Claymont, DE", latitude: 39.801604, longitude: -75.454112, source: "https://firstdelaware.org/event-archmere", checkedAt: "2026-11-01" },
+  { id: "usde-archmere-2026", yearInferred: true, title: "FTC BIOBUZZ Kickoff Scrimmage", date: "2026-11-21", time: "09:00", endTime: "14:00", kind: "Scrimmage", location: "Archmere Academy · 3600 Philadelphia Pike, Claymont, DE", latitude: 39.801604, longitude: -75.454112, source: "https://firstdelaware.org/event-archmere", checkedAt: "2026-11-01" },
   { id: "uspa-ksn-2026", title: "Longhorn Roundup Scrimmage", date: "2026-11-07", time: "08:00", endTime: "16:00", kind: "Scrimmage", location: "Charles F Patton Middle School · 760 Unionville Rd, Kennett Square, PA", latitude: 39.885493, longitude: -75.720303, source: pa + "longhorn-roundup-scrimmage", checkedAt: "2026-11-01", deadline: "2026-10-31" },
-  { id: "usde-csw-2026", title: "Applied Forces Scrimmage", date: "2026-12-05", time: "08:00", endTime: "15:00", kind: "Scrimmage", location: "Charter School of Wilmington · 100 N Dupont Rd, Wilmington, DE", latitude: 39.753851, longitude: -75.587810, source: "https://firstdelaware.org/event-csw-scrimmage", checkedAt: "2026-11-01" },
+  { id: "usde-csw-2026", yearInferred: true, title: "Applied Forces Scrimmage", date: "2026-12-05", time: "08:00", endTime: "15:00", kind: "Scrimmage", location: "Charter School of Wilmington · 100 N Dupont Rd, Wilmington, DE", latitude: 39.753851, longitude: -75.587810, source: "https://firstdelaware.org/event-csw-scrimmage", checkedAt: "2026-11-01" },
   { id: "uspa-laq1-2026", title: "Lancaster Area Qualifier", date: "2026-12-12", time: "07:45", endTime: "17:00", kind: "Qualifying tournament", location: "McCaskey East High School · 1051 Lehigh Ave, Lancaster, PA", latitude: 40.048347, longitude: -76.285390, source: pa + "lancaster-area-qualifier", checkedAt: "2026-11-01", deadline: "2026-11-28" },
-  { id: "uspa-beq1-2027", title: "Southeastern Pennsylvania Qualifier", date: "2027-01-23", time: "07:45", endTime: "18:15", kind: "Qualifying tournament", location: "Bensalem High School · 4319 Hulmeville Rd, Bensalem, PA", latitude: 40.112657, longitude: -74.931530, source: pa + "southeastern-pennsylvania-qualifier", checkedAt: "2026-11-01", deadline: "2027-01-09" },
-  { id: "uspa-coq1-2027", title: "Eastern Pennsylvania Qualifier", date: "2027-02-06", time: "07:45", endTime: "18:15", kind: "Qualifying tournament", location: "Coatesville Area Senior High School · 1445 E Lincoln Hwy, Coatesville, PA · Enter on Foundry Rd", latitude: 39.990433, longitude: -75.796810, source: pa + "eastern-pennsylvania-qualifier", checkedAt: "2026-11-01", deadline: "2027-01-23" },
+  { id: "uspa-beq1-2027", title: "Southeastern Pennsylvania Qualifier", date: "2027-01-23", time: "07:45", endTime: "", kind: "Qualifying tournament", location: "Bensalem High School · 4319 Hulmeville Rd, Bensalem, PA", latitude: 40.112657, longitude: -74.931530, source: "https://www.ftcpenn.org/ftc-events", checkedAt: "2026-11-01" },
+  { id: "uspa-coq1-2027", title: "Eastern Pennsylvania Qualifier", date: "2027-02-06", time: "07:45", endTime: "", kind: "Qualifying tournament", location: "Coatesville Area Senior High School · 1445 E Lincoln Hwy, Coatesville, PA · Enter on Foundry Rd", latitude: 39.990433, longitude: -75.796810, source: "https://www.ftcpenn.org/ftc-events", checkedAt: "2026-11-01" },
 ];

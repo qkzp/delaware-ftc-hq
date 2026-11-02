@@ -240,15 +240,7 @@ test("workspace tabs, exact-record search, and role changes keep the redesigned 
     const tab = (label) => byText(mainNavigation(), "button", label);
     assert.equal(mainNavigation().type, "nav");
     assert.equal(mainNavigation().props["aria-label"], "Main navigation");
-    assert.equal(
-      app.root.findAll(
-        (node) =>
-          node.type === "aside" &&
-          node.props.className?.split(" ").includes("sidebar"),
-      ).length,
-      0,
-      "The old sidebar is not part of the new navigation",
-    );
+    assert.equal(app.root.findAllByProps({className:"workspace-sidebar"}).length,1,"The redesigned workspace uses persistent sidebar navigation");
 
     await app.update(() => tab("Tasks").props.onClick());
     assert.equal(app.context.page, "tasks");

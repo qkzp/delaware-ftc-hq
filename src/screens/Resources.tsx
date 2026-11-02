@@ -18,10 +18,11 @@ import {
 } from "lucide-react";
 import type { FormEvent } from "react";
 import type { Resource } from "../types";
-import { useHQ } from "../store";
+import { useHQ, type DraftOrigin } from "../store";
 import { PageHeader, Modal, Badge, EmptyState, Field } from "../components/ui";
 import "./Library.css";
 import PartsList from "../components/PartsList";
+import ResourceSpaces,{resourceAudience,resourceLocation,resourceReview,type ReviewFilter} from "../components/ResourceSpaces";
 
 const categories = [
   "Robot design",
@@ -59,8 +60,9 @@ function safeUrl(url: string) {
   }
 }
 function displayDate(value: string) {
-  return value
-    ? new Date(value + "T12:00:00").toLocaleDateString(undefined, {
+  const date=new Date(value+"T12:00:00Z");
+  return /^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value
+    ? date.toLocaleDateString(undefined, {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -68,8 +70,13 @@ function displayDate(value: string) {
     : "Not reviewed yet";
 }
 export default function ResourcesPage() {
+  const {draftScope}=useHQ();
+  return <ResourcesLibrary key={draftScope}/>;
+}
+function ResourcesLibrary() {
   const {myOwner, memberName, cloud,
     data,
+    draftScope,
     canManage,
     canReview,
     saveRecord,
@@ -83,6 +90,8 @@ export default function ResourcesPage() {
   const [category, setCategory] = useState("All areas");
   const [level, setLevel] = useState("All levels");
   const [kind, setKind] = useState("All types");
+  const [review,setReview]=useState<ReviewFilter>("all");
+  const [sort,setSort]=useState("title");
   const [selected, setSelected] = useState<Resource | null>(null);
   const [editing, setEditing] = useState<Resource | "new" | null>(null);
   useEffect(() => {
@@ -104,23 +113,23 @@ export default function ResourcesPage() {
     }
     clearFocusRecord();
   }, [focusRecord, data.resources, canManage]);
-  const visible = data.resources.filter(
-    (r) => (canManage || (r.visibility !== "private" && r.approved)) && !!r.archived === showArchived,
-  );
+  const authorized=data.resources.filter(r=>r.teamId===data.teamId&&r.seasonId===data.seasonId&&(canManage||(r.visibility!=="private"&&r.approved)));
+  const visible = authorized.filter(r=>!!r.archived===showArchived);
   const filtered = visible.filter(
     (r) =>
       (category === "All areas" || r.category === category) &&
       (level === "All levels" || r.level === level) &&
       (kind === "All types" || r.kind === kind) &&
-      `${r.title} ${r.description} ${r.category} ${r.tags.join(" ")}`
+      (review === "all" || resourceReview(r).needed === (review === "needs-review")) &&
+      `${r.title} ${r.description} ${r.category} ${r.tags.join(" ")} ${memberName(r.owner)} ${resourceLocation(r)}`
         .toLowerCase()
         .includes(query.toLowerCase()),
-  );
+  ).sort((a,b)=>sort==="review"?Number(resourceReview(b).needed)-Number(resourceReview(a).needed)||(a.reviewed||"").localeCompare(b.reviewed||"")||a.title.localeCompare(b.title):sort==="recent"?(b.reviewed||"").localeCompare(a.reviewed||"")||a.title.localeCompare(b.title):a.title.localeCompare(b.title));
   const current = selected
-    ? data.resources.find((r) => r.id === selected.id) || selected
+    ? authorized.find((r) => r.id === selected.id)
     : null;
-  function save(resource: Resource) {
-    saveRecord("resources", resource);
+  function save(resource: Resource, origin: DraftOrigin<Resource>) {
+    if (!saveRecord("resources", resource, origin)) return;
     setEditing(null);
     notify(cloud.shared ? "Resource updated. Check the sync status before closing." : "Resource saved to this device.");
   }
@@ -167,7 +176,10 @@ export default function ResourcesPage() {
       {tab === "robot" ? (
         <RobotReference />
       ) : (
-        <>
+        <div className="knowledge-library-layout">
+          <ResourceSpaces resources={visible} category={category} onCategory={setCategory} review={review} onReview={setReview}/>
+          <div className="knowledge-library-content">
+          <div className="knowledge-space-heading"><div><h2>{category==="All areas"?"All team knowledge":category}</h2><p>{review==="needs-review"?"Check source accuracy, ownership and the selected audience before marking an item reviewed.":review==="reviewed"?"Approved resources checked within the last 90 days.":"Open a resource for its notes, source, owner and sharing permissions."}</p></div>{canReview&&review==="needs-review"&&filtered.length>0&&<button type="button" className="btn btn-secondary" onClick={()=>setSelected(filtered[0])}>Open next review item</button>}</div>
           <div className="filters library-filters">
             <label className="search-input">
               <Search size={17} />
@@ -189,18 +201,6 @@ export default function ResourcesPage() {
             </label>
             <label className="inline"><input type="checkbox" checked={showArchived} onChange={e=>setShowArchived(e.target.checked)}/>Archived resources</label>
             <select
-              aria-label="Filter work area"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option>All areas</option>
-              {Array.from(
-                new Set([...categories, ...visible.map((r) => r.category)]),
-              ).map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
-            <select
               aria-label="Filter skill level"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
@@ -210,6 +210,7 @@ export default function ResourcesPage() {
                 <option key={l}>{l}</option>
               ))}
             </select>
+            <select aria-label="Sort resources" value={sort} onChange={e=>setSort(e.target.value)}><option value="title">Title A–Z</option><option value="review">Needs review first</option><option value="recent">Recently reviewed</option></select>
             <select
               aria-label="Filter resource type"
               value={kind}
@@ -222,12 +223,11 @@ export default function ResourcesPage() {
             </select>
           </div>
           <div className="library-results">
-            <span>
+            <span role="status" aria-live="polite">
               {filtered.length} resource{filtered.length !== 1 ? "s" : ""}
             </span>
             <span>
-              <LockKeyhole size={13} /> Team library · approval required for
-              public use
+              <LockKeyhole size={13} /> {showArchived?"Archived knowledge":"Private team library"} · linked files keep their provider permissions
             </span>
           </div>
           {filtered.length ? (
@@ -286,6 +286,7 @@ export default function ResourcesPage() {
                       <span>Awaiting mentor approval</span>
                     </div>
                   )}
+                  <div className="knowledge-resource-meta"><span><strong>Owner:</strong> {memberName(r.owner)}</span><span><strong>Review:</strong> {resourceReview(r).label}{r.reviewed?` · ${displayDate(r.reviewed)}`:""}</span><span><strong>Access:</strong> {resourceAudience(r)}</span><span><strong>Location:</strong> {resourceLocation(r)}</span></div>
                 </button>
               ))}
             </div>
@@ -301,6 +302,7 @@ export default function ResourcesPage() {
                     setCategory("All areas");
                     setLevel("All levels");
                     setKind("All types");
+                    setReview("all");
                   }}
                 >
                   Clear filters
@@ -308,7 +310,8 @@ export default function ResourcesPage() {
               }
             />
           )}
-        </>
+          </div>
+        </div>
       )}
       {current && !editing && (
         <Modal title={current.title} onClose={() => setSelected(null)} wide>
@@ -328,6 +331,7 @@ export default function ResourcesPage() {
               {current.demo && <Badge tone="amber">Demo team record</Badge>}
             </div>
             <p className="resource-description">{current.description}</p>
+            <div className="knowledge-sharing-context"><strong>Who can see this record: {resourceAudience(current)}</strong><p>{current.url?`Linked source: ${resourceLocation(current)}. The source provider controls access to the original file; check its sharing settings before sending the link.`:"This note is stored inside the team workspace."}</p><p>{current.visibility==="public"?"External-use approval does not publish this record or change the linked file’s permissions.":"Keep this resource and any exported note within its approved audience."}</p></div>
             <div className="resource-detail-meta">
               <span>
                 <strong>Owner</strong>
@@ -347,10 +351,9 @@ export default function ResourcesPage() {
             {current.content && (
               <div className="resource-content">{current.content}</div>
             )}
-            {current.stale && (
+            {resourceReview(current).needed && (
               <div className="library-note">
-                <Flag size={16} /> Flagged for review. Check with the owner
-                before relying on this information.
+                <Flag size={16} /> {resourceReview(current).label}. {resourceReview(current).reason}
               </div>
             )}
             {safeUrl(current.url) && (
@@ -396,10 +399,10 @@ export default function ResourcesPage() {
                 <button
                   className="btn btn-ghost"
                   onClick={() => {
-                    saveRecord("resources", {
+                    if (!saveRecord("resources", {
                       ...current,
                       stale: !current.stale,
-                    });
+                    }, {original:current,scope:draftScope})) return;
                     notify(
                       current.stale
                         ? "Review flag cleared."
@@ -411,15 +414,16 @@ export default function ResourcesPage() {
                   {current.stale ? "Clear review flag" : "Flag as outdated"}
                 </button>
               )}
-              {canReview && !current.approved && (
+              {canReview && resourceReview(current).needed && (
                 <button
                   className="btn btn-primary"
                   onClick={() => {
-                    saveRecord("resources", {
+                    if (!saveRecord("resources", {
                       ...current,
                       approved: true,
                       reviewed: today(),
-                    });
+                      stale: false,
+                    }, {original:current,scope:draftScope})) return;
                     notify(
                       current.visibility === "public"
                         ? "Approved for public use. Nothing has been published externally."
@@ -427,8 +431,8 @@ export default function ResourcesPage() {
                     );
                   }}
                 >
-                  <CheckCircle2 size={16} /> Approve{" "}
-                  {current.visibility === "public" ? "public use" : "for team"}
+                  <CheckCircle2 size={16} /> {current.approved?"Mark reviewed":"Approve "}
+                  {!current.approved&&(current.visibility === "public" ? "public use" : "for team")}
                 </button>
               )}
             </div>
@@ -442,6 +446,7 @@ export default function ResourcesPage() {
       {editing && (
         <ResourceEditor
           initial={editing === "new" ? null : editing}
+          initialCategory={category==="All areas"?"Robot design":category}
           onClose={() => setEditing(null)}
           onSave={save}
         />
@@ -452,14 +457,17 @@ export default function ResourcesPage() {
 
 function ResourceEditor({
   initial,
+  initialCategory,
   onClose,
   onSave,
 }: {
   initial: Resource | null;
+  initialCategory: string;
   onClose: () => void;
-  onSave: (resource: Resource) => void;
+  onSave: (resource: Resource, origin: DraftOrigin<Resource>) => void;
 }) {
-  const {myOwner, memberName, cloud, data, canReview, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, canReview, notify, draftScope } = useHQ();
+  const [origin] = useState<DraftOrigin<Resource>>(() => ({original:initial ? structuredClone(initial) : null,scope:draftScope}));
   const [value, setValue] = useState<Resource>(
     initial || {
       id: crypto.randomUUID(),
@@ -467,7 +475,7 @@ function ResourceEditor({
       seasonId: data.seasonId,
       demo: false,
       title: "",
-      category: "Robot design",
+      category: initialCategory,
       level: "Beginner",
       kind: "Guide",
       description: "",
@@ -515,7 +523,7 @@ function ResourceEditor({
       ),
       approved: canReview ? value.approved : false,
       demo: false,
-    });
+    }, origin);
   }
   return (
     <Modal
@@ -686,9 +694,10 @@ function ResourceEditor({
 }
 
 function RobotReference() {
-  const {myOwner, memberName, cloud, data, canManage, setData, notify } = useHQ();
+  const {myOwner, memberName, cloud, data, canManage, saveWorkspace, draftScope, notify } = useHQ();
   const [edit, setEdit] = useState(false);
   const [robot, setRobot] = useState(data.robot);
+  const [robotOrigin,setRobotOrigin] = useState(() => ({original:structuredClone(data.robot),scope:draftScope}));
   const sections: {
     key: keyof typeof data.robot;
     title: string;
@@ -747,6 +756,7 @@ function RobotReference() {
             className="btn btn-secondary"
             onClick={() => {
               setRobot(data.robot);
+              setRobotOrigin({original:structuredClone(data.robot),scope:draftScope});
               setEdit(true);
             }}
           >
@@ -813,7 +823,7 @@ function RobotReference() {
                   return;
                 }
               }
-              setData((s) => ({ ...s, robot }));
+              if (!saveWorkspace({robot}, {robot:robotOrigin.original}, robotOrigin.scope)) return;
               setEdit(false);
               notify(cloud.shared ? "Robot reference updated in the shared workspace." : "Robot reference saved on this device.");
             }}

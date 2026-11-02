@@ -8,6 +8,13 @@
       "when": 1793505143876,
       "tag": "0000_tidy_infant_terrible",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793579464981,
+      "tag": "0001_privacy_controls",
+      "breakpoints": true
     }
   ]
 }
