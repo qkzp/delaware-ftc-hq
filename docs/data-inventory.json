@@ -6113,7 +6113,7 @@
     {
       "field": "browser.robot-lab",
       "type": "external/runtime",
-      "purpose": "Motor/servo specifications in the public tracker, numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions, local transmission-stage ratios/wheel-speed calculations and route poses",
+      "purpose": "Motor/servo specifications in the public tracker, numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions, local transmission-stage ratios/wheel-speed calculations, speed targets, user-entered thermal assumptions, illustrative temperature curves and route poses",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Role/host/provider dependent; verify before enabling",
       "storage": "Browser tab memory; no upload to a hosted model or robot connection",

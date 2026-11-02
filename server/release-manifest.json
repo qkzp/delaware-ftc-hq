@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:286616c2052e15eb4f2563bee1e7f548c14cdfef11ad65cb78ad6a2b0736a751",
+  "releaseId": "sha256:c64dc306c9be8d2b60aa8888578831caf0715abbe43dbe8d8d3c6b3dbd9930e4",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -11,8 +11,8 @@
       "sha256": "d4b98c237b432e7944b29e8357874edacbf27b72200271bda55fe8519a10d175"
     },
     "README.md": {
-      "bytes": 19539,
-      "sha256": "2f6551803e7d886e6427ac610454de05a337dfd1e7c6fb04ffcd0d0deea6e99d"
+      "bytes": 19894,
+      "sha256": "967e1f45aa788892673e09db153ff4f423d44a619e2384e25dbb3eb3f069a13d"
     },
     "app/api/[...segments]/route.ts": {
       "bytes": 2052,
@@ -103,8 +103,8 @@
       "sha256": "b3a14d5d21cdb376e1eb52b26d517d4e6b64ff3e04432ce6ccf8e509596fb8dd"
     },
     "docs/data-inventory.json": {
-      "bytes": 421945,
-      "sha256": "42fa0d1017625228f3f0da642a97bca8d07cc3da64684ecf9b2933823047055c"
+      "bytes": 422027,
+      "sha256": "2e345701cab42cade672809552fa624c5a0abff960dde8881104dac5f8f8ded0"
     },
     "docs/launch-acceptance.md": {
       "bytes": 9264,
@@ -125,6 +125,10 @@
     "docs/release-evidence.md": {
       "bytes": 41007,
       "sha256": "08ec9b288c2b78787a379205cb06dd59c3e0af77cae5d593b427df99c5221133"
+    },
+    "docs/thermal-model.md": {
+      "bytes": 3466,
+      "sha256": "f5978fc7c12abdac3bfd92931ddd57ee5d7920516933c0065dc0ccbd9d17da93"
     },
     "docs/ui-redesign.md": {
       "bytes": 2436,
@@ -271,8 +275,8 @@
       "sha256": "bd9c98fc68f29d975fe10508dfc9029bb681dc5789a62861d5c938bdea2064bb"
     },
     "scripts/data-inventory.mjs": {
-      "bytes": 15127,
-      "sha256": "b116e56ffe6182f5cc5b84d983c1f44fbfeec8948a4dd2d24ced7f59df11c775"
+      "bytes": 15209,
+      "sha256": "5b388a49aa1e5e71ee5050cc839c70eae66c1d3d4129a417ed656f610a4ca783"
     },
     "scripts/execution-profile.mjs": {
       "bytes": 624,
@@ -407,8 +411,8 @@
       "sha256": "53aeba0a4d0d585defa967161fc969dcb35a58e2a50cc54b8bb03790c012f1a8"
     },
     "src/atelier.css": {
-      "bytes": 29966,
-      "sha256": "14d3de10641e5a0db3342eafd2e517ee02fb4971ec4278771cc0c859be135611"
+      "bytes": 32118,
+      "sha256": "764c02bf51706b88e153188d2f862bb53a434407305d22d99cd0557dd39b6f2a"
     },
     "src/cloud.ts": {
       "bytes": 13069,
@@ -502,6 +506,10 @@
       "bytes": 122,
       "sha256": "2f382add0ee5deb27a9362a5528db4533ba4de348a10970567d593cd18714fe5"
     },
+    "src/components/SpeedThermalCheck.tsx": {
+      "bytes": 9776,
+      "sha256": "5b3abba909557274801d019fed892dca0e25ef8b637f4258c230c43a119ea804"
+    },
     "src/components/SupportCenter.css": {
       "bytes": 2683,
       "sha256": "b73b7fe5e0dd632f3697f6f662818d0a64c5cde138f71abc3f34bb9b9f3a1bbb"
@@ -535,8 +543,8 @@
       "sha256": "5024b220911976337990e258f3324389fa28b33386be34a937079839bda4ded1"
     },
     "src/components/WheelSpeedCalculator.tsx": {
-      "bytes": 8674,
-      "sha256": "cf19fed482484c57f0443692d1cc3ff08c27c02821b63e7c254090e71db3ede7"
+      "bytes": 8827,
+      "sha256": "665c38b69d376b618cab89aedcc1c72ee3a021eee1ac61e95185d47db019642b"
     },
     "src/components/WorkspaceChrome.tsx": {
       "bytes": 6786,
@@ -738,6 +746,10 @@
       "bytes": 425,
       "sha256": "0fc9ef940a22ff7b0715f445f40f71fd3baf1cee0436388a8cb14a31125b0402"
     },
+    "src/thermal.ts": {
+      "bytes": 1927,
+      "sha256": "e221d131f02dfadd836ab13e04229d623cbc89bf1672604cf10b6682d474f9d0"
+    },
     "src/types.ts": {
       "bytes": 7097,
       "sha256": "0679f8ed879a9b83aab6fe7f8f8909afb424f923d9aa43c4b851d68034ed7062"
@@ -780,6 +792,7 @@
     }
   },
   "sourceChanges": [
-    "src/atelier.css"
+    "src/components/SpeedThermalCheck.tsx",
+    "src/components/WheelSpeedCalculator.tsx"
   ]
 }
