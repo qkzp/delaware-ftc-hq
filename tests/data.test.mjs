@@ -33,7 +33,7 @@ const {
   STORAGE_KEY,
   RECOVERY_KEY,
   RecoveryRequiredError,
-} = await import(await moduleUrl("persistence", {"./actuators": await moduleUrl("actuators"),"./engineering":await moduleUrl("engineering",{"./robot-lab":await moduleUrl("robot-lab"),"./user-errors":await moduleUrl("user-errors")})}));
+} = await import(await moduleUrl("persistence", {"./team-contacts":await moduleUrl("team-contacts"),"./actuators": await moduleUrl("actuators"),"./engineering":await moduleUrl("engineering",{"./robot-lab":await moduleUrl("robot-lab"),"./user-errors":await moduleUrl("user-errors")})}));
 function storage(initial = {}) {
   const values = new Map(Object.entries(initial));
   const api = {

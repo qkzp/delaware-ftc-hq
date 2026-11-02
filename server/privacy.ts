@@ -87,6 +87,7 @@ async function withdrawEvidence(c:Context):Promise<Response> {
 }
 export async function handlePrivacy(c:Context):Promise<Response> {
  const {request,db,teamId,userId,member,row,envelope,path,input}=c,method=request.method,settings=await privacySettings(db,teamId);
+ if(path.length===4&&path[3]==="contacts"&&method==="GET")return response({teamContacts:envelope.workspace.teamContacts||null});
  if(path.length===3&&method==="GET"){
   if(member.role!=="admin")throw new ApiError(403,"Only admins can review team privacy settings.");
   const count=await db.prepare("SELECT count(*) AS n FROM evidence_erasures WHERE team_id=? AND status='pending'").bind(teamId).first<{n:number}>();

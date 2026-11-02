@@ -31,6 +31,7 @@ async function fixture(options,check){
    if(method==="GET")return Response.json({job:state.job});
    state.job={...state.job,status:state.cleanupStatus};return Response.json({status:state.cleanupStatus,pendingCleanup:state.cleanupStatus==="pending",jobId:body.jobId});
   }
+  if(resource==="contacts")return Response.json({teamContacts:state.contacts||null});
   if(resource==="requests"){
    if(method==="GET")return Response.json({requests:state.records.map(record=>({...record,message:record.message.replace("team-a",team).replace("account-a",state.currentAccount)})),pendingCleanups:[]});
    if(state.postFailure)return Response.json({error:"Fictional request limit"},{status:429});
@@ -59,7 +60,7 @@ test("session-only maintenance loads no workspace and preserves request drafts a
   assert.equal(field(app,"Request or concern").props.value,"Fictional data access request");assert.match(app.text,/Fictional request limit/);
   app.state.postFailure=false;await app.update(()=>app.root.findByType("form").props.onSubmit({preventDefault(){}}));
   assert.equal(field(app,"Request or concern").props.value,"");assert.match(app.text,/Fictional data access request/);
-  assert.ok(app.requests.every(request=>request.path.includes("/privacy/requests")));assert.ok(app.requests.every(request=>request.account==="account-a"));
+  assert.ok(app.requests.every(request=>(request.path.includes("/privacy/requests")||request.path.endsWith("/privacy/contacts")&&request.method==="GET")));assert.ok(app.requests.every(request=>request.account==="account-a"));
  });
 });
 
@@ -90,7 +91,7 @@ test("approved mentors can review requests without administrator controls",async
   await app.update(()=>field(app,"Follow-up record").props.onChange({target:{value:"Verified coach follow-up reference"}}));
   await app.update(()=>app.root.findAllByType("form").at(-1).props.onSubmit({preventDefault(){}}));
   assert.match(app.text,/Verified coach follow-up reference/);assert.equal(app.state.records[0].status,"resolved");
-  assert.ok(app.requests.every(request=>request.path.includes("/privacy/requests")));
+  assert.ok(app.requests.every(request=>(request.path.includes("/privacy/requests")||request.path.endsWith("/privacy/contacts")&&request.method==="GET")));
  });
 });
 

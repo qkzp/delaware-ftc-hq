@@ -52,10 +52,11 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
  const old = envelope.workspace;
  if (incoming.teamId !== old.teamId || incoming.seasonId !== old.seasonId) throw new ApiError(403, "Team and season boundaries cannot be changed.");
  const allowed = new Set(Object.keys(before));
- for (const k of Object.keys(incoming)) if (!allowed.has(k) && !["evidence", "parts", "robotLab"].includes(k)) throw new ApiError(400, "Unsupported workspace field.");
+ for (const k of Object.keys(incoming)) if (!allowed.has(k) && !["evidence", "parts", "robotLab", "teamContacts"].includes(k)) throw new ApiError(400, "Unsupported workspace field.");
  const collections = ["tasks", "events", "resources", "sponsors", "grants", "announcements", "evidence"] as const;
- const basics = ["teamName", "teamNumber", "county", "seasonName", "robot", "coachInstructions", "pitChecklist", "pitNotes", "parts", "robotLab"] as const;
+ const basics = ["teamName", "teamNumber", "county", "seasonName", "robot", "coachInstructions", "pitChecklist", "pitNotes", "parts", "robotLab", "teamContacts"] as const;
  for (const key of basics) if (!same(incoming[key] ?? (key === "parts" ? [] : undefined), before[key] ?? (key === "parts" ? [] : undefined))) {
+  if(key==="teamContacts"&&!reviews(role))throw new ApiError(403,"An adult coach, mentor or operator must manage monitored team contacts.");
   if (!manages(role)) {
    if (key !== "pitNotes" && key !== "pitChecklist") throw new ApiError(403, "A student lead or mentor must change team settings.");
    if (key === "pitChecklist") { if(!incoming.pitChecklist.every(id=>['robot-hardware','robot-code','robot-auto','robot-inspection','battery-charged','battery-safe','battery-chargers','battery-tools','pit-assignments','pit-schedule','pit-coach','pit-recap'].includes(id))) throw new ApiError(400,"Invalid pit checklist item."); (next.workspace as any)[key]=structuredClone(incoming[key]); continue; }

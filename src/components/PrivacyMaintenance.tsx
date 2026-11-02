@@ -1,6 +1,9 @@
 "use client";
 import {userError} from "../user-errors";
 import {useEffect,useRef,useState,type FormEvent} from "react";
+import TeamContactDetails from "./TeamContactDetails";
+import {validTeamContacts} from "../team-contacts";
+import type {TeamContacts} from "../types";
 import type {Session} from "../cloud";
 import {Field,Modal} from "./ui";
 
@@ -8,7 +11,7 @@ type Team=Session["teams"][number];
 type PrivacyRequest={id:string;kind:string;message:string;status:string;updated:string;note?:string;created?:string;requester?:string};
 type Settings={paused:boolean;uploadsEnabled:boolean;revisionRetentionDays:number;updated:string};
 type Cleanup={jobId:string;evidenceId?:string;kind:"team"|"evidence"};
-type Payload={error?:string;job?:{jobId:string;status:string}|null;requests?:PrivacyRequest[];pendingCleanups?:{jobId:string;evidenceId:string}[];settings?:Settings;status?:string;pendingCleanup?:boolean;pendingFileCleanup?:number};
+type Payload={teamContacts?:TeamContacts|null;error?:string;job?:{jobId:string;status:string}|null;requests?:PrivacyRequest[];pendingCleanups?:{jobId:string;evidenceId:string}[];settings?:Settings;status?:string;pendingCleanup?:boolean;pendingFileCleanup?:number};
 const kinds=[["access","Access or export"],["correction","Correction"],["withdrawal","Consent withdrawal"],["erasure","Deletion request"],["concern","Safety or abuse concern"]] as const;
 
 /** Privacy maintenance deliberately never requests a workspace, roster or attachment. */
@@ -38,12 +41,13 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
  const admin=team.role==="admin",staff=admin||team.role==="mentor",base=`/api/teams/${encodeURIComponent(team.id)}/privacy`;
  const alive=useRef(true),running=useRef(false),readGeneration=useRef(0),accessEnded=useRef(false),accessEpoch=useRef(0),operation=useRef(0);
  const [busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
+ const [contacts,setContacts]=useState<TeamContacts|null|undefined>(undefined);
  const [records,setRecords]=useState<PrivacyRequest[]>([]),[jobs,setJobs]=useState<Cleanup[]>([]),[settings,setSettings]=useState<Settings|null>(null),[complete,setComplete]=useState(false),[locked,setLocked]=useState(false),[pendingFiles,setPendingFiles]=useState(0);
  const [kind,setKind]=useState<string>("concern"),[message,setMessage]=useState("");
  const [review,setReview]=useState<PrivacyRequest|null>(null),[reviewNote,setReviewNote]=useState(""),[reviewStatus,setReviewStatus]=useState("in-progress");
  const stale=new Error("This privacy maintenance session changed.");
  function check(){if(!alive.current||accessEnded.current)throw stale;}
- function endAccess(){accessEnded.current=true;readGeneration.current++;setRecords([]);setJobs([]);setSettings(null);setPendingFiles(0);setReview(null);setReviewNote("");setMessage("");setNotice("");setLocked(true);onAccessEnded();}
+ function endAccess(){accessEnded.current=true;readGeneration.current++;setContacts(undefined);setRecords([]);setJobs([]);setSettings(null);setPendingFiles(0);setReview(null);setReviewNote("");setMessage("");setNotice("");setLocked(true);onAccessEnded();}
  async function call(path:string,method="GET",body?:unknown){
   check();const epoch=accessEpoch.current;
   const response=await fetch(path,{method,credentials:"same-origin",cache:"no-store",headers:{"X-MyFTC-Account":accountId,...(body===undefined?{}:{"Content-Type":"application/json"})},body:body===undefined?undefined:JSON.stringify(body)});
@@ -60,14 +64,15 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
   const erasure=admin?await call(base+"/erase"):null;check();
   if(generation!==readGeneration.current)return;
   if(erasure?.job){
-   setRecords([]);setSettings(null);setPendingFiles(0);
+   setContacts(undefined);setRecords([]);setSettings(null);setPendingFiles(0);
    if(erasure.job.status==="pending"){setJobs([{jobId:erasure.job.jobId,kind:"team"}]);setComplete(false);}
    else {setJobs([]);setComplete(true);}
    return;
   }
   const result=await call(base+"/requests");check();if(generation!==readGeneration.current)return;
   const policy=admin?await call(base):null;check();if(generation!==readGeneration.current)return;
-  setRecords(result.requests||[]);setJobs((result.pendingCleanups||[]).map((job:{jobId:string;evidenceId:string})=>({...job,kind:"evidence" as const})));setSettings(policy?.settings||null);setPendingFiles(policy?.pendingFileCleanup||0);
+  const contact=await call(base+"/contacts").catch(()=>null);check();if(generation!==readGeneration.current)return;
+  setContacts(contact?.teamContacts===null?null:contact?.teamContacts&&validTeamContacts(contact.teamContacts)?contact.teamContacts:undefined);setRecords(result.requests||[]);setJobs((result.pendingCleanups||[]).map((job:{jobId:string;evidenceId:string})=>({...job,kind:"evidence" as const})));setSettings(policy?.settings||null);setPendingFiles(policy?.pendingFileCleanup||0);
  }
  async function run(action:()=>Promise<void>){
   if(!alive.current||running.current||accessEnded.current)return;const current=++operation.current;running.current=true;setBusy(true);setError("");setNotice("");
@@ -81,7 +86,7 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
    // Revalidate account-bound maintenance access before displaying old private
    // records after the user returns from another tab or account.
    accessEpoch.current++;readGeneration.current++;operation.current++;running.current=false;
-   setRecords([]);setJobs([]);setSettings(null);setPendingFiles(0);setReview(null);setReviewNote("");setMessage("");setNotice("");
+   setContacts(undefined);setRecords([]);setJobs([]);setSettings(null);setPendingFiles(0);setReview(null);setReviewNote("");setMessage("");setNotice("");
    void run(load);
   };
   const visibility=()=>{if(document.visibilityState==="visible")focus();};
@@ -95,12 +100,13 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
  async function retry(job:Cleanup){
   const result=await call(base+(job.kind==="team"?"/erase":"/withdraw-evidence"),job.kind==="team"?"DELETE":"POST",{jobId:job.jobId,...(job.evidenceId?{evidenceId:job.evidenceId}:{})});check();
   if(result.status==="pending"||result.pendingCleanup){setNotice("Access remains withdrawn. Storage cleanup is still pending; keep this receipt and retry later.");return;}
-  if(job.kind==="team"){setJobs([]);setRecords([]);setSettings(null);setPendingFiles(0);setComplete(true);setNotice("Team erased from application storage. The responsible adult must confirm provider, backup and downloaded copies separately.");}
+  if(job.kind==="team"){setJobs([]);setContacts(undefined);setRecords([]);setSettings(null);setPendingFiles(0);setComplete(true);setNotice("Team erased from application storage. The responsible adult must confirm provider, backup and downloaded copies separately.");}
   else {await load();check();setNotice("Evidence cleanup completed in application storage. External copies need separate adult follow-up.");}
  }
  const erasing=jobs.some(job=>job.kind==="team");
  return <section className="card settings-section" aria-labelledby="maintenance-team-title" aria-busy={busy}>
   <h2 id="maintenance-team-title">{team.teamName}</h2>
+  {!locked&&<TeamContactDetails contacts={contacts}/>}
   <p>Your approved role: {team.role}. {staff?"Approved coaches, mentors and admins review team requests.":"You can see your own requests."}</p>
   {error&&<p className="settings-info" role="alert">{error}</p>}
   {notice&&<p className="settings-info" role="status">{notice}</p>}

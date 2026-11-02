@@ -1,3 +1,4 @@
+import TeamContactsSettings from "../components/TeamContacts";
 import {userError} from "../user-errors";
 import DisplayPreferences from "../components/DisplayPreferences";
 import { useRef, useState } from "react";
@@ -49,6 +50,7 @@ export default function Settings() {
         description="Team access, roles, details, and recoverable records."
       />
       <DisplayPreferences/>
+      <TeamContactsSettings key={draftScope}/>
       <TeamAccess />
       <PrivacyControls />
       <div className="settings-layout">

@@ -64,5 +64,5 @@ export function publicSupport(record:ReadinessRecord|null) {
 }
 export function isMaintenanceRequest(request:Request) {
  const path=new URL(request.url).pathname;
- return /^\/api\/teams\/[^/]+\/privacy(?:\/(?:requests(?:\/[^/]+)?|withdraw-evidence|erase))?$/.test(path);
+ return /^\/api\/teams\/[^/]+\/privacy(?:\/(?:contacts|requests(?:\/[^/]+)?|withdraw-evidence|erase))?$/.test(path);
 }

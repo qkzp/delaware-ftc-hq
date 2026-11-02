@@ -3,6 +3,54 @@
   "basis": "Generated from current src/types.ts and db/schema.ts plus explicit external/runtime flows. Technical observations are not approval or a complete host attestation.",
   "fields": [
     {
+      "field": "workspace.teamContacts",
+      "type": "TeamContacts",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.teamContacts.supportEmail",
+      "type": "string",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.teamContacts.privacyEmail",
+      "type": "string",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
       "field": "workspace.robotLab",
       "type": "RobotLabData",
       "purpose": "Maintain robot configuration profiles, numerical motor test observations/models, servo calibration, routes/obstacles and maintenance reminders",
@@ -2069,7 +2117,7 @@
     {
       "field": "workspace.schemaVersion",
       "type": "1",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2085,7 +2133,7 @@
     {
       "field": "workspace.teamId",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2101,7 +2149,7 @@
     {
       "field": "workspace.seasonId",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2117,7 +2165,7 @@
     {
       "field": "workspace.teamName",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2133,7 +2181,7 @@
     {
       "field": "workspace.teamNumber",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2149,7 +2197,7 @@
     {
       "field": "workspace.county",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -2165,7 +2213,7 @@
     {
       "field": "workspace.seasonName",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4421,7 +4469,7 @@
     {
       "field": "workspace.pitChecklist",
       "type": "string[]",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4437,7 +4485,7 @@
     {
       "field": "workspace.pitNotes",
       "type": "{ id: string; text: string; date: string }[]",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4453,7 +4501,7 @@
     {
       "field": "workspace.pitNotes[].id",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4469,7 +4517,7 @@
     {
       "field": "workspace.pitNotes[].text",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4485,7 +4533,7 @@
     {
       "field": "workspace.pitNotes[].date",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -4661,7 +4709,7 @@
     {
       "field": "workspace.coachInstructions",
       "type": "string",
-      "purpose": "Configure team/season and internal pit preparation",
+      "purpose": "Configure team/season, monitored adult team support/privacy contacts and internal pit preparation",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",

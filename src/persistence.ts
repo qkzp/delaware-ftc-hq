@@ -1,3 +1,4 @@
+import {validTeamContacts} from "./team-contacts";
 import {validRobotLab} from "./engineering";
 import {validActuatorStats} from "./actuators";
 import type { AppData } from "./types";
@@ -49,6 +50,7 @@ const uniqueIds = (values: unknown[]) =>
 export function validateData(value: unknown): value is AppData {
   if (!object(value)) return false;
   const v = value;
+  if(v.teamContacts!==undefined&&!validTeamContacts(v.teamContacts))return false;
   if(v.robotLab!==undefined&&!validRobotLab(v.robotLab))return false;
   if(Array.isArray(v.sponsors)&&!v.sponsors.every(s=>object(s)&&[s.firstEmailSentAt,s.responseReceivedAt,s.followUpEmailSentAt].every(d=>d===undefined||d===""||timestamp(d))))return false;
   if(Array.isArray(v.grants)&&!v.grants.every(g=>object(g)&&(g.reminderDays===undefined||Number.isInteger(g.reminderDays)&&(g.reminderDays as number)>=-1&&(g.reminderDays as number)<=90)))return false;

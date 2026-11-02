@@ -155,7 +155,9 @@ export interface Announcement extends Base {
   date: string;
   type: "Decision" | "Update";
 }
+export interface TeamContacts { supportEmail:string; privacyEmail:string; }
 export interface AppData {
+  teamContacts?:TeamContacts;
   robotLab?: RobotLabData;
   evidence?: Evidence[];
   parts?: Part[];
