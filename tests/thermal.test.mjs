@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import {simulateThermal,speedAssessment} from "../src/thermal.ts";
+import {simulateThermal,simulateMotorThermal,speedAssessment} from "../src/thermal.ts";
 const base={ambientC:25,startC:25,thresholdC:55,heatWatts:40,resistanceCPerWatt:2,capacityJPerC:120,durationSeconds:180};
 test("speed flags use the selected target and never invent a universal safe speed",()=>{
  assert.equal(speedAssessment(7,6).aboveTarget,true);assert.equal(speedAssessment(7,8).aboveTarget,false);assert.equal(speedAssessment(6,6).aboveTarget,false);assert.equal(speedAssessment(0,6).excessFeetPerSecond,0);
@@ -19,4 +19,22 @@ test("unreached, asymptotic and already-exceeded thresholds are reported without
 });
 test("invalid thermal inputs cannot produce fabricated curves or unbounded sampling",()=>{
  for(const changes of [{heatWatts:-1},{heatWatts:NaN},{resistanceCPerWatt:0},{capacityJPerC:0},{durationSeconds:0},{durationSeconds:3601},{startC:Infinity},{thresholdC:251}])assert.throws(()=>simulateThermal({...base,...changes}));assert.equal(simulateThermal({...base,durationSeconds:3600}).samples.length,241);
+});
+
+const motor={ratedVoltage:12,stallCurrentAmps:10,supplyVoltage:12,currentLimitAmps:5,temperatureCoefficientPerC:0};
+test("the DC stall algorithm derives resistance and respects applied voltage and motor current limits",()=>{
+ const limited=simulateMotorThermal(base,motor);assert.equal(limited.electrical.windingOhmsAt25C,1.2);assert.equal(limited.electrical.initialCurrentAmps,5);assert.equal(limited.electrical.initialHeatWatts,30);
+ const lower=simulateMotorThermal(base,{...motor,currentLimitAmps:2.5});assert.equal(lower.electrical.initialHeatWatts,7.5);assert.ok(lower.endC<limited.endC);
+ const voltage=simulateMotorThermal(base,{...motor,supplyVoltage:6,currentLimitAmps:100});assert.equal(voltage.electrical.initialCurrentAmps,5);assert.equal(voltage.electrical.initialHeatWatts,30);
+});
+test("numerical motor heating matches the exact constant-loss solution when temperature feedback is disabled",()=>{
+ const numerical=simulateMotorThermal(base,motor),exact=simulateThermal({...base,heatWatts:30});assert.ok(Math.abs(numerical.endC-exact.endC)<1e-8);assert.ok(Math.abs(numerical.thresholdSeconds-exact.thresholdSeconds)<1e-8);assert.equal(numerical.samples.length,241);assert.ok(numerical.electrical.integrationSteps<=200000);
+});
+test("temperature-dependent resistance raises current-limited losses and reduces voltage-limited stall current",()=>{
+ const fixed=simulateMotorThermal(base,motor),warm=simulateMotorThermal(base,{...motor,temperatureCoefficientPerC:.0039});assert.ok(warm.endC>fixed.endC);assert.ok(warm.electrical.endHeatWatts>warm.electrical.initialHeatWatts);const finer=simulateMotorThermal(base,{...motor,temperatureCoefficientPerC:.0039},{maxStepSeconds:.05});assert.ok(Math.abs(finer.endC-warm.endC)<.02);assert.ok(Math.abs(finer.thresholdSeconds-warm.thresholdSeconds)<.1);
+ const unlimited=simulateMotorThermal(base,{...motor,currentLimitAmps:100,temperatureCoefficientPerC:.0039});assert.ok(unlimited.electrical.endCurrentAmps<unlimited.electrical.initialCurrentAmps);assert.ok(unlimited.electrical.endHeatWatts<unlimited.electrical.initialHeatWatts);
+});
+test("a disabled electrical drive contributes no heat and motor model guards reject invalid or unresolved data",()=>{
+ for(const changes of [{supplyVoltage:0},{currentLimitAmps:0}]){const result=simulateMotorThermal(base,{...motor,...changes});assert.equal(result.endC,25);assert.equal(result.thresholdSeconds,null);}
+ for(const changes of [{ratedVoltage:0},{stallCurrentAmps:NaN},{currentLimitAmps:-1},{temperatureCoefficientPerC:.5}])assert.throws(()=>simulateMotorThermal(base,{...motor,...changes}));assert.throws(()=>simulateMotorThermal({...base,resistanceCPerWatt:.001,capacityJPerC:.1},motor));
 });

@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:c64dc306c9be8d2b60aa8888578831caf0715abbe43dbe8d8d3c6b3dbd9930e4",
+  "releaseId": "sha256:f355398172388943c2faafaa2d3fa6cd56ae98980a96c01b25466fc9809f4af5",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -11,8 +11,8 @@
       "sha256": "d4b98c237b432e7944b29e8357874edacbf27b72200271bda55fe8519a10d175"
     },
     "README.md": {
-      "bytes": 19894,
-      "sha256": "967e1f45aa788892673e09db153ff4f423d44a619e2384e25dbb3eb3f069a13d"
+      "bytes": 20270,
+      "sha256": "6b5887652b1f49582a8e4dd0f0899c46b7f4f1044521c1a3cc6720ff1f8f9c5b"
     },
     "app/api/[...segments]/route.ts": {
       "bytes": 2052,
@@ -103,8 +103,8 @@
       "sha256": "b3a14d5d21cdb376e1eb52b26d517d4e6b64ff3e04432ce6ccf8e509596fb8dd"
     },
     "docs/data-inventory.json": {
-      "bytes": 422027,
-      "sha256": "2e345701cab42cade672809552fa624c5a0abff960dde8881104dac5f8f8ded0"
+      "bytes": 422069,
+      "sha256": "80bd4e5e4c6f57982b04566ed1eb58f0ede9ab51d557a774e2bb06f141d91d07"
     },
     "docs/launch-acceptance.md": {
       "bytes": 9264,
@@ -127,8 +127,8 @@
       "sha256": "08ec9b288c2b78787a379205cb06dd59c3e0af77cae5d593b427df99c5221133"
     },
     "docs/thermal-model.md": {
-      "bytes": 3466,
-      "sha256": "f5978fc7c12abdac3bfd92931ddd57ee5d7920516933c0065dc0ccbd9d17da93"
+      "bytes": 6039,
+      "sha256": "197343e1ab46c02052db4a80b3c3f365c582956159cab9d17d924abaa78c5d6d"
     },
     "docs/ui-redesign.md": {
       "bytes": 2436,
@@ -275,8 +275,8 @@
       "sha256": "bd9c98fc68f29d975fe10508dfc9029bb681dc5789a62861d5c938bdea2064bb"
     },
     "scripts/data-inventory.mjs": {
-      "bytes": 15209,
-      "sha256": "5b388a49aa1e5e71ee5050cc839c70eae66c1d3d4129a417ed656f610a4ca783"
+      "bytes": 15251,
+      "sha256": "8b2f0005c825f029857a8105508269e81be0dbe9679e0fe43e74ddca280d4099"
     },
     "scripts/execution-profile.mjs": {
       "bytes": 624,
@@ -447,8 +447,8 @@
       "sha256": "b26e7904a67df8f4f1b2ad8dcc8408f97035750d50da620f28f109e4b1f52431"
     },
     "src/components/ExperienceRuntime.tsx": {
-      "bytes": 5381,
-      "sha256": "3b580b5f2c653a2dc776387df9e7ab2654553f670c15695387e554ab7b305b24"
+      "bytes": 5412,
+      "sha256": "ba5ddbcc6f1fbaabf441213febce4b69c1dcd57c920f84a272231f2ff8976f51"
     },
     "src/components/FocusSession.css": {
       "bytes": 7660,
@@ -507,8 +507,8 @@
       "sha256": "2f382add0ee5deb27a9362a5528db4533ba4de348a10970567d593cd18714fe5"
     },
     "src/components/SpeedThermalCheck.tsx": {
-      "bytes": 9776,
-      "sha256": "5b3abba909557274801d019fed892dca0e25ef8b637f4258c230c43a119ea804"
+      "bytes": 12671,
+      "sha256": "72fa367e0907f87a2c93781015e1e6e0ef291ae4842509aa538c08040ac89d7a"
     },
     "src/components/SupportCenter.css": {
       "bytes": 2683,
@@ -747,8 +747,8 @@
       "sha256": "0fc9ef940a22ff7b0715f445f40f71fd3baf1cee0436388a8cb14a31125b0402"
     },
     "src/thermal.ts": {
-      "bytes": 1927,
-      "sha256": "e221d131f02dfadd836ab13e04229d623cbc89bf1672604cf10b6682d474f9d0"
+      "bytes": 5834,
+      "sha256": "87d401a4cd858d98cf3139d1336dfb4274afba54679d87accc61b28317b3f0a8"
     },
     "src/types.ts": {
       "bytes": 7097,
@@ -792,7 +792,6 @@
     }
   },
   "sourceChanges": [
-    "src/components/SpeedThermalCheck.tsx",
-    "src/components/WheelSpeedCalculator.tsx"
+    "src/components/ExperienceRuntime.tsx"
   ]
 }
