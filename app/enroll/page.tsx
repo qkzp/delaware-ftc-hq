@@ -3,7 +3,7 @@ import { isAuthConfigured } from "../../auth";
 import "../../src/components/entry.css";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Adult release setup | MyFTCSpace", description: "Private account ID lookup for an authorized adult preparing a team release." };
+export const metadata = { title: "Adult release setup | MyFTCSpace", description: "Private account ID lookup for an authorized adult preparing a team release.", robots: { index: false, follow: false } };
 
 export default async function EnrollmentPage() {
   const authConfigured = isAuthConfigured();

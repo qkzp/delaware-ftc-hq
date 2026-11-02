@@ -1,0 +1,59 @@
+.public-welcome { --welcome-ink:#202623; --welcome-muted:#58635c; --welcome-line:#dce2dd; min-height:100dvh; background:#fafbf9; color:var(--welcome-ink); font:400 15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; }
+.public-welcome *, .public-welcome *::before, .public-welcome *::after { box-sizing:border-box; }
+.public-welcome a { color:inherit; text-underline-offset:4px; }
+.public-welcome a:focus-visible { outline:3px solid #176451; outline-offset:5px; border-radius:3px; }
+.welcome-skip { position:absolute; z-index:100; top:12px; left:16px; padding:12px 18px; background:#202623; color:white!important; transform:translateY(-160%); }
+.welcome-skip:focus { transform:translateY(0); }
+.welcome-header { max-width:1248px; margin:auto; padding:25px 32px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.welcome-brand { display:inline-flex; align-items:center; gap:10px; text-decoration:none; white-space:nowrap; }
+.welcome-brand span { font-size:18px; font-weight:650; letter-spacing:-.6px; }
+.welcome-brand img { border-radius:5px; flex-shrink:0; }
+.welcome-header nav { display:flex; align-items:center; gap:30px; }
+.welcome-header nav a { display:inline-flex; align-items:center; min-height:44px; gap:8px; font-size:13px; text-decoration:none; }
+.welcome-header nav a:hover, .welcome-footer a:hover { text-decoration:underline; }
+.welcome-member-link { border-left:1px solid var(--welcome-line); padding-left:30px; }
+.welcome-hero { max-width:1248px; margin:auto; padding:90px 32px 96px; display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr); align-items:center; gap:88px; }
+.public-welcome .welcome-eyebrow { margin:0 0 21px; color:#3e594b; font-size:11px; line-height:1.5; font-weight:650; letter-spacing:1.3px; text-transform:uppercase; }
+.public-welcome h1 { margin:0 0 25px; font:600 clamp(43px,4.7vw,66px)/1.07 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; letter-spacing:-2.8px; text-transform:none; color:var(--welcome-ink); }
+.welcome-lede { max-width:510px; margin:0; color:var(--welcome-muted); font-size:18px; line-height:1.75; }
+.welcome-explore { display:inline-flex; align-items:center; gap:12px; min-height:44px; margin-top:25px; color:#17533f!important; font-size:14px; font-weight:600; text-decoration:none; }
+.welcome-explore:hover { text-decoration:underline; }
+.welcome-principles { display:flex; flex-wrap:wrap; gap:10px 20px; margin-top:40px; font-size:12px; color:var(--welcome-muted); }
+.welcome-principles span { display:inline-flex; align-items:center; gap:8px; }
+.welcome-principles span::before { content:""; width:5px; height:5px; border-radius:50%; background:#5b7766; }
+.welcome-account { padding:30px; border:1px solid #d7dfd8; border-radius:10px; background:white; box-shadow:0 8px 30px #283a2b07; }
+.welcome-account-heading { display:flex; align-items:center; gap:11px; padding-bottom:23px; margin-bottom:24px; border-bottom:1px solid var(--welcome-line); }
+.welcome-account-heading span { font-size:11px; color:var(--welcome-muted); letter-spacing:.3px; }
+.public-welcome .welcome-account h2 { margin:0 0 10px; font:600 25px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; letter-spacing:-.7px; text-transform:none; }
+.welcome-account>p { margin:0 0 22px; font-size:14px; color:var(--welcome-muted); line-height:1.75; }
+.welcome-access-status { display:flex; align-items:center; gap:8px; color:#645327; font-size:12px; font-weight:600; padding-top:3px; }
+.welcome-access-status>span { width:6px; height:6px; border-radius:50%; background:#8c7334; }
+.welcome-account .welcome-status-note { margin:9px 0 22px; font-size:12px; }
+.welcome-actions { display:grid; gap:10px; }
+.public-welcome .welcome-button { display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:46px; padding:12px 15px; border:1px solid #202623; border-radius:5px; font-size:13px; font-weight:550; text-decoration:none; }
+.public-welcome .welcome-button-dark { color:white; background:#202623; }
+.public-welcome .welcome-button-dark:hover { background:#34463a; border-color:#34463a; }
+.public-welcome .welcome-button-light { color:#202623; background:#fff; border-color:#cbd4cd; }
+.public-welcome .welcome-button-light:hover { background:#f4f7f3; }
+.welcome-account-help { display:inline-flex; align-items:center; min-height:44px; margin-top:10px; color:#355b46!important; font-size:12px; }
+.welcome-account-note { border-top:1px solid var(--welcome-line); padding-top:17px; margin-top:13px; font-size:11px; line-height:1.8; color:var(--welcome-muted); }
+.welcome-features { background:white; border-block:1px solid var(--welcome-line); padding:57px max(32px,calc((100vw - 1184px)/2)) 62px; scroll-margin-top:24px; }
+.welcome-section-heading { margin-bottom:37px; }
+.welcome-section-heading .welcome-eyebrow { margin-bottom:10px; }
+.public-welcome .welcome-section-heading h2, .public-welcome .welcome-oversight h2 { margin:0; font:550 29px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; text-transform:none; letter-spacing:-.9px; }
+.welcome-feature-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:30px; }
+.welcome-feature-grid article { min-width:0; }
+.welcome-feature-grid article>svg { color:#40634d; margin-bottom:16px; }
+.public-welcome .welcome-feature-grid h3 { margin:0 0 9px; font:600 15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; letter-spacing:-.2px; }
+.welcome-feature-grid p { margin:0; color:var(--welcome-muted); font-size:13px; line-height:1.8; }
+.welcome-oversight { max-width:1248px; margin:auto; padding:62px 32px; display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+.welcome-oversight .welcome-eyebrow { margin-bottom:10px; }
+.welcome-oversight>p { max-width:520px; margin:0; color:var(--welcome-muted); font-size:14px; line-height:1.9; }
+.welcome-footer { max-width:1248px; margin:auto; padding:26px 32px 30px; display:flex; justify-content:space-between; gap:25px; border-top:1px solid var(--welcome-line); }
+.welcome-footer .welcome-brand span { font-size:14px; }
+.welcome-footer p { max-width:440px; margin:12px 0 0; color:var(--welcome-muted); font-size:11px; }
+.welcome-footer nav { display:flex; flex-wrap:wrap; align-content:flex-start; gap:5px 25px; }
+.welcome-footer nav a { display:inline-flex; align-items:center; min-height:44px; font-size:11px; text-decoration:none; }
+@media(max-width:1000px) { .welcome-hero { padding-top:60px; gap:40px; } .public-welcome h1 { font-size:51px; letter-spacing:-2px; } .welcome-account { padding:25px; } .welcome-header nav { gap:20px; } .welcome-member-link { padding-left:20px; } }
+@media(max-width:760px) { .welcome-header { padding:18px 22px; flex-wrap:wrap; gap:7px 20px; } .welcome-header nav { flex-wrap:wrap; gap:4px 20px; } .welcome-header nav a { font-size:12px; } .welcome-member-link { border:0; padding:0; } .welcome-hero { grid-template-columns:1fr; padding:48px 22px 48px; gap:35px; } .public-welcome h1 { font-size:49px; } .welcome-lede { font-size:16px; } .welcome-principles { margin-top:20px; } .welcome-account { max-width:520px; width:100%; } .welcome-features { padding:38px 22px; } .welcome-feature-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:30px 24px; } .welcome-oversight { grid-template-columns:1fr; padding:38px 22px; gap:20px; } .welcome-footer { padding:22px; flex-direction:column; gap:12px; } }
+@media(max-width:400px) { .public-welcome h1 { font-size:42px; letter-spacing:-1.8px; } .welcome-feature-grid { grid-template-columns:1fr; } .welcome-account { padding:22px; } .welcome-brand span { font-size:16px; } .public-welcome .welcome-section-heading h2, .public-welcome .welcome-oversight h2 { font-size:26px; } }

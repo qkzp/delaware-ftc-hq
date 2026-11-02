@@ -3899,10 +3899,10 @@
     {
       "field": "identity-provider.account-session",
       "type": "external/runtime",
-      "purpose": "Provider-scoped Google/Microsoft account identifier, encrypted authentication/session cookies and normal network metadata",
+      "purpose": "Provider-scoped Google/Microsoft account identifier and essential OAuth/session cookies; provider profile processed during sign-in but name/email/image removed from app JWT and session",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Role/host/provider dependent; verify before enabling",
-      "storage": "Auth.js session on Vercel with Google or Microsoft as identity provider; never app localStorage",
+      "storage": "Auth.js encrypted session on Vercel (configured eight-hour lifetime); Google or Microsoft identity provider; never app localStorage",
       "vendors": [
         "Vercel",
         "Google",

@@ -9,15 +9,26 @@ export default function PrivacyPage(){
   <a className="privacy-skip-link" href="#privacy-content">Skip to privacy information</a>
   <header className="privacy-header"><a className="privacy-brand" href="/" aria-label="MyFTCSpace home"><img src="/favicon.svg" width="36" height="36" alt=""/><strong>MyFTCSpace</strong></a><a className="privacy-workspace-link" href="/">Team access</a></header>
   <main id="privacy-content" className="privacy-content">
-   <div className="privacy-intro"><h1>Privacy and data help</h1><p>Understand who can see team records and how to ask for help.</p><p className="privacy-updated">Product information · November 1, 2026</p></div>
+   <div className="privacy-intro"><h1>Privacy and data help</h1><p>Understand who can see team records and how to ask for help.</p><p className="privacy-updated">Product information · November 2, 2026</p></div>
    <p role="status">{gate.enabled?"Access is limited to the approved roster and release scope.":"New team access and normal team operations are paused pending release review."}</p>
-   <nav className="privacy-contents" aria-label="On this page"><a href="#account-access">Access and ages</a><a href="#team-data">Team records</a><a href="#media-consent">Media and consent</a><a href="#saving-recovery">Retention and deletion</a><a href="#maps-links">Maps and vendors</a><a href="#data-help">Requests and safety concerns</a></nav>
+   <nav className="privacy-contents" aria-label="On this page"><a href="#operator">Operator</a><a href="#account-access">Access and ages</a><a href="#session-cookies">Sign-in cookies</a><a href="#team-data">Team records</a><a href="#media-consent">Media and consent</a><a href="#saving-recovery">Retention and deletion</a><a href="#maps-links">Maps and vendors</a><a href="#data-help">Requests and safety concerns</a></nav>
+   <section id="operator" aria-labelledby="operator-title">
+    <h2 id="operator-title">Who operates this service</h2>
+    <p>The initial rollout is for teams based in Delaware, United States. Expansion to other states is planned and requires a review of the additional organizations, users and requirements before team data access is offered.</p>
+    {gate.record ? <p>The responsible organization is <strong>{gate.record.organization}</strong>, with <strong>{gate.record.adultOwner}</strong> as the adult service owner. Contact <a href={`mailto:${gate.record.privacyEmail}`}>{gate.record.privacyEmail}</a> for privacy questions and data requests.</p> : <p>The responsible organization, named adult service owner and monitored privacy contact have not yet been configured for this deployment. Team data access remains unavailable until those details and the required release review are complete.</p>}
+    <p>Each team uses a designated adult coach or mentor for privacy and safety concerns. Team leads coordinate routine work and refer these concerns to an adult.</p>
+   </section>
    <section id="account-access" aria-labelledby="account-access-title">
     <h2 id="account-access-title">Access and ages</h2>
     <p>This FTC workspace is intended for teams in grades 7–12. Direct student accounts are restricted to approved users ages 13–18, with the required parent or guardian permission. Under-13 accounts, shared adult credentials and adult proxy accounts for children are not supported.</p>
-    <p>Google or Microsoft handles sign-in and credentials. The app uses a provider-scoped account ID, a team alias and assigned role; it does not store your password or copy your sign-in email into the roster. Use a first name and last initial.</p>
+    <p>Google or Microsoft handles sign-in and credentials. During sign-in, the provider supplies basic account profile information to the authentication service. MyFTCSpace keeps the provider-scoped account ID in its encrypted session and removes the provider name, email and profile image from that session. Team membership stores your chosen alias and assigned role. Use a first name and last initial; your password is not stored by this app.</p>
     <p>Only an operator-approved account can enter an operator-approved team. Membership and role checks run on private requests. Adult mentor and administrator access must also be on the approved adult roster. An in-app role alone does not prove adulthood or school authorization.</p>
     <p>Production remains closed until the operator records all required reviewer decisions for this exact build, audience and vendor arrangement. These recorded decisions are not a legal certification. Material source or policy changes, approval expiry or a service pause close normal access again.</p>
+   </section>
+   <section id="session-cookies" aria-labelledby="session-cookies-title">
+    <h2 id="session-cookies-title">Sign-in and essential cookies</h2>
+    <p>Authentication uses essential cookies to protect sign-in requests, remember the return page and maintain your encrypted session. The app configures an eight-hour session lifetime; session renewal and provider sign-in can require authentication again. Signing out ends this browser's app session. Google, Microsoft and the hosting provider have their own separate cookie, logging and retention practices.</p>
+    <p>MyFTCSpace does not add advertising or analytics cookies. Map tiles remain optional and do not load until you choose them. See the maps and external services section for what those requests disclose.</p>
    </section>
    <section id="team-data" aria-labelledby="team-data-title">
     <h2 id="team-data-title">Team records and viewers</h2>

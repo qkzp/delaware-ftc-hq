@@ -2,6 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import AzureADProvider from "next-auth/providers/azure-ad";
+import { minimizeIdentityToken, privateSessionUser } from "./server/auth-profile";
 
 const configured = (name: string) => process.env[name]?.trim() || "";
 
@@ -27,14 +28,10 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account }) {
-      if (account?.provider && account.providerAccountId) {
-        // Keep identities distinct if the same person signs in through two providers.
-        token.sub = `${account.provider}:${account.providerAccountId}`;
-      }
-      return token;
+      return minimizeIdentityToken(token, account);
     },
     async session({ session, token }) {
-      if (session.user && token.sub) session.user.id = token.sub;
+      session.user = privateSessionUser(token);
       return session;
     },
   },

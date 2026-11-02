@@ -1,6 +1,6 @@
 # MyFTCSpace
 
-A private FTC team workspace intended for schools and other organizations, with coach/mentor oversight and team-lead support. Release version: 1.1.0. Production real-data access defaults closed until the exact release and its teams have the required recorded review.
+A private FTC team workspace initially intended for Delaware schools and other organizations, with coach/mentor oversight and team-lead support. The intended future scope is the United States; additional states and organizations need review before onboarding. Release version: 1.1.0. Production real-data access defaults closed until the exact release and its teams have the required recorded review.
 
 The interface follows the compact light layouts in Linear, Notion and Slack: a quiet sidebar, grouped task rows with an inspector, document lists and conversation panes. Screens use system typography, white surfaces, thin dividers and restrained controls. See [the UI design references and notes](docs/ui-redesign.md).
 
@@ -89,6 +89,6 @@ Production sign-in uses Google and Microsoft OAuth, backed by encrypted Auth.js 
 
 ## Verification status
 
-On November 2, 2026, all 161 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 259-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the release hold, privacy page, enrollment setup message, maintenance hold, session gate, and security headers. Automated accessibility semantics passed, but visual/responsive/screen-reader review remains outstanding.
+On November 2, 2026, all 163 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 259-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the public welcome page, privacy page, enrollment setup message, maintenance entry, session gate, and security headers. Automated accessibility semantics passed, but visual/responsive/screen-reader review remains outstanding.
 
-There is no Git remote or linked Vercel project, and no OAuth or Cloudflare credentials are configured in this workspace. No live deployment, OAuth flow, D1/R2 operation or migration has been verified. Hosted two-account/device acceptance, phone/tablet/desktop, zoom/contrast and screen-reader review, vendor deletion/backup attestations and signed approvals remain outstanding. The release fingerprint is generated in `server/release-manifest.json` by `npm run build`.
+The GitHub remote is `https://github.com/qkzp/delaware-ftc-hq.git` and its listed website is `https://delaware-ftc-hq.vercel.app`. The GitHub Vercel status reported success for the existing main commit on November 2, 2026. This workspace has no local Vercel project link or OAuth/Cloudflare credentials; provider configuration and real data flows are not verified by that deployment status. Hosted two-account/device acceptance, phone/tablet/desktop, zoom/contrast and screen-reader review, vendor deletion/backup attestations and signed approvals remain outstanding. The release fingerprint is generated in `server/release-manifest.json` by `npm run build`.

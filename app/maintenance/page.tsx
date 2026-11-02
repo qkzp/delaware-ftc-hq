@@ -9,7 +9,7 @@ import type { Session } from "../../src/cloud";
 import "../privacy/privacy.css";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Privacy requests and cleanup | MyFTCSpace", description: "Private data requests and authorized cleanup while team work is paused." };
+export const metadata = { title: "Privacy requests and cleanup | MyFTCSpace", description: "Private data requests and authorized cleanup while team work is paused.", robots: { index: false, follow: false } };
 
 export default async function MaintenancePage() {
   const gate = assessReadiness(getReadinessEnvironment());
