@@ -1,0 +1,27 @@
+"use client";
+import {Component,useEffect,type ReactNode} from "react";
+import {readPreferences,type Preferences} from "../preferences";
+
+export function installInteractionGuards(root:Document){
+ const clicks=new WeakMap<Element,number>(),submits=new WeakMap<Element,number>();let previous:{x:number;y:number;at:number;target:Element}|undefined;
+ const click=(event:MouseEvent)=>{const target=(event.target as Element)?.closest?.("button,a[role=button],input[type=submit]"),now=performance.now(),through=event.detail>0&&previous&&now-previous.at<300&&Math.hypot(event.clientX-previous.x,event.clientY-previous.y)<8&&target!==previous.target;if(through){event.preventDefault();event.stopImmediatePropagation();return;}if(!target)return;const last=clicks.get(target)??-Infinity,repeat=target===previous?.target&&(event.detail>1||now-last<450);if(repeat||through){event.preventDefault();event.stopImmediatePropagation();return;}clicks.set(target,now);previous={x:event.clientX,y:event.clientY,at:now,target};target.classList.remove("tap-feedback");void (target as HTMLElement).offsetWidth;target.classList.add("tap-feedback");};
+ const submit=(event:SubmitEvent)=>{const target=event.target as Element,now=performance.now();if(now-(submits.get(target)??-Infinity)<450){event.preventDefault();event.stopImmediatePropagation();return;}submits.set(target,now);};
+ const changed=(event:Event)=>{previous=undefined;const form=(event.target as Element)?.closest?.("form");if(form)submits.delete(form);};
+ root.addEventListener("input",changed,true);root.addEventListener("change",changed,true);root.addEventListener("click",click,true);root.addEventListener("submit",submit,true);return()=>{root.removeEventListener("input",changed,true);root.removeEventListener("change",changed,true);root.removeEventListener("click",click,true);root.removeEventListener("submit",submit,true);};
+}
+export function revealFocusedControl(root:Document,viewport:{offsetTop:number;height:number}){
+ const element=root.activeElement as HTMLElement|null;if(!element||!element.matches?.("input,textarea,select,[contenteditable=true]"))return;
+ const box=element.getBoundingClientRect(),top=viewport.offsetTop+16,bottom=viewport.offsetTop+viewport.height-24;if(box.top>=top&&box.bottom<=bottom)return;
+ const delta=(box.top+Math.min(box.height,80)/2)-(top+(bottom-top)/2);if(Math.abs(delta)<1)return;let parent=element.parentElement;
+ while(parent){const style=getComputedStyle(parent);if(/auto|scroll/.test(style.overflowY)&&parent.scrollHeight>parent.clientHeight){parent.scrollBy({top:delta,behavior:"auto"});return;}parent=parent.parentElement;}
+ window.scrollBy({top:delta,behavior:"auto"});
+}
+export default function ExperienceRuntime(){useEffect(()=>{
+ const root=document.documentElement,media=window.matchMedia("(prefers-color-scheme: dark)");
+ const apply=()=>{const p=readPreferences(),theme=p.theme==="system"?(media.matches?"dark":"light"):p.theme;root.dataset.theme=theme;root.dataset.motion=p.motion;root.style.colorScheme=theme;root.style.fontSize=`${p.textScale*100}%`;document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="dark"?"#111a1f":"#f4f6f7");viewport();};
+ let frame=0,timer:ReturnType<typeof setTimeout>|undefined;const viewport=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{const v=window.visualViewport;root.style.setProperty("--visual-height",`${v?.height??window.innerHeight}px`);root.style.setProperty("--visual-top",`${v?.offsetTop??0}px`);if(v)revealFocusedControl(document,v);});};
+ const focus=()=>{clearTimeout(timer);timer=setTimeout(viewport,180);};apply();viewport();window.addEventListener("myftc-preferences",apply);window.addEventListener("storage",apply);media.addEventListener("change",apply);window.visualViewport?.addEventListener("resize",viewport);window.visualViewport?.addEventListener("scroll",viewport);window.addEventListener("resize",viewport);document.addEventListener("focusin",focus);const removeGuards=installInteractionGuards(document);
+ if("serviceWorker" in navigator&&!location.pathname.startsWith("/tests/")&&(location.protocol==="https:"||location.hostname==="localhost"||location.hostname==="127.0.0.1"))void navigator.serviceWorker.register("/static-cache-sw.js",{scope:"/",updateViaCache:"none"}).catch(()=>{/* Asset caching is optional; normal networking remains available. */});
+ return()=>{cancelAnimationFrame(frame);clearTimeout(timer);removeGuards();window.removeEventListener("myftc-preferences",apply);window.removeEventListener("storage",apply);media.removeEventListener("change",apply);window.visualViewport?.removeEventListener("resize",viewport);window.visualViewport?.removeEventListener("scroll",viewport);window.removeEventListener("resize",viewport);document.removeEventListener("focusin",focus);};
+ },[]);return null;}
+export class ScreenBoundary extends Component<{children:ReactNode},{failed:boolean}>{state={failed:false};static getDerivedStateFromError(){return{failed:true};}render(){return this.state.failed?<main className="workspace-recovery"><h1>Let’s reopen this screen.</h1><p>The screen could not finish loading. Keep any unsaved work in this tab; your last successful save can be reopened.</p><button className="btn btn-primary" onClick={()=>window.location.reload()}>Reload screen</button><p><a href="/">Return to team access</a></p></main>:this.props.children;}}

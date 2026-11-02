@@ -1,0 +1,1 @@
+export default function Loading(){return <main className="workspace-recovery" aria-busy="true"><h1>Opening your screen.</h1><p role="status">Loading the workspace tools. Your controls will appear here shortly.</p></main>;}

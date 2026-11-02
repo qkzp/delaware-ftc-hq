@@ -1,3 +1,6 @@
+import {createWorkspaceData} from "../../src/workspace-data";
+import {localRepository} from "../../src/persistence";
+import ExperienceRuntime from "../../src/components/ExperienceRuntime";
 import React from "react";
 import {createRoot} from "react-dom/client";
 import App from "../../src/App";
@@ -7,5 +10,7 @@ import "../../src/fonts.css";
 import "../../src/styles.css";
 import "../../src/redesign.css";
 import "../../src/surfaces.css";
+import "../../src/experience.css";
 const mode=new URLSearchParams(location.search).get("mode"),account=mode==="account";
-createRoot(document.getElementById("root")!).render(mode==="publiclab"?<PublicRobotLab/>:mode==="welcome"?<PublicWelcome accessReady={false}/>:<App accountMode={account} demoMode={!account}/>);
+if(mode==="fresh")localRepository.write(createWorkspaceData({teamName:"New fictional team"}));
+createRoot(document.getElementById("root")!).render(<><ExperienceRuntime/>{mode==="publiclab"?<PublicRobotLab/>:mode==="welcome"?<PublicWelcome accessReady={false}/>:<App accountMode={account} demoMode={!account}/>}</>);

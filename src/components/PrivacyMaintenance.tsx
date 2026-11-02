@@ -1,4 +1,5 @@
 "use client";
+import {userError} from "../user-errors";
 import {useEffect,useRef,useState,type FormEvent} from "react";
 import type {Session} from "../cloud";
 import {Field,Modal} from "./ui";
@@ -70,7 +71,7 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
  }
  async function run(action:()=>Promise<void>){
   if(!alive.current||running.current||accessEnded.current)return;const current=++operation.current;running.current=true;setBusy(true);setError("");setNotice("");
-  try{await action();}catch(caught){if(alive.current&&current===operation.current&&caught!==stale)setError((caught as Error).message);}
+  try{await action();}catch(caught){if(alive.current&&current===operation.current&&caught!==stale)setError(userError(caught));}
   finally{if(current===operation.current){running.current=false;if(alive.current)setBusy(false);}}
  }
  useEffect(()=>{

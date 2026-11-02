@@ -6039,6 +6039,30 @@
       "approval": "PENDING organization/vendor/retention review"
     },
     {
+      "field": "browser.display-preferences",
+      "type": "external/runtime",
+      "purpose": "Theme (system/light/dark), relative text scale, motion choice and preferred task/calendar/sponsor views; forward-compatible preference fields are preserved during updates",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Role/host/provider dependent; verify before enabling",
+      "storage": "Device localStorage under stable myftcspace:preferences; in-memory fallback if blocked",
+      "vendors": [],
+      "retention": "Until changed or the user clears browser/site data; not sent to an app API; cache upgrades do not clear these choices",
+      "deletion": "Until changed or the user clears browser/site data; not sent to an app API; cache upgrades do not clear these choices",
+      "approval": "PENDING"
+    },
+    {
+      "field": "browser.public-asset-cache",
+      "type": "external/runtime",
+      "purpose": "Public hashed JavaScript/styles, bundled fonts and favicon only; no HTML pages, sessions, API responses or team files",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Role/host/provider dependent; verify before enabling",
+      "storage": "Same-origin service-worker Cache Storage and browser HTTP asset cache",
+      "vendors": [],
+      "retention": "Bounded to 100 app asset entries; old app cache versions may be pruned; unrelated caches and user preferences are preserved",
+      "deletion": "Bounded to 100 app asset entries; old app cache versions may be pruned; unrelated caches and user preferences are preserved",
+      "approval": "PENDING"
+    },
+    {
       "field": "browser.robot-lab",
       "type": "external/runtime",
       "purpose": "Motor/servo specifications in the public tracker, numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions, local transmission-stage ratios/wheel-speed calculations and route poses",

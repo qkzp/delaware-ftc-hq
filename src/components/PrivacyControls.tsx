@@ -1,3 +1,4 @@
+import {userError} from "../user-errors";
 import {useEffect,useRef,useState,type FormEvent} from "react";
 import {useHQ} from "../store";
 import {api} from "../cloud";
@@ -43,10 +44,10 @@ function PrivacyPanel(){
   if(job.kind==="team"){notify("Team erased from application storage. The adult owner must confirm provider and exported copies separately.");await cloud.refreshSession();}
   else {await load();if(alive.current)notify("Evidence cleanup completed in application storage.");}
  }
- useEffect(()=>{alive.current=true;void load().catch(e=>{if(alive.current)setError((e as Error).message);});return()=>{alive.current=false;};},[]);
+ useEffect(()=>{alive.current=true;void load().catch(e=>{if(alive.current)setError(userError(e));});return()=>{alive.current=false;};},[]);
  async function run(action:()=>Promise<void>){
   if(busy)return;setBusy(true);setError("");
-  try{await action();}catch(e){if(alive.current)setError((e as Error).message);}
+  try{await action();}catch(e){if(alive.current)setError(userError(e));}
   finally{if(alive.current)setBusy(false);}
  }
  async function submit(event:FormEvent){

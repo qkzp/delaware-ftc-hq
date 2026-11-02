@@ -1,3 +1,4 @@
+import {userError} from "../user-errors";
 import {useState} from "react";
 import {calculateDrivetrain,type TransmissionStage} from "../drivetrain";
 import type {Part} from "../types";
@@ -8,7 +9,7 @@ const names:Record<TransmissionStage["kind"],string>={gear:"Gears (tooth count)"
 export default function WheelSpeedCalculator({parts,onApply}:{parts:Part[];onApply:(value:{rpm:number;ratio:number;wheelDiameter:number})=>void}){
  const [rpm,setRpm]=useState(300),[wheel,setWheel]=useState(4),[unit,setUnit]=useState("in"),[stages,setStages]=useState<TransmissionStage[]>([{kind:"gear",driver:20,driven:40}]),[motor,setMotor]=useState("");
  let result:ReturnType<typeof calculateDrivetrain>|undefined,error="";
- try{result=calculateDrivetrain(rpm,unit==="mm"?wheel/25.4:wheel,stages);}catch(e){error=(e as Error).message;}
+ try{result=calculateDrivetrain(rpm,unit==="mm"?wheel/25.4:wheel,stages);}catch(e){error=userError(e);}
  const plannerSupported=!!result&&rpm>0&&result.wheelDiameterInches>=.5&&result.reduction>=.05&&result.reduction<=100;
  const motors=parts.filter(part=>part.actuator?.kind==="motor"&&part.actuator.status==="Installed");
  const patch=(index:number,value:Partial<TransmissionStage>)=>setStages(current=>current.map((stage,i)=>i===index?{...stage,...value}:stage));

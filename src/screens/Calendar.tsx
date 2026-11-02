@@ -1,3 +1,5 @@
+import {userError} from "../user-errors";
+import {useViewPreference} from "../use-preferences";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDownToLine,
@@ -249,7 +251,7 @@ export default function CalendarPage() {
   const [month, setMonth] = useState(
     () => new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   );
-  const [view, setView] = useState<"Month" | "Agenda" | "Season" | "Map">("Agenda");
+  const [view, setView] = useViewPreference("calendarView");
   const [typeFilter, setTypeFilter] = useState("All events");
   const [selected, setSelected] = useState<TeamEvent | null>(null);
   const [editing, setEditing, saveDraft] = useRecordDraft("events");
@@ -429,7 +431,7 @@ export default function CalendarPage() {
     } catch (error) {
       setImportError(
         error instanceof Error
-          ? error.message
+          ? userError(error)
           : "Could not read this calendar file.",
       );
     }

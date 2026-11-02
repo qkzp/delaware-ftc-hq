@@ -146,13 +146,13 @@ export function Modal({
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handler);
-      before?.focus();
+      before?.focus({preventScroll:true});
     };
   }, []);
   return (
     <div
       className="modal-backdrop"
-      onMouseDown={(e) => {
+      onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >

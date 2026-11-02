@@ -1,3 +1,4 @@
+import {userError} from "./user-errors";
 import type {MaintenanceItem,MotorObservation,MotorTest,RobotLabData,RobotProfile,RouteObstacle,ServoCalibration} from "./types";
 import {fitMotorModel,planRoute,type MotorModel,type RobotHardware,type Waypoint} from "./robot-lab";
 export const emptyRobotLab=():RobotLabData=>({profiles:[],tests:[],calibrations:[],maintenance:[]});
@@ -27,7 +28,7 @@ export function parseTelemetryCSV(csv:string,ticksPerRev:number){
  if(!["time","power","velocity"].every(h=>headers.includes(h))||headers.some(h=>!["time","power","velocity","current","temperature"].includes(h))||new Set(headers).size!==headers.length||lines.length<1||lines.length>10000)throw new Error("Use time,power,velocity with optional current,temperature columns; 1–10000 observations. Units: seconds, power -1..1, ticks/s, amps, Celsius.");
  const samples=lines.map((line,index)=>{const values=line.split(",");if(values.length!==headers.length||values.some(v=>!v.trim()||!Number.isFinite(Number(v))))throw new Error(`Invalid numeric telemetry on row ${index+2}.`);const row=Object.fromEntries(headers.map((key,i)=>[key,Number(values[i])])) as Record<string,number>;if(!finite(row.time,0,86400)||!finite(row.power,-1,1)||!finite(row.velocity,-1e9,1e9)||(row.current!==undefined&&!finite(row.current,0,1000))||(row.temperature!==undefined&&!finite(row.temperature,-100,300)))throw new Error(`Telemetry outside supported units on row ${index+2}.`);return {...row,time:row.time,rpm:row.velocity*60/ticksPerRev} as MotorObservation;});
  if(samples.some((s,i)=>!finite(s.rpm,-100000,100000)||i>0&&s.time<=samples[i-1].time))throw new Error("Use increasing timestamps and check encoder units; output-shaft RPM must stay within ±100000.");
- let model:MotorModel|undefined,modelError="";try{model=fitMotorModel(samples.map(s=>({time:s.time,power:s.power!,velocity:s.velocity!})),"telemetry");}catch(e){modelError=(e as Error).message;}
+ let model:MotorModel|undefined,modelError="";try{model=fitMotorModel(samples.map(s=>({time:s.time,power:s.power!,velocity:s.velocity!})),"telemetry");}catch(e){modelError=userError(e);}
  return {samples,model,modelError};
 }
 export function retainedSamples(samples:MotorObservation[]){if(samples.length<=200)return samples;const peaks=[samples.reduce((a,b)=>Math.abs(a.rpm)>Math.abs(b.rpm)?a:b),samples.reduce((a,b)=>(a.current??-Infinity)>(b.current??-Infinity)?a:b),samples.reduce((a,b)=>(a.temperature??-Infinity)>(b.temperature??-Infinity)?a:b)];return [...new Set([...Array.from({length:197},(_,i)=>samples[Math.round(i*(samples.length-1)/196)]),...peaks])].sort((a,b)=>a.time-b.time);}

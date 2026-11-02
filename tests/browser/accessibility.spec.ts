@@ -6,7 +6,7 @@ for(const preset of [{label:"mobile 320",width:320},{label:"mobile 400",width:40
  test(`${preset.label}: core screens reflow and pass rendered WCAG A AA automated checks`,async({page},testInfo)=>{
   await page.setViewportSize({width:preset.width,height:900});
   for(const screen of pages){await page.goto(`/tests/browser/#${screen}`);await expect(page.locator(".workspace-topbar")).toBeVisible();await expect(page.getByRole("heading",{level:1})).toHaveCount(1);
-   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);expect(overflow,`${screen} at ${preset.width}px has horizontal page overflow`).toBe(false);
+   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);expect(overflow,`${screen} at ${preset.width}px has horizontal page overflow: ${overflow?JSON.stringify(await page.evaluate(()=>Array.from(document.querySelectorAll("body *")).filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.left>=0&&r.right>innerWidth+1;}).slice(-12).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right})))):""}`).toBe(false);
    const result=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"]).analyze();
    expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,reason:n.failureSummary}))})),`${screen} at ${preset.width}px`).toEqual([]);
    if(["home","awards","robotlab"].includes(screen))await page.screenshot({path:testInfo.outputPath(`${screen}.png`),fullPage:true});

@@ -1,3 +1,4 @@
+import {userError} from "../user-errors";
 import { useEffect, useRef, useState } from "react";
 import { api as sharedApi } from "../cloud";
 import { useHQ } from "../store";
@@ -20,7 +21,7 @@ function TeamAccessPanel() {
  const api:typeof sharedApi=(...args)=>scoped(()=>sharedApi(...args));
  const notify=(message:string)=>{if(active.current)showNotice(message);};
  const [busy,setBusy]=useState(false),[token,setToken]=useState(""),[invites,setInvites]=useState<any[]>([]),[history,setHistory]=useState<any[]>([]),[restore,setRestore]=useState<string|null>(null),[reload,setReload]=useState(false),[learning,setLearning]=useState<any[]>([]);
- async function run(action:()=>Promise<void>){if(!active.current||running.current)return;running.current=true;setBusy(true);try{await action();}catch(e){if(e!==inactive)notify((e as Error).message);}finally{running.current=false;if(active.current)setBusy(false);}}
+ async function run(action:()=>Promise<void>){if(!active.current||running.current)return;running.current=true;setBusy(true);try{await action();}catch(e){if(e!==inactive)notify(userError(e));}finally{running.current=false;if(active.current)setBusy(false);}}
  const base=cloud.shared?`/api/teams/${cloud.shared.id}`:"";
  return <section className="card settings-section team-access" aria-labelledby="team-access-title" aria-busy={busy}>
   <h2 id="team-access-title">{cloud.shared?"Your private team":"Connect your team"}</h2>

@@ -2,11 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import type { AppData, Member, Role } from "./types";
 import { rebaseWorkspace } from "../server/policy";
 import { createWorkspaceData } from "./workspace-data";
+import {userError} from "./user-errors";
 export type Session = {user: {userId:string}|null; teams:{id:string;teamName:string;name:string;role:Role}[]};
 type Shared = {id:string;version:number;role:Role;members:Member[];updated:string};
-export async function api(path:string, method="GET", body?:unknown) {
- const response=await fetch(path,{method,credentials:"same-origin",cache:"no-store",headers:body===undefined?{}:{"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});
- const payload:any=await response.json(); if(!response.ok) throw Object.assign(new Error(payload.error||"Request failed."),{status:response.status}); return payload;
+const pendingWrites=new Map<string,Promise<any>>();let requestAccount="",sessionSequence=0;
+export function api(path:string, method="GET", body?:unknown):Promise<any> {
+ const sequence=path==="/api/session"?++sessionSequence:0;
+ const encoded=body===undefined?undefined:JSON.stringify(body),write=!["GET","HEAD"].includes(method),key=JSON.stringify([requestAccount,path,method,encoded]);
+ if(write&&pendingWrites.has(key))return pendingWrites.get(key)!;
+ const result=(async()=>{let response:Response;try{response=await fetch(path,{method,credentials:"same-origin",cache:"no-store",headers:body===undefined?{}:{"Content-Type":"application/json"},body:encoded});}catch(error){throw Object.assign(new Error(userError(error)),{status:0});}
+ let payload:any;try{payload=await response.json();}catch{throw Object.assign(new Error("The service could not finish its response. Keep this tab open and try again."),{status:response.ok?502:response.status});}
+ if(!response.ok)throw Object.assign(new Error(userError(payload.error)),{status:response.status});
+ if(path==="/api/session"&&sequence===sessionSequence){const account=payload.user?.userId||"";if(account!==requestAccount){requestAccount=account;pendingWrites.clear();}}
+ return payload;})();
+ if(write){pendingWrites.set(key,result);const clear=()=>{if(pendingWrites.get(key)===result)pendingWrites.delete(key);};void result.then(clear,clear);}return result;
 }
 export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=true,autoOpen=false}:{enabled?:boolean;autoOpen?:boolean}={}) {
  const [ready,setReady]=useState(!enabled);
@@ -35,7 +44,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=tr
   else if(active.current && !next.teams.some(t=>t.id===active.current?.id))lock("Your team access was removed. Private records have been cleared from this tab.",next);
   else if(active.current&&nextRole&&previousRole!==nextRole){
    const team=active.current;lock("Your team role changed. Checking current permissions…",next);active.current={...team,role:nextRole};
-   void readTeam(true).then(()=>{if(active.current?.id===team.id&&active.current.role===nextRole)setError("Your team role changed. Records were reloaded with your current permissions.");}).catch(e=>{if(active.current?.id===team.id)setError((e as Error).message);});
+   void readTeam(true).then(()=>{if(active.current?.id===team.id&&active.current.role===nextRole)setError("Your team role changed. Records were reloaded with your current permissions.");}).catch(e=>{if(active.current?.id===team.id)setError(userError(e));});
   }
   else if(!active.current)setError("");
   sessionRef.current=next;setSession(next);return next;
@@ -80,7 +89,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=tr
    const result=await api(`/api/teams/${team.id}`,"PUT",{baseVersion:team.version,data:snapshot,accountId:current.user.userId});
    if(active.current?.id!==team.id||!validResult(generation,team.id,identity,team.role,result))return;accept(team.id,result);if(latest.current===snapshot){dirty.current=false;latest.current=result.data;replaceRef.current(result.data);}else{const rebased=rebaseWorkspace(snapshot,latest.current,result.data);dirty.current=true;latest.current=rebased;replaceRef.current(rebased);}setError("");setStatus(dirty.current?"Changes waiting to save":"Synced");
   }
-  catch(e){if(active.current?.id!==team.id||generation!==accessGeneration.current)return;const code=(e as Error & {status?:number}).status;if(code===401){lock("Your session ended. Sign in again to access your private team.");return;}blocked.current=!!code&&code>=400&&code<500;setError((e as Error).message);setStatus("Not synced");}
+  catch(e){if(active.current?.id!==team.id||generation!==accessGeneration.current)return;const code=(e as Error & {status?:number}).status;if(code===401){lock("Your session ended. Sign in again to access your private team.");return;}blocked.current=!!code&&code>=400&&code<500;setError(userError(e));setStatus("Not synced");}
   finally{if(request===saveRequest.current)saving.current=false;}
  };
  const markDirty=()=>{if(active.current){editRevision.current++;dirty.current=true;setStatus("Changes waiting to save");}};
@@ -113,7 +122,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=tr
     if(!validAccess(generation,team.id,identity,team.role))return;
     if(dirty.current){if(!blocked.current&&navigator.onLine)await save();return;}if(saving.current)return;
     const result=await api(`/api/teams/${team.id}`);await refreshSession();if(!dirty.current&&!saving.current&&active.current?.id===team.id&&validResult(generation,team.id,identity,team.role,result)&&(result.version!==active.current.version||JSON.stringify(result.members)!==JSON.stringify(active.current.members))){accept(team.id,result);latest.current=result.data;replaceRef.current(result.data);setStatus("Synced");}
-   }catch(e){if(generation!==accessGeneration.current||active.current?.id!==team.id)return;const code=(e as Error & {status?:number}).status;if(code===401||code===403)lock("Your session or team access ended. Sign in again to reopen your team.");else{setError((e as Error).message);setStatus("Connection needs attention");}}
+   }catch(e){if(generation!==accessGeneration.current||active.current?.id!==team.id)return;const code=(e as Error & {status?:number}).status;if(code===401||code===403)lock("Your session or team access ended. Sign in again to reopen your team.");else{setError(userError(e));setStatus("Connection needs attention");}}
    finally{checking=false;}
   };
   const timer=setInterval(()=>void sync(),5000);

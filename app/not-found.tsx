@@ -1,0 +1,1 @@
+export default function NotFound(){return <main className="workspace-recovery"><h1>Let’s find the right page.</h1><p>This address is unavailable. Open team access or return to the robot tools to continue.</p><p><a className="btn btn-primary" href="/">Open team access</a></p><p><a className="btn btn-secondary" href="/robot-lab">Open Robot Lab</a></p></main>;}

@@ -1,3 +1,4 @@
+import {userError} from "./user-errors";
 import {
   createContext,
   useContext,
@@ -186,7 +187,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
       if (!origin.original && current) { notify("A record with this identifier already exists. Your draft was kept."); return false; }
       if (origin.original && current) {
         try { record = mergeDraft(origin.original, record, current); }
-        catch (error) { notify((error as Error).message); return false; }
+        catch (error) { notify(userError(error)); return false; }
       }
     }
     if (collection === "tasks") {
@@ -265,7 +266,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
       const merged = mergeDraft(original, patch, current);
       setData(previous => ({...previous, ...merged}));
       return true;
-    } catch (error) { notify((error as Error).message); return false; }
+    } catch (error) { notify(userError(error)); return false; }
   }
   function removeRecord(collection: Collection, id: string) {
     if (draftScope !== scopeRef.current) { notify("Your account, team, season, or permissions changed. Reopen the record before removing it."); return; }

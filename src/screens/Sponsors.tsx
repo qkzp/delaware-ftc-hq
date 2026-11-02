@@ -1,3 +1,4 @@
+import {useViewPreference} from "../use-preferences";
 import {sponsorFollowUp} from "../reminders";
 import { useEffect, useState, type FormEvent } from "react";
 import {
@@ -87,7 +88,7 @@ export default function SponsorsPage() {
   const [search, setSearch] = useState("");
   const [county, setCounty] = useState("All counties");
   const [status, setStatus] = useState("All statuses");
-  const [view, setView] = useState<"list" | "board">("list");
+  const [view, setView] = useViewPreference("sponsorView");
   const [followOnly, setFollowOnly] = useState(false);
   const [editing, setEditing, saveDraft] = useRecordDraft("sponsors");
   const [error, setError] = useState("");

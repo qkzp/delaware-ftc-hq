@@ -1,3 +1,4 @@
+import {useViewPreference} from "../use-preferences";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
@@ -79,7 +80,7 @@ export default function TasksPage() {
     clearFocusRecord,
   } = useHQ();
   const members = cloud.shared ? [...cloud.shared.members.map(m => m.userId), "Unassigned"] : demoMembers;
-  const [view, setView] = useState<"board" | "list" | "plan">("board");
+  const [view, setView] = useViewPreference("taskView");
   const [focusTask, setFocusTask] = useState<{id:string;scope:string}|null>(null);
   const [scope, setScope] = useState("All tasks");
   const [query, setQuery] = useState("");

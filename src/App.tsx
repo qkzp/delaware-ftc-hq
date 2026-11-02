@@ -71,6 +71,25 @@ export function Workspace() {
             {storageError}
           </div>
         )}
+      {notice && (
+        <div className="toast" role="status" aria-live="polite">
+          <CheckCircle2 size={17} />
+          <span>{notice.message}</span>
+          {notice.action && (
+            <button
+              onClick={() => {
+                notice.action?.();
+                clearNotice();
+              }}
+            >
+              {notice.actionLabel}
+            </button>
+          )}
+          <button aria-label="Dismiss notification" onClick={clearNotice}>
+            <X size={15} />
+          </button>
+        </div>
+      )}
         <div key={role} className="page-surface">
           <div className="team-hub-surface" hidden={page!=="team"}>{(hubVisited||page==="team")&&<TeamHub/>}</div>
           <div hidden={page!=="robotlab"}>{(labVisited||page==="robotlab")&&<RobotLab/>}</div>
@@ -187,25 +206,7 @@ export function Workspace() {
           </div>
         </Modal>
       )}
-      {notice && (
-        <div className="toast" role="status" aria-live="polite">
-          <CheckCircle2 size={17} />
-          <span>{notice.message}</span>
-          {notice.action && (
-            <button
-              onClick={() => {
-                notice.action?.();
-                clearNotice();
-              }}
-            >
-              {notice.actionLabel}
-            </button>
-          )}
-          <button aria-label="Dismiss notification" onClick={clearNotice}>
-            <X size={15} />
-          </button>
-        </div>
-      )}
+
     </div>
   );
 }

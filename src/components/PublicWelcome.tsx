@@ -1,3 +1,4 @@
+import DisplayPreferences from "./DisplayPreferences";
 import { ArrowRight, CalendarDays, ClipboardList, FolderOpen, Wrench } from "lucide-react";
 import "./welcome.css";
 
@@ -11,6 +12,7 @@ export default function PublicWelcome({ accessReady, support }: { accessReady: b
       <nav aria-label="Welcome navigation"><a href="#workspace-features">The workspace</a><a href="/privacy">Privacy &amp; data</a><a className="welcome-member-link" href="/maintenance">Member help <ArrowRight size={15} aria-hidden="true"/></a></nav>
     </header>
     <main id="welcome-main">
+      <details className="welcome-display-options"><summary>Display settings</summary><DisplayPreferences/></details>
       <section className="welcome-hero" aria-labelledby="welcome-title">
         <div className="welcome-intro">
           <p className="welcome-eyebrow">A workspace for Delaware FTC teams</p>

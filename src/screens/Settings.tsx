@@ -1,3 +1,5 @@
+import {userError} from "../user-errors";
+import DisplayPreferences from "../components/DisplayPreferences";
 import { useRef, useState } from "react";
 import {
   ArrowRight,
@@ -46,6 +48,7 @@ export default function Settings() {
         title="Workspace settings"
         description="Team access, roles, details, and recoverable records."
       />
+      <DisplayPreferences/>
       <TeamAccess />
       <PrivacyControls />
       <div className="settings-layout">
@@ -351,7 +354,7 @@ export default function Settings() {
             <button
               className="btn btn-primary"
               onClick={async () => {
-                if(cloud.shared){try{const result=await api(`/api/teams/${cloud.shared.id}/import`,'POST',{baseVersion:cloud.shared.version,data:JSON.parse(restore)});await cloud.reload();setRestore(null);notify(result.missingFiles.length?`Backup restored. Re-upload attachments for: ${result.missingFiles.join(', ')}`:'Shared backup restored. Imported approvals need review.');}catch(error){notify((error as Error).message);}return;}
+                if(cloud.shared){try{const result=await api(`/api/teams/${cloud.shared.id}/import`,'POST',{baseVersion:cloud.shared.version,data:JSON.parse(restore)});await cloud.reload();setRestore(null);notify(result.missingFiles.length?`Backup restored. Re-upload attachments for: ${result.missingFiles.join(', ')}`:'Shared backup restored. Imported approvals need review.');}catch(error){notify(userError(error));}return;}
                 if (importData(restore)) setRestore(null);
               }}
             >
