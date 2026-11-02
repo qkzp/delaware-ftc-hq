@@ -33,7 +33,7 @@ const {
   STORAGE_KEY,
   RECOVERY_KEY,
   RecoveryRequiredError,
-} = await import(await moduleUrl("persistence"));
+} = await import(await moduleUrl("persistence", {"./actuators": await moduleUrl("actuators")}));
 function storage(initial = {}) {
   const values = new Map(Object.entries(initial));
   const api = {

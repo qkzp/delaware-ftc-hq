@@ -208,4 +208,22 @@ export interface Evidence extends Base {
   reviewedAt: string;
   archived: boolean;
 }
-export interface Part { id: string; name: string; subsystem: string; quantity: number; location: string; source: string; notes: string; }
+export interface ActuatorStats {
+  kind: "motor" | "servo";
+  model: string;
+  purpose: string;
+  configName: string;
+  port: string;
+  status: "Installed" | "Spare" | "Retired";
+  voltage?: number;
+  ratedRpm?: number;
+  measuredRpm?: number;
+  ticksPerRev?: number;
+  gearRatio?: number;
+  wheelDiameter?: number;
+  servoType: "Positional" | "Continuous rotation";
+  travelDegrees?: number;
+  speedSec60?: number;
+  torqueKgCm?: number;
+}
+export interface Part { actuator?: ActuatorStats; id: string; name: string; subsystem: string; quantity: number; location: string; source: string; notes: string; }

@@ -39,7 +39,7 @@ Production requires the operator-managed `MYFTC_READINESS_RECORD` runtime secret
 
 - Team messages: group chat and optional participant-only DMs, per-user blocking, explicit safety reports, multiple reviewed adult operators, and 1?30-day retention. DMs default off.
 - Awards: shared, sourced deadlines with time zones, submission state and mentor review; students and adults see the same dates.
-- Robot Lab: public local CSV motor-model training, simulated PID search, route preview and disabled Java scaffold export at `/robot-lab`. Real telemetry and hardware validation are required.
+- Robot Lab: shared motor/servo tracking (model, purpose, ports, RPM, encoder/gearing and servo type/speed/torque), tracker-based drivetrain estimates, public local CSV motor-model training, simulated PID search, route preview and disabled Java scaffold export at `/robot-lab`. Real telemetry and hardware validation are required.
 
 See [provider setup](docs/provider-setup.md) for Apple/email credentials, database migration and scheduled cleanup requirements.
 
@@ -95,6 +95,6 @@ Production sign-in supports Google, Microsoft and Apple OAuth and email links, b
 
 ## Verification status
 
-On November 2, 2026, all 174 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 291-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the public welcome page, privacy page, enrollment setup message, maintenance entry, session gate, and security headers. Isolated Chromium simulations also passed rendered contrast/semantics, mobile/tablet/desktop reflow, 200%/400% reflow equivalents and keyboard checks with fictional records. An actual screen-reader review, real devices and hosted provider flows remain outstanding.
+On November 2, 2026, all 177 automated tests passed; TypeScript, the Next.js production build, release fingerprint, 308-field inventory, and `npm audit` also passed (zero known dependency vulnerabilities). A local production-mode HTTP smoke check confirmed the public welcome page, privacy page, enrollment setup message, maintenance entry, session gate, and security headers. Isolated Chromium simulations also passed rendered contrast/semantics, mobile/tablet/desktop reflow, 200%/400% reflow equivalents and keyboard checks with fictional records. An actual screen-reader review, real devices and hosted provider flows remain outstanding.
 
 The GitHub remote is `https://github.com/qkzp/delaware-ftc-hq.git` and its listed website is `https://delaware-ftc-hq.vercel.app`. The GitHub Vercel status reported success for the existing main commit on November 2, 2026. This workspace has no local Vercel project link or OAuth/Cloudflare credentials; provider configuration and real data flows are not verified by that deployment status. Hosted two-account/device acceptance, phone/tablet/desktop, zoom/contrast and screen-reader review, vendor deletion/backup attestations and signed approvals remain outstanding. The release fingerprint is generated in `server/release-manifest.json` by `npm run build`.

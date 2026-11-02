@@ -421,7 +421,23 @@
     {
       "field": "workspace.parts",
       "type": "Part[]",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator",
+      "type": "ActuatorStats",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -437,7 +453,7 @@
     {
       "field": "workspace.parts[].id",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -453,7 +469,7 @@
     {
       "field": "workspace.parts[].name",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -469,7 +485,7 @@
     {
       "field": "workspace.parts[].subsystem",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -485,7 +501,7 @@
     {
       "field": "workspace.parts[].quantity",
       "type": "number",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -501,7 +517,7 @@
     {
       "field": "workspace.parts[].location",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -517,7 +533,7 @@
     {
       "field": "workspace.parts[].source",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -533,7 +549,7 @@
     {
       "field": "workspace.parts[].notes",
       "type": "string",
-      "purpose": "Track robot components and business product references",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Authorized team",
       "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
@@ -3075,6 +3091,262 @@
       "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
     },
     {
+      "field": "workspace.parts[].actuator.kind",
+      "type": "\"motor\" | \"servo\"",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.model",
+      "type": "string",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.purpose",
+      "type": "string",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.configName",
+      "type": "string",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.port",
+      "type": "string",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.status",
+      "type": "\"Installed\" | \"Spare\" | \"Retired\"",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.voltage",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.ratedRpm",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.measuredRpm",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.ticksPerRev",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.gearRatio",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.wheelDiameter",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.servoType",
+      "type": "\"Positional\" | \"Continuous rotation\"",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.travelDegrees",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.speedSec60",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
+      "field": "workspace.parts[].actuator.torqueKgCm",
+      "type": "number",
+      "purpose": "Track robot components, motor/servo specifications, RPM, purpose and business product references",
+      "accountableOwner": "Designated adult organization owner — not yet named",
+      "viewers": "Authorized team",
+      "storage": "D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",
+      "vendors": [
+        "Vercel hosting",
+        "Enabled Google Microsoft Apple OAuth and email sign-in",
+        "Cloudflare D1"
+      ],
+      "retention": "Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",
+      "deletion": "Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",
+      "approval": "PENDING purpose/necessity, retention, vendor and viewer review"
+    },
+    {
       "field": "database.teams.id",
       "type": "text(\"id\").primaryKey()",
       "purpose": "Support teams authorization, persistence, requests, consent or cleanup; inspect db/schema.ts and server/privacy.ts for exact use",
@@ -4393,7 +4665,7 @@
     {
       "field": "browser.robot-lab",
       "type": "external/runtime",
-      "purpose": "Numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions and route poses",
+      "purpose": "Motor/servo specifications in the public tracker, numeric motor telemetry, locally fitted ARX/PID parameters, hardware dimensions and route poses",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Role/host/provider dependent; verify before enabling",
       "storage": "Browser tab memory; no upload to a hosted model or robot connection",

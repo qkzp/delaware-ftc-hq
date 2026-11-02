@@ -261,7 +261,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
     if (scope !== scopeRef.current) { notify("Your account, team, season, or permissions changed. Your draft was kept."); return false; }
     if (!canManage) { notify("A student lead or mentor can make this change."); return false; }
     try {
-      const current = Object.fromEntries(Object.keys(patch).map(key => [key, dataRef.current[key as keyof AppData]]));
+      const current = Object.fromEntries(Object.keys(patch).map(key => [key, key === "parts" ? (dataRef.current.parts ?? []) : dataRef.current[key as keyof AppData]]));
       const merged = mergeDraft(original, patch, current);
       setData(previous => ({...previous, ...merged}));
       return true;
