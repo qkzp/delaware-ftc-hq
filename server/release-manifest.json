@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:f1c39b3411ae225557aec1fa688114f6a88cf2af872d3786fc2d219ebaff233a",
+  "releaseId": "sha256:286616c2052e15eb4f2563bee1e7f548c14cdfef11ad65cb78ad6a2b0736a751",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -407,8 +407,8 @@
       "sha256": "53aeba0a4d0d585defa967161fc969dcb35a58e2a50cc54b8bb03790c012f1a8"
     },
     "src/atelier.css": {
-      "bytes": 26284,
-      "sha256": "01fdb5ae30e984fe62af568c0bfbc059c8a01ca8bb4d9d1ab932f6f0f2bb8657"
+      "bytes": 29966,
+      "sha256": "14d3de10641e5a0db3342eafd2e517ee02fb4971ec4278771cc0c859be135611"
     },
     "src/cloud.ts": {
       "bytes": 13069,
@@ -535,8 +535,8 @@
       "sha256": "5024b220911976337990e258f3324389fa28b33386be34a937079839bda4ded1"
     },
     "src/components/WheelSpeedCalculator.tsx": {
-      "bytes": 7575,
-      "sha256": "1f6eac492f164023ca096defa99908f422bce920a368e7bb33485c4af503fb35"
+      "bytes": 8674,
+      "sha256": "cf19fed482484c57f0443692d1cc3ff08c27c02821b63e7c254090e71db3ede7"
     },
     "src/components/WorkspaceChrome.tsx": {
       "bytes": 6786,

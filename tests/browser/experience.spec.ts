@@ -16,7 +16,7 @@ test("display preferences and view choices survive reloads and device theme chan
 });
 
 test("double taps add one stage and tap feedback respects reduced motion",async({page})=>{
- await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/tests/browser/?mode=publiclab");await page.getByRole("button",{name:"Wheel RPM & speed",exact:true}).click();const add=page.getByRole("button",{name:"Add transmission stage",exact:true});await add.dblclick();await expect(page.locator(".wheel-calculator fieldset")).toHaveCount(2);expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("tap-confirm");await page.emulateMedia({reducedMotion:"reduce"});expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
+ await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/tests/browser/?mode=publiclab");await page.getByRole("button",{name:"Wheel RPM & speed",exact:true}).click();await page.getByRole("button",{name:"Use gears, belts or chain",exact:true}).click();await page.getByText("More than one drive stage",{exact:true}).click();const add=page.getByRole("button",{name:"Add another stage",exact:true});await add.dblclick();await expect(page.locator(".wheel-calculator fieldset")).toHaveCount(2);expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("tap-confirm");await page.emulateMedia({reducedMotion:"reduce"});expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
 });
 
 test("a fresh team has meaningful content and next steps on every screen and tool",async({page})=>{
