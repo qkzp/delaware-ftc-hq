@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:f355398172388943c2faafaa2d3fa6cd56ae98980a96c01b25466fc9809f4af5",
+  "releaseId": "sha256:615d04bad1154fb2ed6b8038cbe8de4c58ed40b7d8eadf8949c2e3a2ea725fba",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -11,8 +11,8 @@
       "sha256": "d4b98c237b432e7944b29e8357874edacbf27b72200271bda55fe8519a10d175"
     },
     "README.md": {
-      "bytes": 20270,
-      "sha256": "6b5887652b1f49582a8e4dd0f0899c46b7f4f1044521c1a3cc6720ff1f8f9c5b"
+      "bytes": 20620,
+      "sha256": "191210c78b88b01915efb116b0f1c68fd4421b1c3059920ab211d566dc1d02d2"
     },
     "app/api/[...segments]/route.ts": {
       "bytes": 2052,
@@ -103,8 +103,12 @@
       "sha256": "b3a14d5d21cdb376e1eb52b26d517d4e6b64ff3e04432ce6ccf8e509596fb8dd"
     },
     "docs/data-inventory.json": {
-      "bytes": 422069,
-      "sha256": "80bd4e5e4c6f57982b04566ed1eb58f0ede9ab51d557a774e2bb06f141d91d07"
+      "bytes": 422075,
+      "sha256": "ecec14e14d69355b4022683a5b5a6803094ef4adffe8f05ae8a79ece26edffab"
+    },
+    "docs/field-layout.md": {
+      "bytes": 2205,
+      "sha256": "82eae2c3fcecbe261ed8cb0c12c5a261ec6be5988294bcec6f4a23f08a5fe610"
     },
     "docs/launch-acceptance.md": {
       "bytes": 9264,
@@ -206,6 +210,10 @@
       "bytes": 197,
       "sha256": "31ce05c89cf57883c2f3aa98d335f06bec6781badfe92447aae3b1cd9ea54105"
     },
+    "public/fields/biobuzz-team16236-2026-v1.png": {
+      "bytes": 294740,
+      "sha256": "28aa9785b829a9cd809fb5c573965d7e6963e692ca1b8018b8ade9a3b1e703bb"
+    },
     "public/fonts/barlowcondensed-500.woff2": {
       "bytes": 21424,
       "sha256": "460f141ec8f6c9a1516bfd2bd9fe71656246d7a9d04a0955faf53158d8970c4c"
@@ -243,12 +251,12 @@
       "sha256": "37784b44044a4ffd9256702b7c0982c37e5c8887ba90c6dca0479aea93dc898d"
     },
     "public/static-cache-sw.js": {
-      "bytes": 1397,
-      "sha256": "a5d4eb96e296b7b15a105809aaac75fc62617e42d4f7b90fc5dcc447ca531c34"
+      "bytes": 1453,
+      "sha256": "895bca43d86577e21889c5ea29557f64c1d2d322cf1321918e75ed2c401b62e0"
     },
     "public/third-party-notices.txt": {
-      "bytes": 38023,
-      "sha256": "e5730434e18b743e425afdf76687a1a4bec175ed6c5d55203f1f0b3fb60855f8"
+      "bytes": 38485,
+      "sha256": "7a64aaa90e6d2c7c786c714932ce9d70761532d164997c508e2db6ce946e58bc"
     },
     "scripts/build-verified.sh": {
       "bytes": 661,
@@ -275,8 +283,8 @@
       "sha256": "bd9c98fc68f29d975fe10508dfc9029bb681dc5789a62861d5c938bdea2064bb"
     },
     "scripts/data-inventory.mjs": {
-      "bytes": 15251,
-      "sha256": "8b2f0005c825f029857a8105508269e81be0dbe9679e0fe43e74ddca280d4099"
+      "bytes": 15257,
+      "sha256": "54e74b256dcec38670906fddbe10aac91fa1fb4838b1034afb499d8985023e71"
     },
     "scripts/execution-profile.mjs": {
       "bytes": 624,
@@ -539,8 +547,8 @@
       "sha256": "1282e35dfaf7df742adac256cc122f0a5dcd947393b53ab82f571e074aa4e9ed"
     },
     "src/components/VisualRouteEditor.tsx": {
-      "bytes": 6024,
-      "sha256": "5024b220911976337990e258f3324389fa28b33386be34a937079839bda4ded1"
+      "bytes": 8107,
+      "sha256": "0170ab5c999fe3044ff47d38f0a99ff31958cbb4490763119f34f919eb29ef0c"
     },
     "src/components/WheelSpeedCalculator.tsx": {
       "bytes": 8827,
@@ -602,6 +610,10 @@
       "bytes": 9009,
       "sha256": "ca6daf1120ff7b439175a2e7a7b3ea368aee5ef3cd081771d3cb86816dabb1f0"
     },
+    "src/field-layouts.ts": {
+      "bytes": 678,
+      "sha256": "4bfa2218420c395aea6284d5eab667dc38350e24e3e4ac2e82cc4781e28b5129"
+    },
     "src/fonts.css": {
       "bytes": 2971,
       "sha256": "6511e240273e975c7d600412d08d1e63c3766314afbe0b8393463d0003ef2008"
@@ -619,8 +631,8 @@
       "sha256": "0432d73b4671cd240f67dc16f23f2a67e865367848d83605e650073dd136630b"
     },
     "src/preferences.ts": {
-      "bytes": 2356,
-      "sha256": "2edc8200239e880f9409124f5d2cc0cb8bab569e536f6acf4816c3a5354ba11b"
+      "bytes": 2449,
+      "sha256": "26de39451bc0a8e49208686abb0b936d25988ef29d534f2e3f0464247bfc5968"
     },
     "src/redesign.css": {
       "bytes": 15829,
@@ -691,8 +703,8 @@
       "sha256": "d17dd0e3ecb2c03257e88eebe84d97c764bcf6c5a594e1baa0354c28f49dfba6"
     },
     "src/screens/RobotLab.tsx": {
-      "bytes": 17628,
-      "sha256": "41d7a7ef51996d85a3795c66854efe404d58904ed53819f7cbc6561f5bc6a1ac"
+      "bytes": 18099,
+      "sha256": "cd6bdeea87081940de1d79b8a7c82e4ec4d24618d39b7b2dc0d592d37dadaca9"
     },
     "src/screens/Settings.tsx": {
       "bytes": 14863,
@@ -719,8 +731,8 @@
       "sha256": "7474f9c24ed9b97f1f1f91645223c668b5fb2a584dbd3f78f8f160c28ca145db"
     },
     "src/screens/robot-lab.css": {
-      "bytes": 3876,
-      "sha256": "cc3bf58be35ec075de3beb399c7c1e71a2b14cfeb7fbbf9bf07001d5ee2ffaa7"
+      "bytes": 4085,
+      "sha256": "248aa38cece280a58ea18387ed3cd40c23cfc92d47abc51649cc9f02b997ba70"
     },
     "src/screens/tasks-calendar.css": {
       "bytes": 21903,
@@ -755,8 +767,8 @@
       "sha256": "0679f8ed879a9b83aab6fe7f8f8909afb424f923d9aa43c4b851d68034ed7062"
     },
     "src/use-preferences.ts": {
-      "bytes": 1235,
-      "sha256": "baf45e4e34720ad840e5dc35d588afe1f59167e9bb89d7c0568d602176a2b705"
+      "bytes": 1247,
+      "sha256": "65fc6e2e3e65bc3cc65023a93b2b98ba00bb3210b0330697de55a000c71166c1"
     },
     "src/user-errors.ts": {
       "bytes": 761,
@@ -792,6 +804,18 @@
     }
   },
   "sourceChanges": [
-    "src/components/ExperienceRuntime.tsx"
+    "README.md",
+    "docs/data-inventory.json",
+    "public/static-cache-sw.js",
+    "public/third-party-notices.txt",
+    "scripts/data-inventory.mjs",
+    "src/components/VisualRouteEditor.tsx",
+    "src/preferences.ts",
+    "src/screens/RobotLab.tsx",
+    "src/screens/robot-lab.css",
+    "src/use-preferences.ts",
+    "docs/field-layout.md",
+    "public/fields/biobuzz-team16236-2026-v1.png",
+    "src/field-layouts.ts"
   ]
 }

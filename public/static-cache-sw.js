@@ -1,6 +1,6 @@
 /* Public immutable assets only. Never cache pages, sessions, API responses or team files. */
 const CACHE="myftc-public-assets-v1";
-const eligible=url=>url.origin===self.location.origin&&(url.pathname.startsWith("/_next/static/")||/^\/fonts\/[^/]+\.(?:woff2|woff)$/.test(url.pathname)||url.pathname==="/favicon.svg");
+const eligible=url=>url.origin===self.location.origin&&(url.pathname.startsWith("/_next/static/")||/^\/fonts\/[^/]+\.(?:woff2|woff)$/.test(url.pathname)||url.pathname==="/favicon.svg"||url.pathname==="/fields/biobuzz-team16236-2026-v1.png");
 self.addEventListener("install",event=>{event.waitUntil(self.skipWaiting());});
 self.addEventListener("activate",event=>{event.waitUntil((async()=>{try{for(const name of await caches.keys())if(name.startsWith("myftc-public-assets-")&&name!==CACHE)await caches.delete(name);}catch{}await self.clients.claim();})());});
 self.addEventListener("fetch",event=>{if(event.request.method!=="GET"||!eligible(new URL(event.request.url)))return;event.respondWith((async()=>{

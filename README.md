@@ -114,3 +114,5 @@ The landing page and shared application surfaces now use an original Apple-inspi
 Wheel speed includes an editable speed-target warning and an optional illustrative 100% load thermal model with two-setup comparison, threshold-crossing markers, accessible chart values and JSON export. Default temperatures and thermal parameters are examples, not motor-specific ratings or a verified cutoff. See [thermal model](docs/thermal-model.md).
 
 The thermal chart defaults to a brushed-DC motor algorithm: estimate terminal resistance from datasheet voltage/stall current, clamp motor-side current, calculate temperature-dependent I-squared-R losses and integrate the thermal response. Editable example electrical specs are not a verified motor profile or firmware cutoff. The manual heat-input method remains available.
+
+The autonomous planner includes a BIOBUZZ 2026-27 field illustration credited to Team Juice 16236, a selectable blank practice field, and conservative approximate screening for the central HIVE. Other field elements and real-world clearance require separate review; the field choice is a device preference. See [field layout](docs/field-layout.md).

@@ -771,3 +771,7 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 
+
+BIOBUZZ community field illustration
+Copyright and credit: Team Juice 16236. The creator requests attribution when used in public projects. Source and permission statement: https://www.reddit.com/r/FTC/comments/1weleaj/biobuzz_custom_field_images_meepmeep_compatible/
+The illustration is an independent reference and is not an official field drawing. Verify dimensions using FIRST field resources: https://ftc-resources.firstinspires.org/ftc/archive/2027/field

@@ -6089,7 +6089,7 @@
     {
       "field": "browser.display-preferences",
       "type": "external/runtime",
-      "purpose": "Theme (system/light/dark), relative text scale, motion choice and preferred task/calendar/sponsor views; forward-compatible preference fields are preserved during updates",
+      "purpose": "Theme (system/light/dark), relative text scale, motion choice and preferred task/calendar/sponsor/field views; forward-compatible preference fields are preserved during updates",
       "accountableOwner": "Designated adult organization owner — not yet named",
       "viewers": "Role/host/provider dependent; verify before enabling",
       "storage": "Device localStorage under stable myftcspace:preferences; in-memory fallback if blocked",

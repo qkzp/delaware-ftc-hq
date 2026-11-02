@@ -1,0 +1,11 @@
+# BIOBUZZ route field
+
+The default 2026-27 BIOBUZZ visual reference is an independent illustration by **Team Juice 16236**, used with credit as requested by its creator in the [original public post](https://www.reddit.com/r/FTC/comments/1weleaj/biobuzz_custom_field_images_meepmeep_compatible/). The file is included locally and may be cached as a public asset. It is not an official FIRST field drawing, and no endorsement is implied.
+
+The image is mapped across the planner's existing nominal 144 by 144 inch square. X increases right and Y increases up from the lower-left corner; blue is at the top of this illustration and red at the bottom. Heading is clockwise from forward. Image alignment and dimensions are approximate, including perimeter and tile tolerances. Verify against the current [FIRST field resources and CAD](https://ftc-resources.firstinspires.org/ftc/archive/2027/field) and the actual field.
+
+For conservative screening, the app adds one 54 by 54 inch approximate central HIVE bounding box with its lower-left at (45, 45). This is intentionally a rough over-approximation, not a CAD-derived collision model. A circular swept robot footprint is expanded around this box and around team-entered rectangular obstacles. Route preview and Java generation are blocked when these simplified checks detect a conflict. The larger rectangle may flag space a particular robot could physically pass through, and it can still omit other hazards.
+
+The image, flowers, overhead components, moving HIVE parts, game pieces, AprilTags, other robots and game rules are not automatically modeled or checked. Add appropriate obstacles and verify all clearances, robot dimensions, localization and the full route separately. Generated Java remains disabled until reviewed and has not been tested on a robot.
+
+Selecting **Blank practice field** removes the automatic HIVE check, clearly identifies that no game elements are automatically checked, and keeps team-entered obstacles. This selection is saved in the browser's device preferences; it is not saved in a team robot profile. Exported route JSON records the selected field and automatic obstacles so the recipient can see the basis for screening.

@@ -6,6 +6,6 @@ export function usePreferences(){
  const update=useCallback((patch:Partial<Preferences>)=>{try{setPreferences(writePreferences(patch));setStored(true);window.dispatchEvent?.(new Event("myftc-preferences"));}catch{setPreferences(previous=>({...previous,...patch}));setStored(false);rememberPreferences(patch);window.dispatchEvent?.(new Event("myftc-preferences"));}},[]);
  return {preferences,update,stored};
 }
-export function useViewPreference<K extends "taskView"|"calendarView"|"sponsorView">(key:K):[Preferences[K],(value:Preferences[K])=>void]{
+export function useViewPreference<K extends "taskView"|"calendarView"|"sponsorView"|"fieldView">(key:K):[Preferences[K],(value:Preferences[K])=>void]{
  const {preferences,update}=usePreferences();return [preferences[key],value=>update({[key]:value})];
 }
