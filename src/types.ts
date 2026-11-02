@@ -1,3 +1,4 @@
+import type {RobotHardware,Waypoint,MotorModel} from "./robot-lab";
 export type Role = "student" | "lead" | "mentor" | "admin";
 export type Page =
   | "home"
@@ -39,6 +40,7 @@ export interface Task extends Base {
   comments: { text: string; date: string; author: string }[];
 }
 export interface TeamEvent extends Base {
+  awardReminderDays?:number;
   awardName?:string;
   awardSubmitted?:boolean;
   awardTimezone?:string;
@@ -63,6 +65,9 @@ export interface TeamEvent extends Base {
   recurring: "None" | "Weekly";
 }
 export interface Sponsor extends Base {
+  firstEmailSentAt?: string;
+  responseReceivedAt?: string;
+  followUpEmailSentAt?: string;
   name: string;
   county: string;
   website: string;
@@ -96,6 +101,7 @@ export interface Sponsor extends Base {
   history: { date: string; text: string }[];
 }
 export interface Grant extends Base {
+  reminderDays?: number;
   name: string;
   source: string;
   checked: string;
@@ -150,6 +156,7 @@ export interface Announcement extends Base {
   type: "Decision" | "Update";
 }
 export interface AppData {
+  robotLab?: RobotLabData;
   evidence?: Evidence[];
   parts?: Part[];
   schemaVersion: 1;
@@ -227,3 +234,12 @@ export interface ActuatorStats {
   torqueKgCm?: number;
 }
 export interface Part { actuator?: ActuatorStats; id: string; name: string; subsystem: string; quantity: number; location: string; source: string; notes: string; }
+
+export interface RouteObstacle { id:string; name:string; x:number; y:number; width:number; height:number; }
+export interface RobotProfile { id:string; name:string; robotName:string; season:string; hardware:RobotHardware; route:Waypoint[]; obstacles:RouteObstacle[]; archived:boolean; }
+export interface MotorObservation { time:number; rpm:number; current?:number; temperature?:number; power?:number; velocity?:number; }
+export interface MotorTest { id:string; profileId:string; partId:string; recordedAt:string; name:string; source:"manual"|"csv"; encoderTicksPerRev?:number; notes:string; samples:MotorObservation[]; model?:MotorModel; }
+export interface ServoPreset { name:string; command:number; }
+export interface ServoCalibration { servoType:"Positional"|"Continuous rotation"; id:string; profileId:string; partId:string; direction:"Forward"|"Reverse"; minimum:number; maximum:number; neutral:number; presets:ServoPreset[]; reviewedAt:string; notes:string; }
+export interface MaintenanceItem { id:string; profileId:string; partId:string; title:string; due:string; intervalDays:number; owner:string; notes:string; lastCompleted:string; done:boolean; }
+export interface RobotLabData { profiles:RobotProfile[]; tests:MotorTest[]; calibrations:ServoCalibration[]; maintenance:MaintenanceItem[]; }

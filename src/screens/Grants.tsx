@@ -560,23 +560,9 @@ export default function GrantsPage() {
                 <Field label="Assigned owner">
                   {cloud.shared ? <select required value={editing.owner} onChange={e=>patch("owner",e.target.value)}>{cloud.shared.members.map(m=><option value={m.userId} key={m.userId}>{m.name}</option>)}</select> : <input required value={editing.owner} onChange={e=>patch("owner",e.target.value)}/>}
                 </Field>
-                <Field
-                  label="Reminder plan"
-                  hint="Shown in this record; no automatic notifications are sent."
-                >
-                  <select
-                    value={editing.reminder}
-                    onChange={(e) => patch("reminder", e.target.value)}
-                  >
-                    {[
-                      "One week before internal deadline",
-                      "Three days before internal deadline",
-                      "Weekly check-in",
-                      "At the next team meeting",
-                      "No reminder",
-                    ].map((r) => (
-                      <option key={r}>{r}</option>
-                    ))}
+                <Field label="Remind before grant deadline" hint="Appears in Team updates before the earlier internal or external deadline, until submitted or closed. No email is sent.">
+                  <select value={editing.reminderDays??(editing.reminder==="No reminder"?-1:editing.reminder==="Three days before internal deadline"?3:7)} onChange={event=>setEditing({...editing,reminderDays:Number(event.target.value),reminder:Number(event.target.value)<0?"No reminder":`${event.target.value} days before earliest deadline`})}>
+                    {[-1,1,3,7,14,30,60].map(days=><option key={days} value={days}>{days<0?"Off":`${days} days before`}</option>)}
                   </select>
                 </Field>
                 <Field label="Linked documents">

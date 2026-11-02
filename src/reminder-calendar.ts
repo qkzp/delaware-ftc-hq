@@ -1,0 +1,13 @@
+import type {AppData} from "./types";
+import {legacyGrantDays,sponsorFollowUp} from "./reminders";
+const escape=(value:string)=>value.replace(/\\/g,"\\\\").replace(/\r?\n/g,"\\n").replace(/;/g,"\\;").replace(/,/g,"\\,");
+const stamp=(date:Date)=>date.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
+export function reminderCalendar(data:AppData,userId:string,manages:boolean,now=new Date()){
+ const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//MyFTCSpace//Team reminders//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH"];
+ function event(id:string,title:string,date:string,days:number,description:string,timed=false){lines.push("BEGIN:VEVENT",`UID:${encodeURIComponent(data.teamId+":"+id)}@myftcspace`,`DTSTAMP:${stamp(now)}`,timed?`DTSTART:${stamp(new Date(date))}`:`DTSTART;VALUE=DATE:${date.replace(/-/g,"")}`,`SUMMARY:${escape(title)}`,`DESCRIPTION:${escape(description)}`,"BEGIN:VALARM",`TRIGGER:${days===0?"PT0S":`-P${days}D`}`,"ACTION:DISPLAY",`DESCRIPTION:${escape(title)}`,"END:VALARM","END:VEVENT");}
+ for(const g of data.grants){const due=[g.internalDeadline,g.deadline].filter(Boolean).sort()[0],days=legacyGrantDays(g);if(due&&days>=0&&!["Submitted","Awarded","Not Awarded","Closed"].includes(g.status)&&(manages||g.owner===userId))event("grant:"+g.id,"Grant: "+g.name,due,days,"Prepare the application before this deadline. Recheck the organizer's source and team submission status.");}
+ for(const a of data.events)if(a.awardName&&!a.awardSubmitted&&(a.awardReminderDays??7)>=0)event("award:"+a.id,"Award: "+a.awardName,a.date,a.awardReminderDays??7,`Due ${a.date}${a.time?" at "+a.time:""} ${a.awardTimezone||"America/New_York"}. Verify the stated time; this calendar entry is date-only.`);
+ if(manages)for(const s of data.sponsors){const follow=sponsorFollowUp(s);if(follow)event("sponsor:"+s.id,"Send sponsorship follow-up: "+s.name,follow.automatic?new Date(follow.at).toISOString():follow.date,0,"Check your sent mail and inbox. No reply or follow-up has been recorded in the app. Send outreach from your team's approved email system.",follow.automatic);}
+ for(const m of data.robotLab?.maintenance||[])if(!m.done)event("maintenance:"+m.id,"Robot maintenance: "+m.title,m.due,7,m.notes||"Complete and record the robot maintenance check.");
+ lines.push("END:VCALENDAR");return lines.map(line=>{const chunks:string[]=[];let current="",bytes=0;for(const char of line){const size=new TextEncoder().encode(char).length;if(bytes+size>74){chunks.push(current);current=" ";bytes=1;}current+=char;bytes+=size;}chunks.push(current);return chunks.join("\r\n");}).join("\r\n")+"\r\n";
+}

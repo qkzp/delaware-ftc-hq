@@ -1,3 +1,4 @@
+import {sponsorFollowUp} from "../reminders";
 import {useState} from "react";
 import {ArrowRight,ArrowUpRight,CalendarDays,Check,Circle,CircleDashed,Crosshair,FileText,Flag,MessageSquare,PanelRight,Play,Plus,TriangleAlert} from "lucide-react";
 import {useHQ} from "../store";
@@ -27,7 +28,7 @@ function OverviewWorkspace(){
  const upcoming=[...data.events].filter(event=>event.date>=today).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)),competition=upcoming.find(event=>event.type==="Competition");
  const resources=data.resources.filter(resource=>!resource.archived&&(canManage||resource.visibility!=="private"&&resource.approved));
  const cad=resources.find(resource=>resource.kind==="CAD"),code=resources.find(resource=>resource.kind==="Code"),buildLog=resources.find(resource=>resource.kind==="Build log");
- const sponsors=canManage?data.sponsors.filter(sponsor=>sponsor.followUp&&sponsor.followUp<=today&&!["Committed","Declined","Do Not Contact"].includes(sponsor.status)):[];
+ const sponsors=canManage?data.sponsors.filter(sponsor=>{const follow=sponsorFollowUp(sponsor);return follow&&(follow.automatic?Date.now()>=follow.at:follow.date<=today);}):[];
  const grants=canManage?data.grants.filter(grant=>grant.status==="Needs Mentor Review"):[];
  const updates=[...data.announcements].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,3);
  function complete(task:Task){

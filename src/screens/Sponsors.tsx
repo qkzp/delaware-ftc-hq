@@ -1,3 +1,4 @@
+import {sponsorFollowUp} from "../reminders";
 import { useEffect, useState, type FormEvent } from "react";
 import {
   ArrowUpRight,
@@ -60,10 +61,7 @@ const normalizedDomain = (value: string) => {
     return "";
   }
 };
-const overdue = (s: Sponsor) =>
-  !!s.followUp &&
-  s.followUp <= today() &&
-  !["Committed", "Declined", "Do Not Contact"].includes(s.status);
+const overdue = (s:Sponsor) => {const follow=sponsorFollowUp(s);return !!follow&&(follow.automatic?Date.now()>=follow.at:follow.date<=today());};
 const tone = (s: Sponsor["status"]) =>
   s === "Committed"
     ? "green"
@@ -434,7 +432,7 @@ export default function SponsorsPage() {
                     </td>
                     <td>
                       <span className={overdue(s) ? "funding-due" : ""}>
-                        {dateLabel(s.followUp)}
+                        {dateLabel(sponsorFollowUp(s)?.date||"")}
                         {overdue(s) && " · Due"}
                       </span>
                     </td>
@@ -506,7 +504,7 @@ export default function SponsorsPage() {
                           <strong>{s.contacted ? "Yes" : "No"}</strong>
                         </span>
                         <span className={overdue(s) ? "funding-due" : ""}>
-                          {dateLabel(s.followUp)}
+                          {dateLabel(sponsorFollowUp(s)?.date||"")}
                         </span>
                       </div>
                     </button>
@@ -669,6 +667,10 @@ export default function SponsorsPage() {
                   ))}
                 </select>
               </Field>
+              <Field label="First sponsorship email sent" hint="Record when your team actually sent the first email outside this app. An unanswered-email reminder starts 96 hours later."><input type="datetime-local" value={editing.firstEmailSentAt?new Date(Date.parse(editing.firstEmailSentAt)-new Date(editing.firstEmailSentAt).getTimezoneOffset()*60000).toISOString().slice(0,16):""} onChange={event=>patch("firstEmailSentAt",event.target.value?new Date(event.target.value).toISOString():"")}/></Field>
+              <Field label="Response received" hint="A recorded response stops the automatic four-day follow-up reminder."><input type="datetime-local" value={editing.responseReceivedAt?new Date(Date.parse(editing.responseReceivedAt)-new Date(editing.responseReceivedAt).getTimezoneOffset()*60000).toISOString().slice(0,16):""} onChange={event=>patch("responseReceivedAt",event.target.value?new Date(event.target.value).toISOString():"")}/></Field>
+              <Field label="Follow-up email sent" hint="Record a follow-up sent outside the app to clear the unanswered first-email reminder."><input type="datetime-local" value={editing.followUpEmailSentAt?new Date(Date.parse(editing.followUpEmailSentAt)-new Date(editing.followUpEmailSentAt).getTimezoneOffset()*60000).toISOString().slice(0,16):""} onChange={event=>patch("followUpEmailSentAt",event.target.value?new Date(event.target.value).toISOString():"")}/></Field>
+              {editing.firstEmailSentAt&&sponsorFollowUp(editing)?.automatic&&<p>Unanswered first-email follow-up due: {new Date(sponsorFollowUp(editing)!.at).toLocaleString()}. Check your sent folder and inbox; the app cannot detect delivery or replies.</p>}
               <Field label="Next follow-up">
                 <input
                   type="date"

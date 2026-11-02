@@ -1,3 +1,4 @@
+import TeamReminders from "./components/TeamReminders";
 import { useEffect, useState } from "react";
 import {ArrowRight,CheckCircle2,X} from "lucide-react";
 import type { Page } from "./types";
@@ -112,11 +113,7 @@ export function Workspace() {
       </Modal>}
       {notifications && (
         <Modal title="Team updates" onClose={() => setNotifications(false)}>
-          <h3>Needs attention</h3>
-          {data.tasks.filter(t=>t.status!=='Done'&&(t.owner===myOwner||canManage)&&(!!t.blockedReason||t.dependencies.some(id=>data.tasks.find(d=>d.id===id)?.status!=='Done')||(t.due&&t.due<=new Date().toLocaleDateString('en-CA')))).slice(0,6).map(t=><button className="search-result" key={t.id} onClick={()=>{navigate('tasks');setNotifications(false);}}><span>{t.title}<small>{t.blockedReason?`Blocked: ${t.blockedReason}`:t.due?`Due ${t.due}`:'Linked dependency needs attention'}</small></span><ArrowRight size={16}/></button>)}
-          {canManage&&data.sponsors.filter(s=>s.followUp&&s.followUp<=new Date().toLocaleDateString('en-CA')&&!['Committed','Declined','Do Not Contact'].includes(s.status)).map(s=><button className="search-result" key={s.id} onClick={()=>{navigate('sponsors');setNotifications(false);}}><span>{s.name}<small>Sponsor follow-up due {s.followUp}</small></span><ArrowRight size={16}/></button>)}
-          {data.grants.filter(g=>g.status!=='Closed'&&g.deadline&&g.deadline<=new Date(Date.now()+7*86400000).toLocaleDateString('en-CA')).map(g=><button className="search-result" key={g.id} onClick={()=>{navigate('grants');setNotifications(false);}}><span>{g.name}<small>Grant deadline {g.deadline} · {g.status}</small></span><ArrowRight size={16}/></button>)}
-          <p className="privacy-note">In-app reminders use your team’s records. Check this list when you open the app; no email is sent.</p>
+          <TeamReminders onClose={()=>setNotifications(false)}/>
           {data.announcements.length ? (
             data.announcements.map((a) => (
               <article key={a.id} className="notification-item">

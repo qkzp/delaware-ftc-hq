@@ -1,3 +1,5 @@
+import {buildReminders} from "../reminders";
+import {useReminderTime} from "./TeamReminders";
 import {Bell,ChevronDown,HelpCircle,Plus,Search,Settings2,ShieldCheck,UserRound,UserRoundPlus} from "lucide-react";
 import {useHQ} from "../store";
 import {navigation,pageLabels} from "../navigation";
@@ -8,6 +10,7 @@ type Props={onSearch:()=>void;onCreate:()=>void;onAccount:()=>void;onUpdates:()=
 
 export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,onHelp}:Props){
  const {data,cloud,page,setPage,role,setRole,myOwner}=useHQ();
+ const reminderCount=buildReminders(data,myOwner,role!=="student",useReminderTime()).length;
  const mine=data.tasks.filter(task=>task.owner===myOwner&&task.status!=="Done").length;
  const roleName=role==="admin"?"Team admin":role==="mentor"?"Mentor / coach":role==="lead"?"Student lead":"Student";
  const groups=[
@@ -27,7 +30,7 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
    </button>
    <div className="sidebar-quick-actions">
     <button className="workspace-search" aria-label="Search Ctrl K — search workspace" onClick={onSearch}><Search size={16} aria-hidden="true"/><span>Search</span> <kbd>Ctrl K</kbd></button>
-    <button className="sidebar-utility sidebar-inbox" aria-label="Team updates" onClick={onUpdates}><Bell size={16} aria-hidden="true"/>Team updates</button>
+    <button className="sidebar-utility sidebar-inbox" onClick={onUpdates}><Bell size={16} aria-hidden="true"/>Team updates {reminderCount>0&&<span className="nav-count">{reminderCount}</span>}</button>
    </div>
    <div className="sidebar-navigation-scroll">
     <nav className="workspace-tabs" aria-label="Main navigation">
@@ -59,7 +62,7 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
   <div className="mobile-section-bar">
    <label><span className="sr-only">Workspace section</span><select className="mobile-navigation" aria-label="Workspace section" value={page} onChange={event=>setPage(event.target.value as Page)}>{navigation.map(item=><option key={item.page} value={item.page}>{item.label}</option>)}<option value="onboarding">New member checklist</option><option value="settings">Team access & settings</option></select></label>
    {cloud.shared?<span><ShieldCheck size={13} aria-hidden="true"/>{roleName}</span>:<select className="mobile-role-select" aria-label="Preview role on mobile" value={role} onChange={event=>setRole(event.target.value as Role)}><option value="student">Student demo</option><option value="lead">Lead demo</option><option value="mentor">Mentor demo</option><option value="admin">Admin demo</option></select>}
-   <button className="chrome-icon" aria-label="Open team updates" onClick={onUpdates}><Bell size={17}/></button>
+   <button className="chrome-icon" onClick={onUpdates}><Bell size={17} aria-hidden="true"/><span className="sr-only">Open team updates</span> {reminderCount>0&&<span className="reminder-count">{reminderCount}</span>}</button>
   </div>
  </>;
 }

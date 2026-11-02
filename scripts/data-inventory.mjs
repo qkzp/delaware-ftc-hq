@@ -6,30 +6,34 @@ import path from "node:path";
 // Enumerate the actual typed fields instead of maintaining a second hand-copied schema.
 const root=fileURLToPath(new URL("..",import.meta.url));
 const source=ts.createSourceFile("types.ts",readFileSync(path.join(root,"src/types.ts"),"utf8"),ts.ScriptTarget.Latest,true);
-const interfaces=new Map(source.statements.filter(ts.isInterfaceDeclaration).map(n=>[n.name.text,n]));
+const robotSource=ts.createSourceFile("robot-lab.ts",readFileSync(path.join(root,"src/robot-lab.ts"),"utf8"),ts.ScriptTarget.Latest,true);
+const declarations=[...source.statements,...robotSource.statements];
+const interfaces=new Map(declarations.filter(ts.isInterfaceDeclaration).map(n=>[n.name.text,n]));
+const aliases=new Map(declarations.filter(ts.isTypeAliasDeclaration).map(n=>[n.name.text,n]));
 const fields=[];
 function collect(name,prefix,seen=[]){
  if(seen.includes(name))return;
- const node=interfaces.get(name);if(!node)return;
- for(const clause of node.heritageClauses||[])for(const type of clause.types)collect(type.expression.getText(source),prefix,[...seen,name]);
- for(const member of node.members)if(ts.isPropertySignature(member))visit(member.type,prefix+"."+member.name.getText(source),[...seen,name]);
+ const node=interfaces.get(name);if(!node){const alias=aliases.get(name);if(alias&&ts.isTypeLiteralNode(alias.type))for(const member of alias.type.members)if(ts.isPropertySignature(member))visit(member.type,prefix+"."+member.name.getText(),[...seen,name]);return;}
+ for(const clause of node.heritageClauses||[])for(const type of clause.types)collect(type.expression.getText(),prefix,[...seen,name]);
+ for(const member of node.members)if(ts.isPropertySignature(member))visit(member.type,prefix+"."+member.name.getText(),[...seen,name]);
 }
 function visit(type,field,seen){
- fields.push({field,type:type.getText(source)});
+ fields.push({field,type:type.getText()});
  if(ts.isArrayTypeNode(type)){
-  if(ts.isTypeReferenceNode(type.elementType))collect(type.elementType.typeName.getText(source),field+"[]",seen);
-  else if(ts.isTypeLiteralNode(type.elementType))for(const m of type.elementType.members)if(ts.isPropertySignature(m))visit(m.type,field+"[]."+m.name.getText(source),seen);
- }else if(ts.isTypeLiteralNode(type))for(const m of type.members)if(ts.isPropertySignature(m))visit(m.type,field+"."+m.name.getText(source),seen);
+  if(ts.isTypeReferenceNode(type.elementType))collect(type.elementType.typeName.getText(),field+"[]",seen);
+  else if(ts.isTypeLiteralNode(type.elementType))for(const m of type.elementType.members)if(ts.isPropertySignature(m))visit(m.type,field+"[]."+m.name.getText(),seen);
+ }else if(ts.isTypeReferenceNode(type))collect(type.typeName.getText(),field,seen);
+ else if(ts.isTypeLiteralNode(type))for(const m of type.members)if(ts.isPropertySignature(m))visit(m.type,field+"."+m.name.getText(),seen);
 }
-collect("AppData","workspace");collect("ActuatorStats","workspace.parts[].actuator");collect("Member","membership");
+collect("AppData","workspace");collect("Member","membership");
 function category(field){
  if(field.startsWith("membership"))return "identity";
- for(const key of ["sponsors","grants","resources","evidence","events","tasks","announcements","parts","robot"])if(field.startsWith("workspace."+key))return key;
+ for(const key of ["sponsors","grants","resources","evidence","events","tasks","announcements","parts","robotLab","robot"])if(field.startsWith("workspace."+key))return key;
  if(/^workspace\.(onboarding|skills)/.test(field))return "learning";
  return "team";
 }
-const purposes={identity:"Identify the approved account, team alias and authorized role",sponsors:"Research business sponsors and track adult-reviewed follow-up; no sending",grants:"Research sourced opportunities and track manual eligibility/application decisions",resources:"Maintain reviewed technical references and school-controlled external links",evidence:"Document approved team activities and collection/use consent references",events:"Coordinate team dates, venues and per-member RSVP; venue coordinates only",tasks:"Assign work, document dependencies, blockers and append-only build comments",announcements:"Record internal decisions and team updates",parts:"Track robot components, motor/servo specifications, RPM, purpose and business product references",robot:"Keep robot setup, safety, CAD/code links and repair instructions",learning:"Track personal training and mentor sign-offs",team:"Configure team/season and internal pit preparation"};
-const viewers={identity:"Authorized teammates; platform identity handled by host",sponsors:"Lead, mentor and admin; excluded from student responses",grants:"Lead, mentor and admin; students only team-visible records",resources:"Managing roles; students only approved nonprivate records",evidence:"Owner and managing roles; other students only approved nonprivate records; current attachment only",events:"Authorized team; each member receives their own RSVP",tasks:"Authorized team; server enforces assignment/comment permissions",announcements:"Authorized team",parts:"Authorized team",robot:"Authorized team",learning:"Account owner; mentor/admin skill review",team:"Authorized team"};
+const purposes={identity:"Identify the approved account, team alias and authorized role",sponsors:"Research business sponsors and track adult-reviewed follow-up; no sending",grants:"Research sourced opportunities and track manual eligibility/application decisions",resources:"Maintain reviewed technical references and school-controlled external links",evidence:"Document approved team activities and collection/use consent references",events:"Coordinate team dates, venues and per-member RSVP; venue coordinates only",tasks:"Assign work, document dependencies, blockers and append-only build comments",announcements:"Record internal decisions and team updates",robotLab:"Maintain robot configuration profiles, numerical motor test observations/models, servo calibration, routes/obstacles and maintenance reminders",parts:"Track robot components, motor/servo specifications, RPM, purpose and business product references",robot:"Keep robot setup, safety, CAD/code links and repair instructions",learning:"Track personal training and mentor sign-offs",team:"Configure team/season and internal pit preparation"};
+const viewers={identity:"Authorized teammates; platform identity handled by host",sponsors:"Lead, mentor and admin; excluded from student responses",grants:"Lead, mentor and admin; students only team-visible records",resources:"Managing roles; students only approved nonprivate records",evidence:"Owner and managing roles; other students only approved nonprivate records; current attachment only",events:"Authorized team; each member receives their own RSVP",tasks:"Authorized team; server enforces assignment/comment permissions",announcements:"Authorized team",parts:"Authorized team",robotLab:"Authorized team; lead, mentor and admin edit; public copies remain tab-only",robot:"Authorized team",learning:"Account owner; mentor/admin skill review",team:"Authorized team"};
 const records=fields.map(({field,type})=>({field,type,purpose:purposes[category(field)],accountableOwner:"Designated adult organization owner — not yet named",viewers:viewers[category(field)],storage:"D1 workspace/envelope and bounded revision snapshots; authorized browser-tab memory",vendors:["Vercel hosting","Enabled Google Microsoft Apple OAuth and email sign-in","Cloudflare D1"],retention:"Active records until authorized erasure; revisions 1–30 days and at most 30 snapshots, pruned on activity. Approved active/inactive schedule and maintenance owner pending.",deletion:"Admin team erasure removes current/revision records. Evidence withdrawal also purges its revisions/files. Exports, linked providers and host logs/backups need separately verified handling.",approval:"PENDING purpose/necessity, retention, vendor and viewer review"}));
 const schema=ts.createSourceFile("schema.ts",readFileSync(path.join(root,"db/schema.ts"),"utf8"),ts.ScriptTarget.Latest,true);
 for(const statement of schema.statements)if(ts.isVariableStatement(statement))for(const declaration of statement.declarationList.declarations){

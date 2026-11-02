@@ -52,9 +52,9 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
  const old = envelope.workspace;
  if (incoming.teamId !== old.teamId || incoming.seasonId !== old.seasonId) throw new ApiError(403, "Team and season boundaries cannot be changed.");
  const allowed = new Set(Object.keys(before));
- for (const k of Object.keys(incoming)) if (!allowed.has(k) && !["evidence", "parts"].includes(k)) throw new ApiError(400, "Unsupported workspace field.");
+ for (const k of Object.keys(incoming)) if (!allowed.has(k) && !["evidence", "parts", "robotLab"].includes(k)) throw new ApiError(400, "Unsupported workspace field.");
  const collections = ["tasks", "events", "resources", "sponsors", "grants", "announcements", "evidence"] as const;
- const basics = ["teamName", "teamNumber", "county", "seasonName", "robot", "coachInstructions", "pitChecklist", "pitNotes", "parts"] as const;
+ const basics = ["teamName", "teamNumber", "county", "seasonName", "robot", "coachInstructions", "pitChecklist", "pitNotes", "parts", "robotLab"] as const;
  for (const key of basics) if (!same(incoming[key] ?? (key === "parts" ? [] : undefined), before[key] ?? (key === "parts" ? [] : undefined))) {
   if (!manages(role)) {
    if (key !== "pitNotes" && key !== "pitChecklist") throw new ApiError(403, "A student lead or mentor must change team settings.");

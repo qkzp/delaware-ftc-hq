@@ -1,3 +1,4 @@
+import {validRobotLab} from "./engineering";
 import {validActuatorStats} from "./actuators";
 import type { AppData } from "./types";
 
@@ -48,6 +49,10 @@ const uniqueIds = (values: unknown[]) =>
 export function validateData(value: unknown): value is AppData {
   if (!object(value)) return false;
   const v = value;
+  if(v.robotLab!==undefined&&!validRobotLab(v.robotLab))return false;
+  if(Array.isArray(v.sponsors)&&!v.sponsors.every(s=>object(s)&&[s.firstEmailSentAt,s.responseReceivedAt,s.followUpEmailSentAt].every(d=>d===undefined||d===""||timestamp(d))))return false;
+  if(Array.isArray(v.grants)&&!v.grants.every(g=>object(g)&&(g.reminderDays===undefined||Number.isInteger(g.reminderDays)&&(g.reminderDays as number)>=-1&&(g.reminderDays as number)<=90)))return false;
+  if(Array.isArray(v.events)&&!v.events.every(e=>object(e)&&(e.awardReminderDays===undefined||Number.isInteger(e.awardReminderDays)&&(e.awardReminderDays as number)>=-1&&(e.awardReminderDays as number)<=90)))return false;
   if (Array.isArray(v.evidence) && !v.evidence.every(e => object(e) && (e.consentReviewedBy === undefined || typeof e.consentReviewedBy === "string") && (e.consentReviewedAt === undefined || e.consentReviewedAt === "" || timestamp(e.consentReviewedAt)))) return false;
   if (v.evidence !== undefined && (!Array.isArray(v.evidence) || !uniqueIds(v.evidence) || !v.evidence.every((e) => object(e) && strings(e, ["id", "teamId", "seasonId", "title", "date", "county", "owner", "activity", "impact", "measurement", "mediaUrl", "fileId", "consentNote", "reviewedBy", "reviewedAt"]) && e.teamId === v.teamId && e.seasonId === v.seasonId && day(e.date, false) && day(e.reviewedAt) && oneOf(e.kind, ["Outreach", "Engineering", "Team development"]) && oneOf(e.consent, ["Not recorded", "Team use only", "External use permitted"]) && visibility(e.visibility) && booleans(e, ["approved", "archived"]) && stringList(e.awards) && link(e.mediaUrl) && Number.isInteger(e.reach) && (e.reach as number) >= 0))) return false;
   if (v.parts !== undefined && (!Array.isArray(v.parts) || !uniqueIds(v.parts) || !v.parts.every((p) => object(p) && strings(p, ["id", "name", "subsystem", "location", "source", "notes"]) && (p.actuator === undefined || validActuatorStats(p.actuator)) && link(p.source) && Number.isInteger(p.quantity) && (p.quantity as number) >= 0))) return false;
