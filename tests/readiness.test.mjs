@@ -1,7 +1,7 @@
 import test,{after} from "node:test";
 import assert from "node:assert/strict";
 import {createServer} from "vite-legacy";
-import {fingerprint} from "../scripts/release-fingerprint.mjs";
+import {fingerprint,writeReleaseFingerprint} from "../scripts/release-fingerprint.mjs";
 import {mkdtempSync,mkdirSync,writeFileSync,rmSync} from "node:fs";
 import {tmpdir} from "node:os";
 import path from "node:path";
@@ -50,10 +50,16 @@ test("release fingerprints change with source and policy, are deterministic, and
  try{
   mkdirSync(path.join(root,"src"));mkdirSync(path.join(root,"server"));mkdirSync(path.join(root,"docs"));
   writeFileSync(path.join(root,"src","app.ts"),"export const value=1;\n");
+  writeFileSync(path.join(root,"vercel.json"),JSON.stringify({framework:"nextjs",buildCommand:"npm run build"},null,2));
   const first=fingerprint(root);assert.equal(first,fingerprint(root));
   writeFileSync(path.join(root,"src","app.ts"),"export const value=1;\r\n");assert.equal(first,fingerprint(root));
+  writeFileSync(path.join(root,"vercel.json"),JSON.stringify({framework:"nextjs",buildCommand:"npm run build"})+"\n");assert.equal(first,fingerprint(root));
   writeFileSync(path.join(root,"server","release-manifest.json"),'{"releaseId":"different"}');assert.equal(first,fingerprint(root));
+  writeReleaseFingerprint(root);
   writeFileSync(path.join(root,"docs","policy.md"),"Policy changed.");assert.notEqual(first,fingerprint(root));
+  const changed=writeReleaseFingerprint(root);assert.deepEqual(changed.sourceChanges,["docs/policy.md"]);assert.equal(changed.sources["src/app.ts"].sha256.length,64);
+  assert.deepEqual(writeReleaseFingerprint(root).sourceChanges,[]);
+  writeFileSync(path.join(root,"vercel.json"),JSON.stringify({framework:"nextjs",buildCommand:"different command"}));assert.notEqual(changed.releaseId,fingerprint(root));assert.deepEqual(writeReleaseFingerprint(root).sourceChanges,["vercel.json"]);
  }finally{
   const resolved=path.resolve(root),expected=path.resolve(tmpdir())+path.sep;
   assert.ok(resolved.startsWith(expected)&&path.basename(resolved).startsWith("myftc-fingerprint-"));

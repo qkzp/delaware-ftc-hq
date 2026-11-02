@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:c8dd023cab9e2d8e8c35c14b1fae34f5fa46c818129ce76003fe68b6f000eb4b",
+  "releaseId": "sha256:36245faa0bebb2b290a7ed145e9a332a03a3159d201d510f36a6dde5e221ad1b",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -107,8 +107,8 @@
       "sha256": "42fa0d1017625228f3f0da642a97bca8d07cc3da64684ecf9b2933823047055c"
     },
     "docs/launch-acceptance.md": {
-      "bytes": 9061,
-      "sha256": "5ba9187147d53e9cd4ac41c9918d69fa1f33454c7990943826f8e11f57c95a72"
+      "bytes": 9264,
+      "sha256": "4e9d19a8d10205279d07e85d074e9d84275d8841e59e0975602e18b938e38a0b"
     },
     "docs/licenses/drizzle-orm-0.45.2-LICENSE.txt": {
       "bytes": 11357,
@@ -307,12 +307,12 @@
       "sha256": "a83164e344c1947053def83b546be8115deaa827314bbaead7afe6b6451c5cdf"
     },
     "scripts/release-fingerprint.mjs": {
-      "bytes": 2853,
-      "sha256": "ef249e047040a59b48247ac132807b282e37d17a68d8710f83644fbd86ef73f6"
+      "bytes": 3040,
+      "sha256": "6e1189cfb591bf95a75315579f393c4a5dcb7b67712c5d7fca028ff4ddb100e0"
     },
     "scripts/release-preflight.mjs": {
-      "bytes": 9417,
-      "sha256": "d5141ad72f75348865a67e2e1f76b77e32bcd385d0ad1c640bfdff69ab970239"
+      "bytes": 9531,
+      "sha256": "8234ba6c0e140e101b62d9cbe66f2b269d469640bddda6799005d910e3079f73"
     },
     "scripts/run-framework.mjs": {
       "bytes": 1170,
@@ -763,8 +763,8 @@
       "sha256": "23dceec4099ce9f2ae6be9a694fc6e4f6d974b42b7adbc51bece7dac7df21a05"
     },
     "vercel.json": {
-      "bytes": 168,
-      "sha256": "b72c7cc037377057aa75ad4ccc7977441a0d7dc9d3b6e5c67ec6dccbe25206c3"
+      "bytes": 151,
+      "sha256": "09a83a9de519b48d12bf9873e49670d9f11397939358bc43f3945c2ca321f40a"
     },
     "vite.config.ts": {
       "bytes": 2673,
@@ -776,7 +776,9 @@
     }
   },
   "sourceChanges": [
-    "README.md",
-    "docs/launch-acceptance.md"
+    "docs/launch-acceptance.md",
+    "scripts/release-fingerprint.mjs",
+    "scripts/release-preflight.mjs",
+    "vercel.json"
   ]
 }

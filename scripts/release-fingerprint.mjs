@@ -20,6 +20,8 @@ export function sourceHashes(root) {
  for(const file of [...new Set(files)].sort()){
   let bytes=readFileSync(path.join(root,file));
   if(/\.(?:[cm]?[jt]sx?|json|css|md|sql|html|svg|txt)$/.test(file))bytes=Buffer.from(bytes.toString("utf8").replace(/\r\n/g,"\n"));
+  // Vercel reserializes this file before the build; retain configuration semantics.
+  if(file==="vercel.json")bytes=Buffer.from(JSON.stringify(JSON.parse(bytes.toString("utf8")))+"\n");
   sources[file]={bytes:bytes.byteLength,sha256:createHash("sha256").update(bytes).digest("hex")};
  }
  return sources;
