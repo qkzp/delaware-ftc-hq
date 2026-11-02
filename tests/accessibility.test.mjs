@@ -90,7 +90,9 @@ test("the sidebar workspace and mobile section picker keep accessible navigation
   await audit(container);
   const picker=container.querySelector('select[aria-label="Workspace section"]');
   await act(async()=>{picker.value="tasks";picker.dispatchEvent(new dom.window.Event("change",{bubbles:true}));});
-  assert.equal(container.querySelector('nav [aria-current="page"]').textContent.trim().replace(/\d+$/, ""),"Tasks");
+  const activePage=container.querySelector('nav [aria-current="page"]').cloneNode(true);
+  activePage.querySelectorAll('[aria-hidden="true"]').forEach(node=>node.remove());
+  assert.equal(activePage.textContent.trim().replace(/\d+$/, ""),"Tasks");
   assert.equal(container.querySelector('main h1').textContent,"Tasks");await audit(container);
  });
 });

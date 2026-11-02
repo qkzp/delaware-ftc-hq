@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:615d04bad1154fb2ed6b8038cbe8de4c58ed40b7d8eadf8949c2e3a2ea725fba",
+  "releaseId": "sha256:a0a240b8e8062036c2f90f2d900d42b715ebd0cc2c930764a66cafe1bac56ec5",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -11,8 +11,8 @@
       "sha256": "d4b98c237b432e7944b29e8357874edacbf27b72200271bda55fe8519a10d175"
     },
     "README.md": {
-      "bytes": 20620,
-      "sha256": "191210c78b88b01915efb116b0f1c68fd4421b1c3059920ab211d566dc1d02d2"
+      "bytes": 20508,
+      "sha256": "dc25e16f96b3d009d1c24a7c35467804c871a23b68790436591969cd5f3104ef"
     },
     "app/api/[...segments]/route.ts": {
       "bytes": 2052,
@@ -47,8 +47,8 @@
       "sha256": "82218f497b759d9d8753190f751be1c654b4c328682d8e788e32f2b88816d6a1"
     },
     "app/layout.tsx": {
-      "bytes": 998,
-      "sha256": "97d2192403faa5b0db5a3847cfbc91ffd4c4a1351eb0309baac0624f88f252fa"
+      "bytes": 1031,
+      "sha256": "18fc5fd3839b473f994479d06cff058e98fd80864fd387d84020d782bd334ac9"
     },
     "app/loading.tsx": {
       "bytes": 223,
@@ -206,9 +206,21 @@
       "bytes": 3358,
       "sha256": "32f06b7b9bc7f28d13987cc2f97a056dca330c3f2f9569a6f4972bdfda59971a"
     },
+    "public/brand/lockup-dark.svg": {
+      "bytes": 726,
+      "sha256": "95dd7e75be13aa315d40bd31b6ad2e68323e7888ebda1304abba5da41ba1a303"
+    },
+    "public/brand/lockup-light.svg": {
+      "bytes": 726,
+      "sha256": "fd65c741da6d862f49f32d5521296b0f314e5c2c9d9961fdefea7723dd353021"
+    },
+    "public/brand/mark.svg": {
+      "bytes": 441,
+      "sha256": "bd0a377f568d205019174d946523b35f9d1838ad9a39cf1c00d719d4068718b0"
+    },
     "public/favicon.svg": {
-      "bytes": 197,
-      "sha256": "31ce05c89cf57883c2f3aa98d335f06bec6781badfe92447aae3b1cd9ea54105"
+      "bytes": 441,
+      "sha256": "bd0a377f568d205019174d946523b35f9d1838ad9a39cf1c00d719d4068718b0"
     },
     "public/fields/biobuzz-team16236-2026-v1.png": {
       "bytes": 294740,
@@ -456,7 +468,7 @@
     },
     "src/components/ExperienceRuntime.tsx": {
       "bytes": 5412,
-      "sha256": "ba5ddbcc6f1fbaabf441213febce4b69c1dcd57c920f84a272231f2ff8976f51"
+      "sha256": "31813cc7ed4c0689e30e1bd171cdabbff3ef3a3ed17b9907189c0ac138861e3d"
     },
     "src/components/FocusSession.css": {
       "bytes": 7660,
@@ -487,8 +499,8 @@
       "sha256": "ef2d7fcb0a1e69d9a4c78047c88260b658a3e86532c0d402b971597b837aa6ac"
     },
     "src/components/PublicWelcome.tsx": {
-      "bytes": 7842,
-      "sha256": "7d763ab6a02bc04688c0c6cb01030cece8f97f6f01479039c49638cb4e5ebee9"
+      "bytes": 6259,
+      "sha256": "a0f5ee1456283ff88d2c9e113f611cabfb4d2be0c67277eae7ec221f6064d172"
     },
     "src/components/ResourceSpaces.css": {
       "bytes": 9226,
@@ -555,8 +567,8 @@
       "sha256": "665c38b69d376b618cab89aedcc1c72ee3a021eee1ac61e95185d47db019642b"
     },
     "src/components/WorkspaceChrome.tsx": {
-      "bytes": 6786,
-      "sha256": "414cbc395d6b78ec59c9422f8c6c969585fe8115df7b7cbb199d02a4fd1461c2"
+      "bytes": 7225,
+      "sha256": "fc3e8643c6a415a5fafc42ed84b01a904af601aae5fefc111ca32b7d78ce3cf0"
     },
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
@@ -565,6 +577,10 @@
     "src/components/entry.css": {
       "bytes": 3909,
       "sha256": "aaa81035fc65813506bd71441180fa43440b2a366d5d6677f02df05e365ff105"
+    },
+    "src/components/public-new.css": {
+      "bytes": 13755,
+      "sha256": "a77408a86862f1d71f5d6ca209457be6141f50a279b6544a112060018dcf7178"
     },
     "src/components/task-planning.css": {
       "bytes": 6266,
@@ -590,6 +606,10 @@
       "bytes": 10007,
       "sha256": "86e2ca3778e8885207ee7eab2d823266401fa42afb13d212a3a4fef207f19200"
     },
+    "src/components/workspace-new.css": {
+      "bytes": 11257,
+      "sha256": "297ec20495b86a363806bd6d6245db2dd4e0917f47b2f5861bcc4c4b29ec4444"
+    },
     "src/design.css": {
       "bytes": 22958,
       "sha256": "bd04be473b911da6087796443890dd3a694754f5d385357f04ae3f0c0b7d0881"
@@ -614,13 +634,17 @@
       "bytes": 678,
       "sha256": "4bfa2218420c395aea6284d5eab667dc38350e24e3e4ac2e82cc4781e28b5129"
     },
+    "src/fieldmanual.css": {
+      "bytes": 5556,
+      "sha256": "67789eff6c27c858ed7f6b2d7f0f71d0ed32d69d75f1a939698785fd30e7d842"
+    },
     "src/fonts.css": {
       "bytes": 2971,
       "sha256": "6511e240273e975c7d600412d08d1e63c3766314afbe0b8393463d0003ef2008"
     },
     "src/main.tsx": {
-      "bytes": 354,
-      "sha256": "d627815e3f9771e0ba3d34a21b915116055128cd72f00a608dad9f2fbfd97d1e"
+      "bytes": 382,
+      "sha256": "f21a00696e23daa015561688011a7460ee58d757d7fdc073bf4365ddf88f91ce"
     },
     "src/navigation.ts": {
       "bytes": 1439,
@@ -691,8 +715,8 @@
       "sha256": "912e013f02c025a50892a103a6bd67e5980aeb3861298b35c86c42c2127b8983"
     },
     "src/screens/Overview.tsx": {
-      "bytes": 16627,
-      "sha256": "ec257316fd7f4beee6804678d4b4e6f9885a7adbbb9790ed01c874b17915917b"
+      "bytes": 16674,
+      "sha256": "4d975324a46028ee4da7272a43cf8ae3bd0a87ff7760ebd057fe1427e53ababc"
     },
     "src/screens/Pit.tsx": {
       "bytes": 14478,
@@ -804,18 +828,6 @@
     }
   },
   "sourceChanges": [
-    "README.md",
-    "docs/data-inventory.json",
-    "public/static-cache-sw.js",
-    "public/third-party-notices.txt",
-    "scripts/data-inventory.mjs",
-    "src/components/VisualRouteEditor.tsx",
-    "src/preferences.ts",
-    "src/screens/RobotLab.tsx",
-    "src/screens/robot-lab.css",
-    "src/use-preferences.ts",
-    "docs/field-layout.md",
-    "public/fields/biobuzz-team16236-2026-v1.png",
-    "src/field-layouts.ts"
+    "src/components/public-new.css"
   ]
 }

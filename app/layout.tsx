@@ -8,6 +8,7 @@ import "../src/redesign.css";
 import "../src/surfaces.css";
 import "../src/experience.css";
 import "../src/atelier.css";
+import "../src/fieldmanual.css";
 export const viewport:Viewport={width:"device-width",initialScale:1,viewportFit:"cover",interactiveWidget:"resizes-content"};
 export const metadata = { title: "MyFTCSpace", description: "A private team workspace for the FTC season." };
-export default function RootLayout({children}: {children: ReactNode}) { return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:preferenceBootstrap}}/><meta name="theme-color" content="#f7f7f8" /><link rel="icon" href="/favicon.svg" /></head><body><ExperienceRuntime/><ScreenBoundary>{children}</ScreenBoundary></body></html>; }
+export default function RootLayout({children}: {children: ReactNode}) { return <html lang="en" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:preferenceBootstrap}}/><meta name="theme-color" content="#f2efe7" /><link rel="icon" href="/favicon.svg" /></head><body><ExperienceRuntime/><ScreenBoundary>{children}</ScreenBoundary></body></html>; }

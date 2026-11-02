@@ -1,0 +1,66 @@
+/* A field notebook, not a marketing template: paper, ink, rules and an inspection accent. */
+html:root, html:root[data-theme=light] {
+  --body: "IBM Plex Sans", Arial, sans-serif;
+  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+  --ink: #25221d; --text: #25221d; --muted: #625b50;
+  --paper: #fffdf8; --surface: #f2efe7; --subtle: #e6e0d4;
+  --line: #c7bfb0; --border: #c7bfb0; --border-strong: #82796a;
+  --accent: #9b3216; --accent-dark: #7d260f; --accent-solid: #9b3216;
+  --accent-soft: #f5e2d4; --strong: #25221d; --on-strong: #fffdf8;
+  --success: #286239; --success-bg: #e9f2e8; --warning: #745016; --warning-bg: #fff2d3;
+  --danger: #9b2d22; --danger-bg: #fff0e9; --info: #315c78; --info-bg: #eaf1f4;
+  --robot-metal: #d7d4ce; --robot-stroke: #79766f;
+  color: var(--ink); background: var(--surface);
+}
+html:root[data-theme=dark] {
+  --ink: #f6f0e4; --text: #f6f0e4; --muted: #c9bdac;
+  --paper: #24221f; --surface: #181715; --subtle: #35312b;
+  --line: #5c554a; --border: #5c554a; --border-strong: #a79b88;
+  --accent: #ffb78f; --accent-dark: #ffd0b7; --accent-solid: #ffb78f;
+  --accent-soft: #513329; --strong: #f6f0e4; --on-strong: #211a16;
+  --success: #a7d8ae; --success-bg: #263a2c; --warning: #f5d399; --warning-bg: #45351d;
+  --danger: #ffb4a6; --danger-bg: #432825; --info: #b4d6eb; --info-bg: #233744;
+  --robot-metal: #6a655d; --robot-stroke: #bfb7a9;
+}
+html body { font-family: var(--body); letter-spacing: 0; }
+html body h1, html body h2, html body h3 { font-family: var(--display); letter-spacing: -.025em; }
+html body .btn, html body .entry-primary-action { border-radius: 2px; font-weight: 600; box-shadow: none; }
+html body .btn-primary, html body .entry-primary-action { color: #fff; background: var(--accent-solid); border-color: var(--accent-solid); }
+html[data-theme=dark] body .btn-primary, html[data-theme=dark] body .entry-primary-action { color: #211a16; }
+html body .btn-primary:hover { color: #fff; background: var(--accent-dark); border-color: var(--accent-dark); }
+html[data-theme=dark] body .btn-primary:hover { color: #211a16; }
+html body .btn-secondary { background: var(--paper); border-color: var(--border-strong); color: var(--ink); }
+html body .card, html body .empty-state { border-radius: 2px; border-color: var(--line); box-shadow: none; }
+html body :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-radius: 2px; border-color: var(--border-strong); }
+html body .modal-backdrop .modal { border-radius: 2px; }
+html body .badge { border-radius: 2px; }
+html body .progress, html body .progress>span { border-radius: 0; }
+html body .eyebrow, html body .workspace-kicker { font-family: var(--mono); letter-spacing: .04em; font-size: .6875rem; }
+html body .app-shell .page-header { border-bottom: 2px solid var(--ink); margin-bottom: 18px !important; }
+html body .app-shell .page-header h1 { font-size: clamp(1.7rem, 2.5vw, 2.3rem); }
+html body .app-shell .card-header h2, html body .app-shell .section-title h2 { letter-spacing: -.025em; }
+/* Lab, public support and account screens share the same material language. */
+html body .standalone-lab { background: var(--surface); }
+html body .standalone-lab>header { max-width: none; background: var(--paper); border-bottom: 2px solid var(--ink); padding: 12px max(20px, calc((100% - 1240px)/2)); }
+html body .standalone-lab>header>a { font-weight: 700; letter-spacing: -.04em; }
+html body .standalone-lab nav a { font-family: var(--mono); font-size: .6875rem; color: var(--ink); }
+html body .standalone-lab>main { max-width: 1240px; padding-top: 14px; }
+html body .standalone-lab .page-header { border-bottom: 2px solid var(--ink); margin-bottom: 18px; padding: 12px 0 16px; }
+html body .standalone-lab .page-header h1 { font-family: var(--display); font-size: clamp(1.9rem, 3.4vw, 2.75rem); letter-spacing: -.05em; }
+html body .standalone-lab .page-description { max-width: 680px; }
+html body :is(.standalone-lab,.app-shell) .robot-lab-tabs { border-radius: 0; background: transparent; border-bottom: 1px solid var(--line); padding: 0; gap: 0; }
+html body :is(.standalone-lab,.app-shell) .robot-lab-tabs .btn { border: 0 !important; border-bottom: 3px solid transparent !important; border-radius: 0; padding: 8px 12px; background: transparent; color: var(--muted); font-weight: 500; }
+html body :is(.standalone-lab,.app-shell) .robot-lab-tabs .btn[aria-pressed=true] { background: transparent; border-bottom-color: var(--accent) !important; color: var(--ink); font-weight: 700; }
+html body :is(.standalone-lab,.app-shell) .robot-lab-tabs .btn:hover { background: var(--subtle); }
+html body .wheel-step-number { border-radius: 0; font-family: var(--mono); }
+html body .wheel-mode button, html body .wheel-simple .wheel-results, html body .thermal-readouts>p { border-radius: 2px; }
+html body .privacy-page, html body .account-entry.entry-page { background: var(--surface); }
+html body .privacy-header, html body .entry-header { background: var(--paper); border-bottom: 2px solid var(--ink); }
+html body .privacy-content, html body .entry-page .entry-layout { border-radius: 0; border-color: var(--line); background: var(--paper); }
+html body .privacy-intro h1, html body .entry-page .entry-layout h1 { font-family: var(--display); letter-spacing: -.045em; }
+@media (max-width: 760px) {
+  html body .standalone-lab>header { padding: 12px 16px; }
+  html body .standalone-lab>main { padding-inline: 16px; }
+  html body .app-shell .page-header { align-items: flex-start; }
+}

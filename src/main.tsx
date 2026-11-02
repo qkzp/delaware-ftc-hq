@@ -7,6 +7,7 @@ import "./redesign.css";
 import "./surfaces.css";
 import "./experience.css";
 import "./atelier.css";
+import "./fieldmanual.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

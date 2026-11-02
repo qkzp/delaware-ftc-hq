@@ -109,7 +109,7 @@ Each team can set monitored support/privacy addresses in Workspace settings. Adu
 
 ## Product UI refresh
 
-The landing page and shared application surfaces now use an original Apple-inspired product style: centered typography, an original robot/route illustration, neutral light/dark surfaces and a blue accent. The workspace has an anchored product header, grouped navigation and real task/event/preparation summaries. The same design covers Robot Lab, conversations, planning, funding, settings and account entry. References: [Apple](https://www.apple.com/), [Notion](https://www.notion.com/product), [Linear](https://linear.app/). Existing role boundaries, display preferences and release gates remain in effect.
+The landing page and shared application surfaces use a robotics field-notebook design: a custom mechanical linkage mark, paper-and-ink surfaces, restrained orange accents, labeled sections and compact controls. The workspace has an anchored product header, grouped navigation and real task/event/preparation summaries. The same design covers Robot Lab, conversations, planning, funding, settings and account entry. Existing role boundaries, display preferences and release gates remain in effect.
 
 Wheel speed includes an editable speed-target warning and an optional illustrative 100% load thermal model with two-setup comparison, threshold-crossing markers, accessible chart values and JSON export. Default temperatures and thermal parameters are examples, not motor-specific ratings or a verified cutoff. See [thermal model](docs/thermal-model.md).
 

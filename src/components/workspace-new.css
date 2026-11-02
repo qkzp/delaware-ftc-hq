@@ -1,0 +1,89 @@
+/* A workshop record book: flat panels, numbered navigation and ruled rows. */
+html body div.app-shell{--work-band:#292720;--work-band-ink:#fffdf7;--work-band-muted:#ded8ca;background:var(--paper)}
+html[data-theme=dark] body div.app-shell{--work-band:#292720;--work-band-ink:#fffdf7;--work-band-muted:#ded8ca}
+html body div.app-shell .product-globalbar{min-height:max(56px,3.5rem);padding:7px 22px;gap:24px;background:var(--work-band);border-bottom:3px solid var(--accent);color:var(--work-band-ink)}
+html body div.app-shell .product-globalbar .product-wordmark{color:var(--work-band-ink);font-weight:700;letter-spacing:-.045em}
+html body div.app-shell .product-wordmark img{border-radius:0}
+html body div.app-shell .globalbar-context{color:var(--work-band-muted);font:500 .6875rem/1.45 var(--mono);letter-spacing:.04em}
+html body div.app-shell .globalbar-context span{color:var(--work-band-ink)}
+html body div.app-shell .globalbar-context b{color:var(--work-band-muted);padding:0 6px}
+html body div.app-shell .globalbar-help{color:var(--work-band-ink);font-size:.75rem!important}
+html body div.app-shell .workspace-sidebar{top:max(56px,3.5rem);width:224px;padding:16px 12px;border-right:1px solid var(--line);background:var(--surface)}
+html body div.app-shell .workspace-sidebar .workspace-name{padding:8px 6px 14px;margin:0 0 12px;border-bottom:1px solid var(--line);border-radius:0}
+html body div.app-shell .workspace-name>.team-symbol{width:32px;height:32px;border-radius:0;background:transparent}
+html body div.app-shell .workspace-name>.team-symbol img{display:block;width:30px;height:30px}
+html body div.app-shell .workspace-sidebar .workspace-search{border-radius:2px!important;background:var(--paper)!important}
+html body div.app-shell .workspace-search kbd{border-radius:1px;font-family:var(--mono)}
+html body div.app-shell .sidebar-section-label{display:flex;gap:6px;padding:4px 8px 7px;font:600 .6875rem/1.5 var(--mono);letter-spacing:.025em;text-transform:uppercase}
+html body div.app-shell .sidebar-section-label span{color:var(--accent)}
+html body div.app-shell .workspace-tabs{gap:17px}
+html body div.app-shell .workspace-sidebar .workspace-tab{border-left:3px solid transparent;border-radius:0;padding:8px 7px;background:transparent;color:var(--ink);font-size:.8125rem}
+html body div.app-shell .workspace-sidebar .workspace-tab .nav-index{color:var(--muted);font:500 .625rem/1 var(--mono);width:16px;flex:none}
+html body div.app-shell .workspace-sidebar .workspace-tab>svg{width:16px;height:16px;color:var(--muted)}
+html body div.app-shell .workspace-sidebar .workspace-tab:hover{background:var(--subtle)}
+html body div.app-shell .workspace-sidebar .workspace-tab.is-active{border-left-color:var(--accent);background:var(--paper);color:var(--ink);font-weight:650}
+html body div.app-shell .workspace-sidebar .workspace-tab.is-active>svg,html body div.app-shell .workspace-sidebar .workspace-tab.is-active .nav-index{color:var(--accent)}
+html body div.app-shell .workspace-sidebar .sidebar-utility{border-radius:0}
+html body div.app-shell .sidebar-bottom{border-top:2px solid var(--ink)}
+html body div.app-shell .sidebar-account{border-radius:0}
+html body div.app-shell .account-avatar{border-radius:2px;font-family:var(--mono)}
+html body div.app-shell .workspace-topbar{margin-left:224px;min-height:58px;padding:8px 28px;background:var(--paper);border-bottom:1px solid var(--line)}
+html body div.app-shell .workspace-breadcrumb{font-size:.8125rem;gap:8px}
+html body div.app-shell .workspace-location{color:var(--accent);font:600 .6875rem/1.4 var(--mono);letter-spacing:.035em}
+html body div.app-shell .workspace-breadcrumb>svg{display:none}
+html body div.app-shell .workspace-topbar .chrome-create{border-radius:2px;background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff);font-weight:650}
+html[data-theme=dark] body div.app-shell .workspace-topbar .chrome-create{color:#191713}
+html body div.app-shell .chrome-icon{border-radius:2px}
+html body div.app-shell .main-content{margin-left:224px;width:calc(100% - 224px);padding:0 28px 20px;border:0;background:var(--paper)}
+html body div.app-shell .page-header{border-bottom:2px solid var(--ink);padding-block:24px 16px!important;margin-bottom:18px!important}
+html body div.app-shell .page-header h1{font-weight:700;letter-spacing:-.045em}
+html body div.app-shell .page-title-metadata .eyebrow{font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;font-size:.6875rem}
+html body div.app-shell .workspace-footer{border-top:1px solid var(--line);margin-top:28px;padding-top:14px}
+/* The workbench stays a working list; summary figures act as shortcuts. */
+html body div.app-shell .work-home{--work-gutter:0px;margin:0}
+html body div.app-shell .work-heading{align-items:end;padding:27px 0 19px;border-bottom:2px solid var(--ink)}
+html body div.app-shell .work-heading>div{display:grid;gap:6px}
+html body div.app-shell .workspace-kicker{margin:0;color:var(--accent);font:700 .6875rem/1.5 var(--mono);letter-spacing:.07em}
+html body div.app-shell .workspace-kicker span{color:var(--muted)}
+html body div.app-shell .work-heading h1{font-size:clamp(2.5rem,4vw,3.5rem);line-height:1;font-weight:700;letter-spacing:-.055em;margin:0}
+html body div.app-shell .work-heading>div>span{font:500 .75rem/1.4 var(--mono);color:var(--muted)}
+html body div.app-shell .work-heading>.btn{border-radius:2px}
+html body div.app-shell .work-at-a-glance{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0 0 20px;border-bottom:1px solid var(--line)}
+html body div.app-shell .work-at-a-glance>button{position:relative;min-width:0;border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;padding:15px 20px 16px 0!important;margin:0;gap:9px}
+html body div.app-shell .work-at-a-glance>button+button{padding-left:20px!important}
+html body div.app-shell .work-at-a-glance>button:last-child{border-right:0}
+html body div.app-shell .work-at-a-glance>button:hover{background:var(--surface)}
+html body div.app-shell .work-at-a-glance>button>span{color:var(--muted);font:600 .6875rem/1.5 var(--mono);letter-spacing:.02em;text-transform:uppercase}
+html body div.app-shell .work-at-a-glance strong{font-size:1.875rem;font-weight:700;line-height:1.1;letter-spacing:-.05em}
+html body div.app-shell .work-at-a-glance small{font:400 .75rem/1.4 var(--body);letter-spacing:0;color:var(--muted);padding-left:5px}
+html body div.app-shell .work-at-a-glance>button>svg{color:var(--accent);right:14px;top:15px}
+html body div.app-shell .work-view-bar{gap:12px;margin:0;padding:0;border-bottom:1px solid var(--line)}
+html body div.app-shell .work-view-tabs{padding:0;background:transparent;border-radius:0;gap:18px}
+html body div.app-shell .work-view-tabs>button{border-radius:0;border-bottom:3px solid transparent;padding:10px 0!important;background:transparent;color:var(--muted)}
+html body div.app-shell .work-view-tabs>button[aria-pressed=true]{border-bottom-color:var(--accent);background:transparent;color:var(--ink);font-weight:650}
+html body div.app-shell .work-view-tabs>button>span{border-radius:2px;background:var(--surface)}
+html body div.app-shell .work-filter-bar{padding:10px 0 12px;border:0}
+html body div.app-shell .work-filter-bar>select{border-radius:2px}
+html body div.app-shell .work-workstreams button{border-radius:2px}
+html body div.app-shell .work-layout{grid-template-columns:minmax(0,1.55fr) minmax(260px,.8fr);gap:0;align-items:start;border-top:2px solid var(--ink)}
+html body div.app-shell .work-list{border:0;border-right:1px solid var(--line);border-radius:0;background:transparent;overflow:hidden}
+html body div.app-shell .work-table-heading,html body div.app-shell .work-task-row{padding-right:12px;padding-left:8px}
+html body div.app-shell .work-table-heading{background:transparent;font:600 .6875rem/1.4 var(--mono);letter-spacing:.02em}
+html body div.app-shell .work-group-heading{background:var(--surface)}
+html body div.app-shell .work-group-heading>[role=cell]{padding-inline:12px}
+html body div.app-shell .work-task-row.is-selected{background:var(--accent-soft)}
+html body div.app-shell .work-list-footer{border:0;padding:10px 12px}
+html body div.app-shell .work-detail{position:static;border:0;border-radius:0;background:transparent}
+html body div.app-shell .work-detail-top{background:transparent;border-bottom:1px solid var(--line);padding:7px 16px}
+html body div.app-shell .work-detail-top>span{font:600 .6875rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.03em}
+html body div.app-shell .work-detail-content{padding:18px 16px}
+html body div.app-shell .work-detail h2{font-size:1.375rem;letter-spacing:-.025em}
+html body div.app-shell .work-reference-row{gap:24px;margin-top:24px;border:0}
+html body div.app-shell .work-schedule,html body div.app-shell .work-team-reference,html body div.app-shell .work-updates{border:0;border-top:2px solid var(--ink);border-radius:0;background:transparent;padding:14px 0 0}
+html body div.app-shell .work-schedule header h2,html body div.app-shell .work-team-reference header h2,html body div.app-shell .work-updates header h2{font-size:1rem;font-weight:700}
+html body div.app-shell .work-event-day{border-radius:1px}
+html body div.app-shell .work-updates{margin-top:24px}
+html body div.app-shell .work-home-footer{padding-top:16px}
+@media(max-width:1100px){html body div.app-shell .work-layout{grid-template-columns:1fr}html body div.app-shell .work-list{border-right:0}html body div.app-shell .work-detail{border-top:1px solid var(--line)}html body div.app-shell .work-detail-content{padding:16px 10px}}
+@media(max-width:980px){html body div.app-shell .workspace-sidebar{display:none}html body div.app-shell .workspace-topbar{margin-left:0;width:100%;padding-inline:16px}html body div.app-shell .main-content{width:100%;margin-left:0;padding-inline:16px}html body div.app-shell .mobile-section-bar{border-bottom:1px solid var(--line);background:var(--surface)}}
+@media(max-width:760px){html body div.app-shell .product-globalbar{padding-inline:16px;gap:8px}html body div.app-shell .globalbar-context{display:none}html body div.app-shell .work-heading{padding:20px 0 16px;align-items:end}html body div.app-shell .work-heading h1{font-size:2.375rem}html body div.app-shell .work-at-a-glance{grid-template-columns:1fr;margin-bottom:12px}html body div.app-shell .work-at-a-glance>button,html body div.app-shell .work-at-a-glance>button+button{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px;border-right:0;border-bottom:1px solid var(--line);padding:10px 0!important}html body div.app-shell .work-at-a-glance>button:last-child{border-bottom:0}html body div.app-shell .work-at-a-glance strong{font-size:1.5rem}html body div.app-shell .work-at-a-glance small{display:inline;font-size:.75rem}html body div.app-shell .work-at-a-glance>button>svg{display:none}html body div.app-shell .work-view-bar{flex-wrap:wrap}html body div.app-shell .work-view-tabs{max-width:100%;gap:8px}html body div.app-shell .work-view-tabs>button{padding-inline:6px!important}html body div.app-shell .work-reference-row{grid-template-columns:1fr;gap:20px}html body div.app-shell .work-table-heading,html body div.app-shell .work-task-row{padding-inline:4px}}

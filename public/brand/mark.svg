@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">MyFTCSpace mark</title>
+  <rect width="96" height="96" rx="12" fill="#1b201e"/>
+  <path fill="#f16839" d="M10 33 18 25h17v17l-9 9v20h27l8-8h25v14l-7 8H18l-8-8z"/>
+  <path fill="#f8f5e9" d="M31 48 59 20h18l8 8v13l-8 8h-7L48 71H31z"/>
+  <path fill="#1b201e" d="M20 33h7v7h-7zm49-5h7v7h-7zM37 55h7v7h-7zm31 16h7v7h-7z"/>
+</svg>

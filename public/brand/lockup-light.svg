@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 96" role="img" aria-labelledby="title">
+  <title id="title">MyFTCSpace</title>
+  <rect width="96" height="96" rx="12" fill="#1b201e"/>
+  <path fill="#f16839" d="M10 33 18 25h17v17l-9 9v20h27l8-8h25v14l-7 8H18l-8-8z"/>
+  <path fill="#f8f5e9" d="M31 48 59 20h18l8 8v13l-8 8h-7L48 71H31z"/>
+  <path fill="#1b201e" d="M20 33h7v7h-7zm49-5h7v7h-7zM37 55h7v7h-7zm31 16h7v7h-7z"/>
+  <text x="118" y="55" fill="#1b201e" font-family="Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="-1.4">MyFTCSpace</text>
+  <text x="120" y="77" fill="#515852" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2.2">BUILD TOGETHER</text>
+</svg>
