@@ -5,7 +5,7 @@ import { ApiError, manages, reviews, view, visibleEvidence, mergeWorkspace, reba
 import { actorHash, collectionAuthorized, handlePrivacy, privacySettings, pruneRetention, teamErasing, eraseTeam, assertNoErasedEvidence, removeErasedEvidence } from "./privacy";
 import {handleChat} from "./chat";
 type User = {userId: string};
-export type ServiceScope = {allowedTeamIds:string[];teamCreationAccountIds:string[];adultAccountIds:string[]};
+export type ServiceScope = {allowedTeamIds:string[];teamCreationAccountIds:string[];adultAccountIds:string[];accessModel?:"allowlist"|"self-service"};
 const roles = ["student", "lead", "mentor", "admin"];
 const json = (data: unknown, status = 200) => Response.json(data, {status,headers:{"Cache-Control":"no-store, private", "X-Content-Type-Options":"nosniff"}});
 const hash = async (text: string) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)))].map(n => n.toString(16).padStart(2,"0")).join("");
@@ -23,21 +23,23 @@ async function body(request: Request) { const bytes=await limitedBody(request,2_
 export async function service(request: Request, db: D1Database, bucket: R2Bucket, user: User | null, scope?: ServiceScope): Promise<Response> {
  try {
   const url = new URL(request.url), path = url.pathname.split("/").filter(Boolean).slice(1);
+  const selfService=scope?.accessModel==="self-service";
   if (path[0] === "session") {
-   if (!user) return json({user:null,teams:[]});
+   if (!user) return json({user:null,teams:[],accessModel:selfService?"self-service":"allowlist"});
    const {results} = await db.prepare("SELECT m.team_id AS id,m.name,m.role,json_extract(t.data,'$.workspace.teamName') AS teamName FROM memberships m JOIN teams t ON t.id=m.team_id WHERE m.user_id=?").bind(user.userId).all();
-   return json({user:{userId:user.userId},teams:results.filter((team:any)=>!scope||scope.allowedTeamIds.includes(team.id))});
+   return json({user:{userId:user.userId},teams:results.filter((team:any)=>!scope||selfService||scope.allowedTeamIds.includes(team.id)),accessModel:selfService?"self-service":"allowlist"});
   }
   if (!user) throw new ApiError(401,"Sign in with your approved account to use a private team workspace.");
   if (!['GET','HEAD'].includes(request.method) && request.headers.get("origin") !== url.origin) throw new ApiError(403,"This change must come from MyFTCSpace.");
   if (path[0] === "teams" && path.length === 1 && request.method === "POST") {
-   if(scope&&!scope.teamCreationAccountIds.includes(user.userId))throw new ApiError(403,"Team creation requires the approved adult operator.");
+   if(scope&&!selfService&&!scope.teamCreationAccountIds.includes(user.userId))throw new ApiError(403,"Team creation requires the approved adult operator.");
    const input = await body(request), name = cleanName(input.name), teamName = String(input.teamName || "").trim().slice(0,80);
+   if(selfService&&input.adultConfirmed!==true)throw new ApiError(400,"Confirm that you are an adult age 18 or older before creating a team.");
    if (!name || !teamName) throw new ApiError(400,"Enter a team name and your display name.");
    const count = await db.prepare("SELECT count(*) AS n FROM memberships WHERE user_id=?").bind(user.userId).first<{n:number}>();
    if ((count?.n || 0) >= 10) throw new ApiError(400,"You can belong to at most ten teams.");
    let teamId=crypto.randomUUID();
-   if(scope){
+   if(scope&&!selfService){
     const vacant=[];for(const approvedId of scope.allowedTeamIds)if(!(await db.prepare("SELECT 1 FROM teams WHERE id=? UNION ALL SELECT 1 FROM team_erasures WHERE team_id=?").bind(approvedId,approvedId).first()))vacant.push(approvedId);
     if(!vacant.length)throw new ApiError(403,"No unused team is included in the approved release. The adult owner must review an additional team before creation.");
     teamId=vacant[0];
@@ -52,8 +54,9 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    const input=await body(request), name=cleanName(input.name); if(!name || typeof input.token!=="string" || input.token.length>200) throw new ApiError(400,"Enter your invitation code and display name.");
    const digest=await hash(input.token.trim()), invite=await db.prepare("SELECT * FROM invitations WHERE hash=? AND used_by IS NULL AND expires>?").bind(digest,new Date().toISOString()).first<any>();
    if(!invite) throw new ApiError(400,"Invitation expired, revoked, or already used.");
-   if(scope&&!scope.allowedTeamIds.includes(invite.team_id))throw new ApiError(403,"This team is outside the approved release scope.");
-   if(scope&&reviews(invite.role)&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"A mentor invitation requires an approved adult account.");
+   if(scope&&!selfService&&!scope.allowedTeamIds.includes(invite.team_id))throw new ApiError(403,"This team is outside the approved release scope.");
+   if(scope&&!selfService&&reviews(invite.role)&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"A mentor invitation requires an approved adult account.");
+   if(selfService&&reviews(invite.role)&&input.adultConfirmed!==true)throw new ApiError(400,"Confirm that you are an adult age 18 or older to accept an adult invitation.");
    if(await teamErasing(db,invite.team_id))throw new ApiError(423,"This team is being permanently erased.");
    if(await db.prepare("SELECT 1 FROM memberships WHERE team_id=? AND user_id=?").bind(invite.team_id,user.userId).first()) throw new ApiError(400,"You already belong to this team.");
    const r=await db.batch([db.prepare("INSERT INTO memberships(team_id,user_id,name,role) SELECT team_id,?,?,role FROM invitations WHERE id=? AND used_by IS NULL AND expires>? AND EXISTS(SELECT 1 FROM teams WHERE id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_privacy WHERE team_id=invitations.team_id AND paused=1)").bind(user.userId,name,invite.id,new Date().toISOString()),db.prepare("UPDATE invitations SET used_by=? WHERE id=? AND used_by IS NULL AND EXISTS(SELECT 1 FROM memberships WHERE team_id=invitations.team_id AND user_id=?) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id)").bind(user.userId,invite.id,user.userId)]);
@@ -62,25 +65,25 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
   }
   if (path[0] !== "teams" || !path[1]) throw new ApiError(404,"Endpoint not found.");
   const teamId=path[1];
-  if(scope&&!scope.allowedTeamIds.includes(teamId))throw new ApiError(403,"This team is outside the approved release scope.");
+  if(scope&&!selfService&&!scope.allowedTeamIds.includes(teamId))throw new ApiError(403,"This team is outside the approved release scope.");
   if(path[2]==="privacy"&&path[3]==="erase"&&path.length===4&&request.method==="GET"){
    const job=await db.prepare("SELECT job_id AS jobId,status FROM team_erasures WHERE team_id=? AND actor_hash=?").bind(teamId,await actorHash(teamId,user.userId)).first();
    if(!job&&!(await db.prepare("SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role='admin'").bind(teamId,user.userId).first()))throw new ApiError(403,"Only an authorized admin can inspect team erasure.");
    return json({job});
   }
   if(path[2]==="privacy"&&path[3]==="erase"&&path.length===4&&request.method==="DELETE"){
-   if(scope&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"The approved adult must authorize erasure.");
+   if(scope&&!selfService&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"The approved adult must authorize erasure.");
    return await eraseTeam(request,db,bucket,teamId,user.userId,await body(request));
   }
   if(await teamErasing(db,teamId))throw new ApiError(423,"This team is being permanently erased; normal access is closed.");
   const member=await db.prepare("SELECT user_id AS userId,name,role FROM memberships WHERE team_id=? AND user_id=?").bind(teamId,user.userId).first<Member>();
   if(!member) throw new ApiError(403,"You are not a member of this team.");
-  if(scope&&reviews(member.role)&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"This adult role is outside the approved adult roster.");
+  if(scope&&!selfService&&reviews(member.role)&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"This adult role is outside the approved adult roster.");
   const row=await db.prepare("SELECT * FROM teams WHERE id=?").bind(teamId).first<any>(); if(!row) throw new ApiError(404,"Team not found.");
   const envelope=JSON.parse(row.data) as Envelope;
   await pruneRetention(db,teamId);
   if(path[2]==="privacy") {
-   if(scope&&!scope.adultAccountIds.includes(user.userId)&&(path[3]==="consent-review"||path.length===3&&request.method==="PUT"||path[3]==="requests"&&request.method==="PUT"))throw new ApiError(403,"An approved adult must perform this review.");
+   if(scope&&!selfService&&!scope.adultAccountIds.includes(user.userId)&&(path[3]==="consent-review"||path.length===3&&request.method==="PUT"||path[3]==="requests"&&request.method==="PUT"))throw new ApiError(403,"An approved adult must perform this review.");
    return await handlePrivacy({request,db,bucket,teamId,userId:user.userId,member,row,envelope,path,input:['GET','HEAD'].includes(request.method)?{}:await body(request)});
   }
   const privacy=await privacySettings(db,teamId);
@@ -119,9 +122,13 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    const input=await body(request);
    if(input.userId===user.userId && input.name && input.role===member.role) {const result=await db.prepare("UPDATE memberships SET name=? WHERE team_id=? AND user_id=?"+accessGuard).bind(cleanName(input.name),teamId,user.userId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed before renaming.");return json({ok:true});}
    if(member.role!=="admin" || !roles.includes(input.role)) throw new ApiError(403,"Only an admin can change member roles.");
-   if(scope&&reviews(input.role)&&!scope.adultAccountIds.includes(input.userId))throw new ApiError(403,"Mentor and administrator roles require an approved adult account.");
+   if(scope&&!selfService&&reviews(input.role)&&!scope.adultAccountIds.includes(input.userId))throw new ApiError(403,"Mentor and administrator roles require an approved adult account.");
+   if(selfService&&reviews(input.role)){
+    const target=await db.prepare("SELECT role FROM memberships WHERE team_id=? AND user_id=?").bind(teamId,input.userId).first<{role:Role}>();
+    if(!target||!reviews(target.role))throw new ApiError(403,"Adult roles require a new adult invitation and confirmation by the invitee.");
+   }
    if(input.userId===user.userId) throw new ApiError(400,"You cannot demote your own admin membership.");
-   const result=await db.prepare("UPDATE memberships SET role=? WHERE team_id=? AND user_id=?"+accessGuard).bind(input.role,teamId,input.userId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed before role assignment.");return json({ok:true});
+   const result=await db.prepare("UPDATE memberships SET role=? WHERE team_id=? AND user_id=?"+(selfService&&reviews(input.role)?" AND role IN ('mentor','admin')":"")+accessGuard).bind(input.role,teamId,input.userId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed before role assignment.");return json({ok:true});
   }
   if(path[2]==="members" && request.method==="DELETE") {
    if(member.role!=="admin" || path[3]===user.userId) throw new ApiError(403,"An admin may remove another member.");

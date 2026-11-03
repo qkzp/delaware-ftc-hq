@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:70b0269a7efaee630b0eb199479448fbdc57c05946837f26881fd3174fd37e96",
+  "releaseId": "sha256:34c59f47c34d29c6a8a881b35d1d90ac8307dca6406bd457801fae9fff5aff49",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -15,8 +15,8 @@
       "sha256": "4a543474431b983229cfdd9b88014b6726691904c18b68006b31ace2ec7a987e"
     },
     "app/api/[...segments]/route.ts": {
-      "bytes": 2052,
-      "sha256": "d8e586b4b387135285f3c381094e29f157ece219e07cd848f0b23b8e6ec38969"
+      "bytes": 2095,
+      "sha256": "95b782946c66d82a393411d351112bcf3251e7c78e6d0e1d4a660efc1966103e"
     },
     "app/api/auth/[...nextauth]/route.ts": {
       "bytes": 239,
@@ -39,8 +39,8 @@
       "sha256": "4b43ffd6ff3542ad06dbd0af44b3b7f2c88422510014194ea7ae6287a13460e7"
     },
     "app/enroll/page.tsx": {
-      "bytes": 2532,
-      "sha256": "ffef77d524398216a26f3361dbe6d0b56cd932943365e17154aa7ca81a50d27c"
+      "bytes": 3129,
+      "sha256": "e52f8c70f8ac9c24ea0228abf96fd187795df6b09c0ce9aabf96c4fc998ef5a4"
     },
     "app/error.tsx": {
       "bytes": 387,
@@ -55,20 +55,20 @@
       "sha256": "d4c45ba7a93f45f58fcda9db2817d1feb8a3fec0dea397d6c65c3acf9b4839e7"
     },
     "app/maintenance/page.tsx": {
-      "bytes": 2692,
-      "sha256": "abe646aa0ca20a20b7102b4e4a10997f967aecd741fbb47b01a7c323fd6a61d4"
+      "bytes": 2733,
+      "sha256": "c933fba984b3c19d6f915e53b62a8fb0073b71e39e5cb740502ac9d4d7548fce"
     },
     "app/not-found.tsx": {
       "bytes": 363,
       "sha256": "6d2a2433c962b3154f5d8bb1084b804948a5c91383e120fbc0bf9c2abe4b20a1"
     },
     "app/page.tsx": {
-      "bytes": 861,
-      "sha256": "4ec6bf053cd94d2762d71aa8f06a29b9233459a12675d2b483bbbd7524564d54"
+      "bytes": 867,
+      "sha256": "e3032a865b9d5f51612731ac5e9cfa94082439499e9f987e26b90920e043bcb0"
     },
     "app/privacy/page.tsx": {
-      "bytes": 16977,
-      "sha256": "2239b72fe47d9759ea48aa64c6d58e03f1875ea59d05ff57befbf328760cac22"
+      "bytes": 17360,
+      "sha256": "8289b010a2d9f4d5dbe7eb176d9d1195e30105096caf64f406b815ed6b84043f"
     },
     "app/privacy/privacy.css": {
       "bytes": 5136,
@@ -131,8 +131,8 @@
       "sha256": "340d1a726d7c06f5d06003fa2ca2ed329905275e951387bf54276e089eb33d13"
     },
     "docs/provider-setup.md": {
-      "bytes": 4908,
-      "sha256": "6859b7e94c1f51dfbd36421323b50ead064343d695405bd16dac25393234ee65"
+      "bytes": 5968,
+      "sha256": "52f7dd0f4519a80b9d0c9d9b2481b9962670d8e14db2290dbf3ce9b20f43d3c0"
     },
     "docs/release-evidence.md": {
       "bytes": 41975,
@@ -451,20 +451,20 @@
       "sha256": "463d1e0ea533ab9c9b9e06a52d2279e8a954a786dad01b6e80485d8da1f1019e"
     },
     "server/readiness.ts": {
-      "bytes": 6025,
-      "sha256": "f8e37932ef6912fd9d8eeac007c459bb7299d5962adcf4bcab2ede88515bb107"
+      "bytes": 7140,
+      "sha256": "2018f3f5928d4cc3733dd318e106dd748d7ce71283d07b5908e9265aff00982d"
     },
     "server/retention.ts": {
       "bytes": 2129,
       "sha256": "6a556dac69fda4629aea7e8b0c7525bad833f5dda99346d14dc4e94145e554bf"
     },
     "server/runtime.ts": {
-      "bytes": 581,
-      "sha256": "cfa7673df18687248b21b67105d5a8536f5b1f60d691625065b5f29b3a44a14f"
+      "bytes": 653,
+      "sha256": "2fdef61ec950b2bd357a450a5f6686a1d2c4890f182fd72fdfb1163fe46fae6a"
     },
     "server/service.ts": {
-      "bytes": 28398,
-      "sha256": "b1a3d165bb9ce9a1ad13e7412a3f52afe8e61a67835ae09a6cc89f300aaf02c8"
+      "bytes": 29456,
+      "sha256": "b9079907d2ceca3b0f8fd7986587780d777afb3f3000ab3ae3b5b86865b5cf18"
     },
     "src/App.tsx": {
       "bytes": 12085,
@@ -479,8 +479,8 @@
       "sha256": "764c02bf51706b88e153188d2f862bb53a434407305d22d99cd0557dd39b6f2a"
     },
     "src/cloud.ts": {
-      "bytes": 13069,
-      "sha256": "2cb66392d752b9e55dac846a08995d32174fba6a080c4fcc892496b434ac687f"
+      "bytes": 13110,
+      "sha256": "d924c2b84c4da289a0e21a6f2a10886d214a28fe0309e1c391ec2a1463fd5ebf"
     },
     "src/competition-map.ts": {
       "bytes": 4593,
@@ -583,8 +583,8 @@
       "sha256": "678a985aa7144f8c11ae27ce3b7c7b6a6b675147dbdbb6d76cbef76bdd0d4078"
     },
     "src/components/TeamAccess.tsx": {
-      "bytes": 11443,
-      "sha256": "c87561e8617d1fd6b3c07a4cc906ab76f37b40c5f47b99b8721fdcd526227726"
+      "bytes": 12170,
+      "sha256": "49ed8f996d967acf08b6f8f264e02aa954b8c2d827c67cc2878900a5b43320f2"
     },
     "src/components/TeamContactDetails.tsx": {
       "bytes": 1055,
@@ -896,9 +896,16 @@
     }
   },
   "sourceChanges": [
-    "app/signin/page.tsx",
-    "src/components/PublicWelcome.tsx",
-    "src/components/entry.css",
-    "src/components/public-new.css"
+    "app/api/[...segments]/route.ts",
+    "app/enroll/page.tsx",
+    "app/maintenance/page.tsx",
+    "app/page.tsx",
+    "app/privacy/page.tsx",
+    "docs/provider-setup.md",
+    "server/readiness.ts",
+    "server/runtime.ts",
+    "server/service.ts",
+    "src/cloud.ts",
+    "src/components/TeamAccess.tsx"
   ]
 }

@@ -7,6 +7,7 @@ export function getReadinessEnvironment(): ReadinessEnvironment {
     MYFTC_DATA_ENABLED: process.env.MYFTC_DATA_ENABLED,
     MYFTC_SERVICE_PAUSED: process.env.MYFTC_SERVICE_PAUSED,
     MYFTC_READINESS_RECORD: process.env.MYFTC_READINESS_RECORD,
+    MYFTC_SELF_SERVICE_ENABLED: process.env.MYFTC_SELF_SERVICE_ENABLED,
   };
 }
 

@@ -26,17 +26,17 @@ const button=(app,text)=>app.root.findAllByType("button").find(node=>node.childr
 async function fixture(check){
  const originalFetch=globalThis.fetch,originalFormData=globalThis.FormData,originalError=console.error;
  const values=new Map([["myftcspace:team","team-a"]]),requests=[];
- const state={user:"account-a",role:"admin"};
+ const state={user:"account-a",role:"admin",accessModel:undefined,extraMembers:[]};
  Object.defineProperty(globalThis,"localStorage",{value:{getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,String(value)),removeItem:key=>values.delete(key)},configurable:true});
  globalThis.FormData=class {constructor(form){this.values=form.values;}get(key){return this.values[key];}};
  const teams=Object.fromEntries(["a","b"].map(letter=>{const data=createWorkspaceData();data.teamId=`team-${letter}`;data.teamName=`Fictional team ${letter.toUpperCase()}`;return [data.teamId,data];}));
  globalThis.fetch=async(path,options={})=>{
   const method=options.method||"GET";requests.push({path,method});
-  if(path==="/api/session")return Response.json({user:{userId:state.user},teams:Object.values(teams).map(data=>({id:data.teamId,teamName:data.teamName,name:"Fictional alias",role:state.role}))});
+  if(path==="/api/session")return Response.json({user:{userId:state.user},accessModel:state.accessModel,teams:Object.values(teams).map(data=>({id:data.teamId,teamName:data.teamName,name:"Fictional alias",role:state.role}))});
   const match=path.match(/^\/api\/teams\/(team-[ab])(?:\/(.+))?$/);
   if(!match)throw new Error(`Unexpected test request: ${method} ${path}`);
   const [,id,resource]=match;
-  if(!resource)return Response.json({data:structuredClone(teams[id]),version:1,role:state.role,members:[{userId:state.user,name:"Fictional alias",role:state.role}],updated:"2026-11-01"});
+  if(!resource)return Response.json({data:structuredClone(teams[id]),version:1,role:state.role,members:[{userId:state.user,name:"Fictional alias",role:state.role},...state.extraMembers],updated:"2026-11-01"});
   if(resource==="invites")return Response.json(method==="POST"?{token:`PRIVATE-CODE-${id}`}:{invites:[{id:`invite-${id}`,role:"student",expires:"2099-01-01",used:false}]});
   if(resource==="history")return Response.json({history:[{id:`revision-${id}`,version:id==="team-a"?411:922,created:"2026-11-01",actor:`PRIVATE-HISTORY-${id}`}]});
   if(resource==="learning")return Response.json({learning:[{userId:`PRIVATE-LEARNING-${id}`,steps:["fictional"],skills:[]}]});
@@ -55,6 +55,20 @@ async function fixture(check){
   assert.equal(context.cloud.shared.id,"team-a");await check(app);
  }finally{if(renderer)await act(async()=>renderer.unmount());globalThis.fetch=originalFetch;globalThis.FormData=originalFormData;console.error=originalError;}
 }
+
+test("self-service members must accept an adult invitation instead of being promoted directly",async()=>{
+ await fixture(async app=>{
+  app.state.accessModel="self-service";app.state.extraMembers=[{userId:"student-b",name:"Student B",role:"student"},{userId:"mentor-c",name:"Mentor C",role:"mentor"}];
+  await app.update(()=>app.context.cloud.reload());
+  const options=name=>app.root.findByProps({"aria-label":`Role for ${name}`}).findAllByType("option").map(option=>option.props.value||option.children[0]);
+  assert.deepEqual(options("Student B"),["student","lead"]);
+  assert.deepEqual(options("Mentor C"),["student","lead","mentor","admin"]);
+  assert.match(app.text,/remove their access and send them an adult invitation/);
+  app.state.accessModel="allowlist";await app.update(()=>app.context.cloud.refreshSession());
+  assert.deepEqual(options("Student B"),["student","lead","mentor","admin"]);
+  assert.doesNotMatch(app.text,/remove their access and send them an adult invitation/);
+ });
+});
 
 test("the real team picker clears invitation codes, history, learning, and restore confirmations",async()=>{
  await fixture(async app=>{

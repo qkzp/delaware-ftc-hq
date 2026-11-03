@@ -3,7 +3,7 @@ import type { AppData, Member, Role } from "./types";
 import { rebaseWorkspace } from "../server/policy";
 import { createWorkspaceData } from "./workspace-data";
 import {userError} from "./user-errors";
-export type Session = {user: {userId:string}|null; teams:{id:string;teamName:string;name:string;role:Role}[]};
+export type Session = {user: {userId:string}|null; teams:{id:string;teamName:string;name:string;role:Role}[]; accessModel?:"allowlist"|"self-service"};
 type Shared = {id:string;version:number;role:Role;members:Member[];updated:string};
 const pendingWrites=new Map<string,Promise<any>>();let requestAccount="",sessionSequence=0;
 export function api(path:string, method="GET", body?:unknown):Promise<any> {

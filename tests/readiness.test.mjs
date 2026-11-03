@@ -22,6 +22,15 @@ test("real-data access is closed without a complete externally managed review",(
  assert.equal(assess(record,{MYFTC_DATA_ENABLED:"false"}).enabled,false);
  assert.equal(assess(record,{MYFTC_SERVICE_PAUSED:"true"}).enabled,false);
 });
+test("self-service requires explicit public-scope review and a separate operator switch",()=>{
+ const record={...approved(),scope:"public-multi-team",accessModel:"self-service",allowedAccountIds:[],adultAccountIds:[],allowedTeamIds:[],teamCreationAccountIds:[],selfServiceReview:{evidence:"review/self-service",reviewer:"Reviewer A.",reviewedAt:"2026-10-31T12:00:00Z"}};
+ assert.equal(assess(record).enabled,false);
+ const enabled={MYFTC_SELF_SERVICE_ENABLED:"true"};
+ assert.equal(assess(record,enabled).enabled,true);
+ for(const patch of [{scope:"team-pilot"},{selfServiceReview:undefined},{selfServiceReview:{...record.selfServiceReview,evidence:""}},{selfServiceReview:{...record.selfServiceReview,reviewedAt:"2026-11-01T11:00:00Z"}},{accessModel:"unexpected"}])assert.equal(assess({...record,...patch},enabled).enabled,false);
+ const missingChecklist=structuredClone(record);delete missingChecklist.checklist["1.1"];assert.equal(assess(missingChecklist,enabled).enabled,false);
+ assert.equal(assess(record,{...enabled,MYFTC_DATA_ENABLED:"false"}).enabled,false);
+});
 test("approval cannot outlive its release, origin, dates, roster or permitted ages",()=>{
  for(const patch of [{releaseId:"sha256:"+"b".repeat(64)},{origin:"https://another.test"},{minimumAge:12},{maximumAge:19},{minorPermissionConfirmed:false},{adultAccountIds:["not-approved"]},{teamCreationAccountIds:["student-a"]},{allowedTeamIds:[]},{supportEmail:"support@example.com"},{expiresAt:"2027-11-01T12:00:00Z"},{expiresAt:"2026-11-01T11:59:00Z"},{approvedAt:"2026-11-02T12:00:00Z"}])assert.equal(assess({...approved(),...patch}).enabled,false,JSON.stringify(patch));
 });

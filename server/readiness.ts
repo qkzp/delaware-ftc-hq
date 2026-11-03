@@ -15,10 +15,12 @@ export type ReadinessRecord = {
  adultOwner:string; organization:string; supportEmail:string; privacyEmail:string;
  approvedAt:string; expiresAt:string; minimumAge:number; maximumAge:number; minorPermissionConfirmed:true;
  allowedAccountIds:string[]; adultAccountIds:string[]; allowedTeamIds:string[]; teamCreationAccountIds:string[];
+ accessModel?:"allowlist"|"self-service"; selfServiceReview?:{evidence:string;reviewer:string;reviewedAt:string};
  checklist:Record<string,ReviewDecision>;
 };
 export type ReadinessEnvironment = {
  MYFTC_DATA_ENABLED?:string; MYFTC_SERVICE_PAUSED?:string; MYFTC_READINESS_RECORD?:string;
+ MYFTC_SELF_SERVICE_ENABLED?:string;
 };
 const text=(v:unknown,max=300):v is string=>typeof v==="string"&&v.trim().length>0&&v.length<=max&&!/^(pending|todo|tbd|unknown|replace|example)/i.test(v.trim());
 const email=(v:unknown):v is string=>typeof v==="string"&&v.length<=254&&/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(v)&&!/@(?:example\.(?:com|org|net)|invalid)$/i.test(v);
@@ -40,10 +42,13 @@ export function assessReadiness(environment:ReadinessEnvironment, options:{now?:
   if(!["team-pilot","school-use","public-multi-team"].includes(c.scope))reject("An approved release scope is required.");
   if(!text(c.adultOwner)||!text(c.organization)||!email(c.supportEmail)||!email(c.privacyEmail))reject("A named adult, organization and monitored real support/privacy contacts are required.");
   if(!Number.isInteger(c.minimumAge)||c.minimumAge<13||!Number.isInteger(c.maximumAge)||c.maximumAge>18||c.minimumAge>c.maximumAge||c.minorPermissionConfirmed!==true)reject("Direct student accounts must be approved ages 13–18 with the required minor permissions.");
-  if(!ids(c.allowedAccountIds,500)||c.allowedAccountIds.length===0||!ids(c.adultAccountIds,100)||c.adultAccountIds.length===0||!ids(c.allowedTeamIds,20)||c.allowedTeamIds.length===0||!ids(c.teamCreationAccountIds,20))reject("Explicit account, adult and team allowlists are required.");
-  else if(!c.adultAccountIds.every((id:string)=>c.allowedAccountIds.includes(id))||!c.teamCreationAccountIds.every((id:string)=>c.adultAccountIds.includes(id)))reject("Adult and team-creation access must be within the approved roster.");
+  if(c.accessModel!==undefined&&c.accessModel!=="allowlist"&&c.accessModel!=="self-service")reject("The access model is unsupported.");
+  const selfService=c.accessModel==="self-service";
+  if(!ids(c.allowedAccountIds,500)||!ids(c.adultAccountIds,100)||!ids(c.allowedTeamIds,20)||!ids(c.teamCreationAccountIds,20)||!selfService&&(c.allowedAccountIds.length===0||c.adultAccountIds.length===0||c.allowedTeamIds.length===0))reject("Valid account, adult and team allowlists are required for the selected access model.");
+  else if(!selfService&&(!c.adultAccountIds.every((id:string)=>c.allowedAccountIds.includes(id))||!c.teamCreationAccountIds.every((id:string)=>c.adultAccountIds.includes(id))))reject("Adult and team-creation access must be within the approved roster.");
   const approved=timestamp(c.approvedAt)?Date.parse(c.approvedAt):NaN,expires=timestamp(c.expiresAt)?Date.parse(c.expiresAt):NaN;
   if(!Number.isFinite(approved)||!Number.isFinite(expires)||expires<=approved||expires-approved>90*86400000)reject("Approval must have valid UTC timestamps and an expiry no later than 90 days after approval.");
+  if(selfService&&(c.scope!=="public-multi-team"||!text(c.selfServiceReview?.evidence,2000)||!text(c.selfServiceReview?.reviewer)||!timestamp(c.selfServiceReview?.reviewedAt)||Date.parse(c.selfServiceReview.reviewedAt)>now||Date.parse(c.selfServiceReview.reviewedAt)>approved))reject("Self-service requires a documented public multi-team review before release approval.");
   for(const id of checklistIds) {
    const row=c.checklist?.[id];
    if(!row||!["PASS","N/A"].includes(row.decision)||!text(row.evidence,2000)||!text(row.reviewer)||!timestamp(row.reviewedAt)||Date.parse(row.reviewedAt)>now||Date.parse(row.reviewedAt)>approved||row.decision==="N/A"&&!text(row.rationale,2000))reject(`Checklist row ${id} needs a reviewer, evidence and a supported decision.`);
@@ -56,8 +61,12 @@ export function assessReadiness(environment:ReadinessEnvironment, options:{now?:
   }
  }
  if(environment.MYFTC_DATA_ENABLED!=="true")issues.push("Real-data access has not been enabled by the operator.");
+ if(record?.accessModel==="self-service"&&environment.MYFTC_SELF_SERVICE_ENABLED!=="true")issues.push("Self-service access has not been enabled by the operator.");
  if(environment.MYFTC_SERVICE_PAUSED==="true")issues.push("The operator has paused the service.");
  return {enabled:issues.length===0,record,issues,releaseId};
+}
+export function accountInRelease(record:ReadinessRecord|null,userId:string) {
+ return !!record&&(record.accessModel==="self-service"||record.allowedAccountIds.includes(userId));
 }
 export function publicSupport(record:ReadinessRecord|null) {
  return record?{supportEmail:record.supportEmail,privacyEmail:record.privacyEmail}:null;

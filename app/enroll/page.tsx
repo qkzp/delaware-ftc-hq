@@ -1,26 +1,33 @@
 import { getCurrentUser } from "../auth-identity";
 import { isAuthConfigured } from "../../auth";
+import { assessReadiness } from "../../server/readiness";
+import { getReadinessEnvironment } from "../../server/runtime";
 import "../../src/components/entry.css";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Adult release setup | MyFTCSpace", description: "Private account ID lookup for an authorized adult preparing a team release.", robots: { index: false, follow: false } };
+export const metadata = { title: "Create a team | MyFTCSpace", description: "Get started with a private team workspace.", robots: { index: false, follow: false } };
 
 export default async function EnrollmentPage() {
   const authConfigured = isAuthConfigured();
+  const readiness = assessReadiness(getReadinessEnvironment());
   const user = await getCurrentUser();
+  const available = authConfigured && readiness.enabled && readiness.record?.accessModel === "self-service";
   return <div className="account-entry entry-page">
-    <a className="entry-skip-link" href="#enroll-content">Skip to account setup</a>
+    <a className="entry-skip-link" href="#enroll-content">Skip to team setup</a>
     <header className="entry-header"><a className="entry-brand" href="/" aria-label="MyFTCSpace home"><img src="/favicon.svg" alt="" width="24" height="24"/><strong>MyFTCSpace</strong></a><a className="entry-header-link" href="/privacy">Privacy &amp; data help</a></header>
     <main className="entry-layout" id="enroll-content" aria-labelledby="enroll-title">
-      <p className="entry-status">Adult release setup</p>
-      <h1 id="enroll-title">Prepare an approved account.</h1>
-      <p className="entry-description">This screen shows only the provider-scoped ID for the account currently signed in. It does not open team records or approve access.</p>
-      {!user ? authConfigured ? <><p>Sign in with the account that the responsible adult will use to administer the reviewed release.</p><a className="btn btn-primary entry-primary-action" href="/signin?callbackUrl=%2Fenroll">Choose a sign-in method</a></> : <p role="status">Account sign-in is not configured yet. The Vercel operator must add the approved identity-provider credentials before adult account setup can continue.</p> : <>
-        <p>Send this ID privately to the named adult service owner through the organization's approved channel. Do not post it publicly or include it in a student record.</p>
-        <div className="entry-detail"><p><strong>Provider-scoped account ID</strong></p><code style={{display:"block",overflowWrap:"anywhere",padding:"12px",background:"#f4f4f5",borderRadius:"4px"}}>{user.userId}</code><p>This ID is needed for the signed adult roster and production allowlist. Different sign-in methods for the same person have different IDs.</p></div>
-      </>}
-      <a className="entry-maintenance-link" href="/">Return to the release status</a>
+      <p className="entry-status">Team setup</p>
+      <h1 id="enroll-title">Create a team workspace.</h1>
+      <p className="entry-description">A coach, mentor, or other responsible adult can set up a private workspace and invite their team.</p>
+      {available ? <>
+        <p>Sign in with your own account, then choose <strong>Create a team</strong> in team settings. You can invite teammates and additional adult operators after creating your team.</p>
+        <a className="btn btn-primary entry-primary-action" href={user ? "/#settings" : "/signin?callbackUrl=%2F%23settings"}>{user ? "Continue to team settings" : "Sign in to get started"}</a>
+      </> : <p role="status">Self-service team creation is not open yet. The service is still being prepared for team access.</p>}
+      {!available && authConfigured && !user && <p><a href="/signin?callbackUrl=%2Fenroll">Sign in for roster-based release setup</a></p>}
+      {user && !available && <details className="entry-detail"><summary>Account ID for a roster-based release</summary><p>For an approved roster-based release, send this ID privately to the responsible service owner through the organization’s approved channel. Do not post it publicly or include it in a student record.</p><p><strong>Provider-scoped account ID</strong></p><code style={{display:"block",overflowWrap:"anywhere",padding:"12px"}}>{user.userId}</code><p>Different sign-in methods for the same person have different IDs.</p></details>}
+      <div className="entry-demo"><span>Want to see the workspace?</span><a href="/review">Try the demo</a><small>Fictional data only. Changes reset when you reload.</small></div>
+      <a className="entry-maintenance-link" href="/">Return to MyFTCSpace</a>
     </main>
-    <footer className="entry-footer"><span>MyFTCSpace</span><span>Access remains closed until approved</span></footer>
+    <footer className="entry-footer"><span>MyFTCSpace</span><span>Private team workspaces</span></footer>
   </div>;
 }
