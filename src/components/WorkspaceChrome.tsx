@@ -7,6 +7,7 @@ import type {Page,Role} from "../types";
 import "./workspace-chrome.css";
 import "./workspace-new.css";
 import "./workspace-simple-nav.css";
+import "./workspace-refresh.css";
 
 type Props={onSearch:()=>void;onCreate:()=>void;onAccount:()=>void;onUpdates:()=>void;onHelp:()=>void};
 
@@ -23,8 +24,9 @@ export default function WorkspaceChrome({onSearch,onCreate,onAccount,onUpdates,o
  return <>
   <div className="product-globalbar"><button onClick={()=>setPage("home")} className="product-wordmark" aria-label="MyFTCSpace home"><img src="/favicon.svg" width="23" height="23" alt=""/>MyFTCSpace</button><span className="globalbar-context">{cloud.shared?(data.teamNumber&&data.teamNumber!=="DEMO"?`FTC ${data.teamNumber}`:"TEAM WORKSPACE"):"DEMO / FICTIONAL DATA"}</span></div>
   <aside className="workspace-sidebar" aria-label="Workspace sidebar">
+   <button className="sidebar-brand" onClick={()=>setPage("home")} aria-label="MyFTCSpace home"><img src="/favicon.svg" width="26" height="26" alt=""/><strong>MyFTCSpace</strong></button>
    <button className="workspace-name" onClick={()=>setPage("settings")}>
-    <span className="team-symbol" aria-hidden="true"><img src="/favicon.svg" alt="" width="30" height="30"/></span>
+    <span className="team-symbol" aria-hidden="true">{(data.teamName||"T").trim().charAt(0).toUpperCase()||"T"}</span>
     <span><strong>{data.teamName||"Your team"}</strong>{data.teamNumber&&data.teamNumber!=="DEMO"&&<small>FTC {data.teamNumber}</small>}</span>
    </button>
    <div className="sidebar-quick-actions">

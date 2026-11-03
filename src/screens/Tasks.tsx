@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   Check,
-  CheckCircle2,
   Circle,
   Clock3,
   CalendarDays,
@@ -22,12 +21,12 @@ import {
   Field,
   Modal,
   PageHeader,
-  Progress,
 } from "../components/ui";
 import type { Task } from "../types";
 import TaskPlanning from "../components/task-planning";
 import { FocusSession } from "../components/FocusSession";
 import "./tasks-calendar.css";
+import "./workspace-screens-simple.css";
 
 const statuses: Task["status"][] = ["To do", "In progress", "Done"];
 const areas = [
@@ -87,6 +86,7 @@ export default function TasksPage() {
   const [area, setArea] = useState("All work areas");
   const [statusFilter, setStatusFilter] = useState("All statuses");
   const [subsystem, setSubsystem] = useState("All subsystems");
+  const extraFilterCount = [area !== "All work areas", statusFilter !== "All statuses", subsystem !== "All subsystems"].filter(Boolean).length;
   const [editing, setEditing, saveDraft] = useRecordDraft("tasks");
   const [comment, setComment] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -109,7 +109,8 @@ export default function TasksPage() {
       ),
     [data.tasks, scope, area, statusFilter, query, subsystem, myOwner],
   );
-  const complete = data.tasks.filter((t) => t.status === "Done").length;
+  const complete = data.tasks.filter((task) => task.status === "Done").length;
+  const overdue = data.tasks.filter((task) => task.status !== "Done" && task.due && task.due < day()).length;
   const blockedBy = (task: Task) =>
     data.tasks.filter(
       (t) => task.dependencies.includes(t.id) && t.status !== "Done",
@@ -213,45 +214,11 @@ export default function TasksPage() {
           ) : undefined
         }
       />
-      <div className="tc-task-summary">
-        <div>
-          <span className="tc-summary-icon">
-            <CheckCircle2 size={20} />
-          </span>
-          <div>
-            <strong>
-              {complete} of {data.tasks.length}
-            </strong>
-            <span>tasks complete</span>
-          </div>
-        </div>
-        <div className="tc-summary-progress">
-          <Progress
-            value={data.tasks.length ? (complete / data.tasks.length) * 100 : 0}
-          />
-          <small>
-            {data.tasks.length
-              ? Math.round((complete / data.tasks.length) * 100)
-              : 0}
-            % of the way there
-          </small>
-        </div>
-        <div>
-          <span className="tc-summary-icon amber">
-            <Clock3 size={20} />
-          </span>
-          <div>
-            <strong>
-              {
-                data.tasks.filter(
-                  (t) => t.status !== "Done" && t.due && t.due < day(),
-                ).length
-              }
-            </strong>
-            <span>overdue tasks</span>
-          </div>
-        </div>
-      </div>
+      <details className="tc-progress-disclosure">
+        <summary>Team progress</summary>
+        <p>{complete} of {data.tasks.length} tasks complete · {overdue} overdue</p>
+        <progress aria-label="Team task completion" value={complete} max={Math.max(data.tasks.length, 1)} />
+      </details>
       <div className="tc-task-toolbar">
         <div className="filter-tabs" role="group" aria-label="Task scope">
           {["All tasks", "My tasks"].map((s) => (
@@ -314,6 +281,9 @@ export default function TasksPage() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </label>
+        <details className="tc-extra-filters">
+        <summary>Filters{extraFilterCount ? ` (${extraFilterCount} active)` : ""}</summary>
+        <div className="tc-extra-filter-fields">
         <select
           aria-label="Filter work area"
           value={area}
@@ -338,6 +308,8 @@ export default function TasksPage() {
           ))}
         </select>
         <select aria-label="Filter robot subsystem" value={subsystem} onChange={e=>setSubsystem(e.target.value)}><option>All subsystems</option>{Array.from(new Set(data.tasks.map(t=>t.subsystem).filter(Boolean))).map(s=><option key={s}>{s}</option>)}</select>
+        </div>
+        </details>
       </div>
       {!filtered.length ? (
         <EmptyState

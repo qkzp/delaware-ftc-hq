@@ -20,6 +20,7 @@ import type { TeamEvent } from "../types";
 import CompetitionMap from "../components/CompetitionMap";
 import { hasCoordinates } from "../competition-map";
 import "./tasks-calendar.css";
+import "./workspace-screens-simple.css";
 
 const types: TeamEvent["type"][] = [
   "Build night",
@@ -466,6 +467,9 @@ export default function CalendarPage() {
         description="Meetings, competitions, outreach, and team deadlines."
         actions={
           <div className="inline">
+            <details className="tc-calendar-file-actions">
+            <summary>{canManage ? "Import or export" : "Export options"}</summary>
+            <div className="tc-calendar-file-buttons">
             <button
               className="btn btn-secondary"
               onClick={exportCalendar}
@@ -489,12 +493,11 @@ export default function CalendarPage() {
                   <FileUp size={16} />
                   <span className="tc-desktop-label">Import</span>
                 </button>
-                <button className="btn btn-primary" onClick={() => create()}>
-                  <Plus size={17} />
-                  New event
-                </button>
               </>
             )}
+            </div>
+            </details>
+            {canManage && <button className="btn btn-primary" onClick={() => create()}><Plus size={17} />New event</button>}
           </div>
         }
       />
@@ -580,14 +583,14 @@ export default function CalendarPage() {
           · Team-managed calendar
         </span>
       </div>
-      <div className="tc-calendar-legend">
+      {view === "Month" && <details className="tc-calendar-key"><summary>Event types</summary><div className="tc-calendar-legend">
         {types.map((t) => (
           <span style={eventStyle(t)} key={t}>
             <i />
             {t}
           </span>
         ))}
-      </div></>}
+      </div></details>}</>}
       {view === "Map" ? <CompetitionMap events={data.events} county={data.county} canManage={canManage} onOpen={setSelected} onAdd={event => openEdit({
         id:crypto.randomUUID(),teamId:data.teamId,seasonId:data.seasonId,demo:false,title:event.title,date:event.date,time:event.time,endTime:event.endTime,type:"Competition",location:event.location,latitude:event.latitude,longitude:event.longitude,owner:myOwner,agenda:"",notes:`Organizer listing checked ${event.checkedAt}. Confirm registration, eligibility, and travel arrangements with the organizer.`,source:event.source,lastSynced:event.checkedAt,rsvp:false,recurring:"None",verification:"needs-review",deadline:event.deadline || "",
       })}/> : view === "Month" ? (

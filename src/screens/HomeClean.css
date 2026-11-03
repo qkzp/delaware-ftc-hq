@@ -1,0 +1,33 @@
+/* A focused work area: the task list first, supporting information alongside it. */
+html body div.app-shell div.work-home .work-heading{border:0;padding:16px 0 20px}
+html body div.app-shell div.work-home .work-heading h1{font-size:clamp(1.875rem,2.8vw,2.5rem);letter-spacing:-.035em}
+html body div.app-shell div.work-home .work-heading>div>span{font:400 .875rem/1.5 var(--body);color:var(--muted)}
+html body div.app-shell div.work-home .work-home-columns{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,290px);gap:24px;align-items:start}
+html body div.app-shell div.work-home .work-home-main{min-width:0}
+html body div.app-shell div.work-home .work-main-heading{padding:0 0 8px}
+html body div.app-shell div.work-home .work-main-heading h2{margin:0;font:700 1.25rem/1.3 var(--body);letter-spacing:-.02em}
+html body div.app-shell div.work-home .work-main-heading p{margin:3px 0 0;color:var(--muted);font-size:.875rem}
+html body div.app-shell div.work-home .work-view-bar{border-bottom:1px solid var(--line);margin:0;gap:8px}
+html body div.app-shell div.work-home .work-view-tabs{gap:14px}
+html body div.app-shell div.work-home .work-view-tabs button{font-size:.875rem!important}
+html body div.app-shell div.work-home .work-filter-disclosure{border-bottom:0}
+html body div.app-shell div.work-home .work-filter-disclosure>summary{font-size:.8125rem}
+html body div.app-shell div.work-home .work-layout,
+html body div.app-shell div.work-home .work-layout.has-selection{grid-template-columns:minmax(0,1fr)}
+html body div.app-shell div.work-home .work-list{border:1px solid var(--line);background:var(--paper);border-radius:8px;overflow:hidden}
+html body div.app-shell div.work-home .work-table-heading{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+html body div.app-shell div.work-home .work-task-row{grid-template-columns:44px minmax(0,1fr) minmax(62px,auto) 82px;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);background:transparent}
+html body div.app-shell div.work-home .work-task-row.is-selected{background:var(--accent-soft)}
+html body div.app-shell div.work-home .work-task-title{display:flex;flex-wrap:wrap;align-items:center;gap:0 6px;min-width:0}
+html body div.app-shell div.work-home .work-task-title>button{padding:4px!important}
+html body div.app-shell div.work-home .work-task-status{display:block;flex-basis:100%;padding-left:4px;color:var(--muted);font-size:.75rem}
+html body div.app-shell div.work-home .work-select-task{gap:4px;font-size:.75rem!important}
+html body div.app-shell div.work-home .work-list-footer{padding:10px 16px;border:0;color:var(--muted)}
+html body div.app-shell div.work-home .work-detail{border:1px solid var(--line);border-radius:8px;background:var(--paper);margin-top:12px}
+html body div.app-shell div.work-home .work-reference-row{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin:0}
+html body div.app-shell div.work-home :is(.work-schedule,.work-team-reference){border:1px solid var(--line);border-radius:8px;background:var(--paper);padding:14px}
+html body div.app-shell div.work-home :is(.work-schedule,.work-team-reference) header{gap:8px}
+html body div.app-shell div.work-home .work-event{padding:8px 0}
+html body div.app-shell div.work-home .work-updates{border-top:1px solid var(--line);margin-top:24px}
+@media(max-width:900px){html body div.app-shell div.work-home .work-home-columns{grid-template-columns:minmax(0,1fr);gap:20px}html body div.app-shell div.work-home .work-reference-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){html body div.app-shell div.work-home .work-home-columns{gap:16px}html body div.app-shell div.work-home .work-reference-row{grid-template-columns:minmax(0,1fr)}html body div.app-shell div.work-home .work-task-row{grid-template-columns:44px minmax(0,1fr) 82px;gap:4px;padding-inline:6px}html body div.app-shell div.work-home .work-mobile-due{flex-basis:auto}html body div.app-shell div.work-home .work-task-status{flex-basis:100%}}

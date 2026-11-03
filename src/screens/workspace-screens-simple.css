@@ -1,0 +1,23 @@
+/* Keep everyday controls visible and let extra filters and file tools open in place. */
+html body .app-shell .tc-task-filters{align-items:flex-start;flex-wrap:wrap}
+html body .app-shell .tc-task-filters .tc-filter-search{flex:1 1 240px;max-width:420px}
+html body .app-shell .tc-extra-filters{flex:1 1 150px;min-width:0}
+html body .app-shell .tc-extra-filters>summary,
+html body .app-shell .tc-calendar-file-actions>summary,
+html body .app-shell .tc-calendar-key>summary{display:flex;align-items:center;min-height:44px;padding:8px 12px;cursor:pointer;color:var(--ink);font:600 .875rem/1.4 var(--body);list-style:none}
+html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary::-webkit-details-marker{display:none}
+html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary:before{content:"+";margin-right:8px;color:var(--accent);font-size:1.125rem}
+html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)[open]>summary:before{content:"-"}
+html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body .app-shell .tc-extra-filter-fields,
+html body .app-shell .tc-calendar-file-buttons{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 10px}
+html body .app-shell .tc-extra-filter-fields select{flex:1 1 145px;min-width:0}
+html body .app-shell .tc-calendar-file-actions{max-width:100%}
+html body .app-shell .tc-calendar-key{margin:0 0 12px}
+html body .app-shell .tc-calendar-key>summary{padding-left:0}
+html body .app-shell .tc-calendar-key .tc-calendar-legend{margin:0;padding:0 0 8px}
+html body .app-shell .tc-progress-disclosure>summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--accent);font-size:.8125rem;font-weight:600}
+html body .app-shell .tc-progress-disclosure p{margin:2px 0 8px;color:var(--muted);font-size:.875rem}
+html body .app-shell .tc-progress-disclosure progress{width:min(100%,260px);accent-color:var(--accent);margin-bottom:12px}
+html body .app-shell .tc-progress-disclosure>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:600px){html body .app-shell .tc-task-filters .tc-filter-search{max-width:none;flex-basis:100%}html body .app-shell .tc-extra-filters{flex-basis:100%}html body .app-shell .tc-extra-filter-fields select{flex-basis:100%}}

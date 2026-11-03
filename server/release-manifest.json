@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:56073b53294e7509f9134017fb927d529a7d456ecc2f72b352e12238ec28c207",
+  "releaseId": "sha256:eef8f087332ae3cad1aaec0247dfbb68e4cb3b783322b1023a17a6d8577432d1",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -611,8 +611,8 @@
       "sha256": "665c38b69d376b618cab89aedcc1c72ee3a021eee1ac61e95185d47db019642b"
     },
     "src/components/WorkspaceChrome.tsx": {
-      "bytes": 6006,
-      "sha256": "244c8e858786d1db090803735bf25cdb659498dc1ed3ae3472f246ba125863ac"
+      "bytes": 6231,
+      "sha256": "2cf2ba58a10251d07c23c153e115dc66f4263b9fca78a6663abd945881339638"
     },
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
@@ -653,6 +653,10 @@
     "src/components/workspace-new.css": {
       "bytes": 12891,
       "sha256": "f5af5a5ac4fd86f2144ccb54d95de919961900366c61fd54f907f66d9d99f88c"
+    },
+    "src/components/workspace-refresh.css": {
+      "bytes": 5043,
+      "sha256": "b92432e5d8ffeaed6eb955ac6fc0e1976ed76426a441d7f7d53016eb6cce2225"
     },
     "src/components/workspace-simple-nav.css": {
       "bytes": 1191,
@@ -727,8 +731,8 @@
       "sha256": "0ba6a9e17cce194ebc0677376e719c50c593d6c509c45dfa9f9e9eda30017413"
     },
     "src/screens/Calendar.tsx": {
-      "bytes": 44972,
-      "sha256": "b55245b74878d96106caac8d38057f916403c018f7e68177f762c22b922350d5"
+      "bytes": 45307,
+      "sha256": "8bec453afbef131ea73449e009d6a01acecdd182a1e16d89ca0c016457a9bfad"
     },
     "src/screens/Evidence.tsx": {
       "bytes": 15553,
@@ -745,6 +749,10 @@
     "src/screens/Home.tsx": {
       "bytes": 36,
       "sha256": "75d3e0f81a452fcc463ac9b5d02a25f0fba8cadd2f239d4d6e1dc2c2912fe116"
+    },
+    "src/screens/HomeClean.css": {
+      "bytes": 4027,
+      "sha256": "391ca733ccc95039bb3a78718ca371d98877214f1eec6492dcc62de73b4cc1c6"
     },
     "src/screens/HomeSimple.css": {
       "bytes": 3713,
@@ -767,8 +775,8 @@
       "sha256": "912e013f02c025a50892a103a6bd67e5980aeb3861298b35c86c42c2127b8983"
     },
     "src/screens/Overview.tsx": {
-      "bytes": 17015,
-      "sha256": "131f9eb7b3630b18c964e38b2f5ce181fe4ca223b75d0b524777b47b26e05262"
+      "bytes": 16010,
+      "sha256": "12532fa2e7cf737163b5813824ee88ac4e0ed070702202753008c87646cd4b88"
     },
     "src/screens/Pit.tsx": {
       "bytes": 14499,
@@ -791,16 +799,20 @@
       "sha256": "35f8eb97b563af586c83452033efef1ef15eda065b176b01dcc1e903237d46f3"
     },
     "src/screens/Tasks.tsx": {
-      "bytes": 30305,
-      "sha256": "fbbd82e4021d0aa9ba3ef001aaef2d04d48945de98c3fca9195d8d18743f2930"
+      "bytes": 29987,
+      "sha256": "3d828c6ef33bc7b8682c416b96e0a0cbd4a5bb86bc84e1521981cd91e4dfb84e"
     },
     "src/screens/TeamHub.css": {
       "bytes": 13947,
       "sha256": "f95cf410bd9d97a037e08f6955a20ca8e4f2db0c85bf45b68c10a9337c4008e1"
     },
     "src/screens/TeamHub.tsx": {
-      "bytes": 16215,
-      "sha256": "d9e2367cb16586459febb9c1a6110455650e736bf9cbd45378178bd65b553db4"
+      "bytes": 16841,
+      "sha256": "6ceabb6e9aa9ef9efb2ca06ff1e34981bbbaef5fd1b26a730a152348596a8c86"
+    },
+    "src/screens/TeamHubSimple.css": {
+      "bytes": 7632,
+      "sha256": "7212c642adb370be35c81af020dbd839d19056ebbb19eadccb794a09d80b9dec"
     },
     "src/screens/funding.css": {
       "bytes": 20219,
@@ -813,6 +825,10 @@
     "src/screens/tasks-calendar.css": {
       "bytes": 21903,
       "sha256": "e6023966200c4d3d06d067dd42d0d7146ea321cb1a5cc7304ef77c4343080e10"
+    },
+    "src/screens/workspace-screens-simple.css": {
+      "bytes": 2449,
+      "sha256": "662bc2aee20949d4f9a666bd892b27ff7f5dc14d631e4a8bf3a07adadb076f0b"
     },
     "src/seed.ts": {
       "bytes": 14937,
@@ -881,8 +897,13 @@
   },
   "sourceChanges": [
     "src/components/WorkspaceChrome.tsx",
+    "src/screens/Calendar.tsx",
     "src/screens/Overview.tsx",
-    "src/components/workspace-simple-nav.css",
-    "src/screens/HomeSimple.css"
+    "src/screens/Tasks.tsx",
+    "src/screens/TeamHub.tsx",
+    "src/components/workspace-refresh.css",
+    "src/screens/HomeClean.css",
+    "src/screens/TeamHubSimple.css",
+    "src/screens/workspace-screens-simple.css"
   ]
 }

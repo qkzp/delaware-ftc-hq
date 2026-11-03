@@ -1,0 +1,65 @@
+/* A calm, compact workspace frame. All tokens are scoped to the application. */
+html body div.app-shell {
+ --ink:#182a39; --text:#182a39; --muted:#526474;
+ --paper:#fff; --surface:#f3f6f8; --subtle:#e6edf1;
+ --line:#cbd6dd; --border:#cbd6dd; --border-strong:#718798;
+ --accent:#195c83; --accent-dark:#104865; --accent-solid:#195c83;
+ --accent-soft:#dfedf4; --on-accent:#fff; --strong:#183c50; --on-strong:#fff;
+ --work-band:#fff; --work-band-ink:#182a39; --work-band-muted:#526474;
+ background:var(--surface); color:var(--ink);
+}
+html[data-theme=dark] body div.app-shell {
+ --ink:#f0f5f7; --text:#f0f5f7; --muted:#b8c8d1;
+ --paper:#1d2a34; --surface:#14212a; --subtle:#2b3c48;
+ --line:#536873; --border:#536873; --border-strong:#95aab7;
+ --accent:#a5d6ed; --accent-dark:#caebfa; --accent-solid:#a5d6ed;
+ --accent-soft:#294657; --on-accent:#10232d; --strong:#e7f1f5; --on-strong:#14242e;
+ --work-band:#1d2a34; --work-band-ink:#f0f5f7; --work-band-muted:#b8c8d1;
+}
+
+html body div.app-shell .sidebar-brand {
+ display:flex;align-items:center;gap:9px;width:100%;min-height:48px;
+ margin:0 0 8px;padding:4px 8px;border:0;border-radius:5px;
+ background:transparent;color:var(--ink);text-align:left;font-size:1rem;
+}
+html body div.app-shell .sidebar-brand img {display:block;flex:none;border-radius:3px}
+html body div.app-shell .sidebar-brand:hover {background:var(--subtle)}
+html body div.app-shell .product-globalbar {background:var(--work-band);color:var(--work-band-ink);border-bottom:1px solid var(--line)}
+html body div.app-shell .product-globalbar .product-wordmark {color:var(--work-band-ink)}
+html body div.app-shell .workspace-sidebar {background:var(--paper);border-right:1px solid var(--line);padding:12px}
+html body div.app-shell .workspace-sidebar .workspace-name {border:0;margin:0 0 8px;padding:6px 8px}
+html body div.app-shell .workspace-name>.team-symbol {width:28px;height:28px;border-radius:4px;background:var(--subtle);color:var(--ink);font:700 .875rem/1 var(--body);letter-spacing:0}
+html body div.app-shell .workspace-sidebar .workspace-search {background:var(--surface)!important;border:1px solid var(--line);border-radius:5px!important}
+html body div.app-shell .workspace-sidebar .workspace-tab {color:var(--muted);border-radius:5px;padding:8px 10px}
+html body div.app-shell .workspace-sidebar .workspace-tab.is-active {background:var(--accent-soft);color:var(--ink)}
+html body div.app-shell .workspace-sidebar .workspace-tab.is-active>svg {color:var(--accent)}
+html body div.app-shell .sidebar-section-label {color:var(--muted);font:600 .75rem/1.4 var(--body);letter-spacing:0;text-transform:none}
+html body div.app-shell .sidebar-bottom {border-top:1px solid var(--line)}
+html body div.app-shell .workspace-topbar {background:var(--paper);border-bottom:1px solid var(--line);padding:8px 24px}
+html body div.app-shell .workspace-topbar .chrome-create {background:var(--accent-solid);border-color:var(--accent-solid);color:var(--on-accent)}
+html body div.app-shell .workspace-topbar .chrome-create:hover {background:var(--accent-dark);border-color:var(--accent-dark);color:var(--on-accent)}
+html[data-theme=dark] body div.app-shell .workspace-topbar .chrome-create {color:var(--on-accent)}
+html body div.app-shell .main-content {background:var(--surface);padding:0 24px 24px}
+html body div.app-shell .page-surface {width:100%;max-width:1400px}
+html body div.app-shell .page-header {padding:20px 0 14px!important;margin-bottom:16px!important;border-bottom:1px solid var(--line)}
+html body div.app-shell .page-header h1 {font-size:clamp(1.625rem,2.4vw,2rem);line-height:1.15;letter-spacing:-.035em}
+html body div.app-shell .page-description {max-width:680px;color:var(--muted);font-size:.875rem;line-height:1.5}
+html body div.app-shell .card {background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:none}
+html body div.app-shell .empty-state {background:var(--paper);border:1px solid var(--line);border-radius:6px}
+html body div.app-shell .btn {border-radius:5px}
+html body div.app-shell .btn-primary {background:var(--accent-solid);border-color:var(--accent-solid);color:var(--on-accent)}
+html body div.app-shell .btn-primary:hover {background:var(--accent-dark);border-color:var(--accent-dark);color:var(--on-accent)}
+html body div.app-shell .btn-secondary {background:var(--paper);border-color:var(--border-strong);color:var(--ink)}
+html body div.app-shell :is(.filter-tabs,.robot-lab-tabs) {border-bottom-color:var(--line)}
+html body div.app-shell :is(.filter-tabs,.robot-lab-tabs)>button {border-radius:4px 4px 0 0}
+html body div.app-shell .review-demo-notice {background:var(--accent-soft);color:var(--ink);border-color:var(--line)}
+html body div.app-shell .review-demo-notice a {color:var(--accent)}
+
+@media(min-width:981px) {
+ html body div.app-shell .product-globalbar {display:none}
+ html body div.app-shell .workspace-sidebar {top:0}
+}
+@media(max-width:980px) {
+ html body div.app-shell .main-content {padding-inline:16px}
+ html body div.app-shell .workspace-topbar {padding-inline:16px}
+}
