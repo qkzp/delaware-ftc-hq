@@ -1,8 +1,8 @@
 /* A field notebook, not a marketing template: paper, ink, rules and an inspection accent. */
 html:root, html:root[data-theme=light] {
-  --body: "IBM Plex Sans", Arial, sans-serif;
-  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
-  --mono: "IBM Plex Mono", Consolas, monospace;
+  --body: "Source Sans 3", Arial, sans-serif;
+  --display: "Manrope", Arial, sans-serif;
+  --mono: "DM Mono", Consolas, monospace;
   --ink: #25221d; --text: #25221d; --muted: #625b50;
   --paper: #fffdf8; --surface: #f2efe7; --subtle: #e6e0d4;
   --line: #c7bfb0; --border: #c7bfb0; --border-strong: #82796a;

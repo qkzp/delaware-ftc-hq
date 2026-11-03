@@ -1,8 +1,8 @@
 import { writeFile, mkdir } from "node:fs/promises";
 const families = [
-  ["Barlow Condensed", "500;600;700", "barlowcondensed"],
-  ["IBM Plex Sans", "400;500;600", "ibmplexsans"],
-  ["IBM Plex Mono", "400;500", "ibmplexmono"],
+  ["Manrope", "500;600;700", "manrope"],
+  ["Source Sans 3", "400;500;600;700", "sourcesans3"],
+  ["DM Mono", "400;500", "dmmono"],
 ];
 const rules = [];
 const downloaded = new Map();

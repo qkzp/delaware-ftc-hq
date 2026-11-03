@@ -13,9 +13,9 @@
   --paper:#faf9f5;
   --surface:#f5f3ec;
   --accent:#ce431e;
-  --body:"IBM Plex Sans", Arial, Helvetica, sans-serif;
-  --display:"Barlow Condensed", "Arial Narrow", Arial, sans-serif;
-  --mono:"IBM Plex Mono", Consolas, "Liberation Mono", monospace;
+  --body:"Source Sans 3", Arial, Helvetica, sans-serif;
+  --display:"Manrope", Arial, sans-serif;
+  --mono:"DM Mono", Consolas, "Liberation Mono", monospace;
 }
 * {
   box-sizing:border-box;

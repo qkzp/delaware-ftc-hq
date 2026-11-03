@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:a0a240b8e8062036c2f90f2d900d42b715ebd0cc2c930764a66cafe1bac56ec5",
+  "releaseId": "sha256:d91077025d08f43a04e45e2225b01ff64903130345a1bb4ac65dff8053bf175f",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -71,8 +71,8 @@
       "sha256": "065289f0dc9d5664e8ee0dced657b68f669014193ad5e71a85f87f4fe6f5a09e"
     },
     "app/privacy/privacy.css": {
-      "bytes": 5272,
-      "sha256": "41a5a61a24df34fcb6a74f6313fa4db1e6c5d514b593d22705d76706ec0b0d5c"
+      "bytes": 5136,
+      "sha256": "7ed2ad41d0f02bfaaf8d691a8367d1578f6cda2ca6458a53b54cbf85c46d6a2d"
     },
     "app/robot-lab/page.tsx": {
       "bytes": 332,
@@ -242,6 +242,18 @@
       "bytes": 4377,
       "sha256": "186d750eb496a4c17a76385f82be6aea2ac1cf2de074a811d63786cf374ea73f"
     },
+    "public/fonts/dmmono-400.woff2": {
+      "bytes": 14820,
+      "sha256": "e1896b13b2b1bb112fac2f9571bd6c40e118746e77a4511edbf43fbb41bf3e1e"
+    },
+    "public/fonts/dmmono-500.woff2": {
+      "bytes": 14988,
+      "sha256": "9964608a849396bd00c4bfd7034afe03486469dcf20b4f6b8cbdfdd310369951"
+    },
+    "public/fonts/dmmono-OFL.txt": {
+      "bytes": 4391,
+      "sha256": "febfd2b42308d5327ade2884aed777da3d2decd2c53d574c43e603443d70c5b2"
+    },
     "public/fonts/ibmplexmono-400.woff2": {
       "bytes": 14708,
       "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
@@ -261,6 +273,22 @@
     "public/fonts/ibmplexsans-OFL.txt": {
       "bytes": 4363,
       "sha256": "37784b44044a4ffd9256702b7c0982c37e5c8887ba90c6dca0479aea93dc898d"
+    },
+    "public/fonts/manrope-500.woff2": {
+      "bytes": 24532,
+      "sha256": "8c2def024c1bf31aacf3624ae3c4d701269b4ec3dc765c04830839f0d36b2d9e"
+    },
+    "public/fonts/manrope-OFL.txt": {
+      "bytes": 4387,
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    "public/fonts/sourcesans3-400.woff2": {
+      "bytes": 28872,
+      "sha256": "19143dca075972bc84e3fd9eab7416dd40cc565dccb2435a044bdfabe060c7d5"
+    },
+    "public/fonts/sourcesans3-OFL.txt": {
+      "bytes": 4486,
+      "sha256": "ed86f375d70bd39238d13b2ba5bd3bed20b3fe4847fa1356a63f380d2b26a8a5"
     },
     "public/static-cache-sw.js": {
       "bytes": 1453,
@@ -303,8 +331,8 @@
       "sha256": "2e71116f4d2b70cff8bb70436f8dd5c709ec7ff62893424530f404e0193d3630"
     },
     "scripts/fetch-fonts.mjs": {
-      "bytes": 2218,
-      "sha256": "029d68c1606b5c236e261f46c277d7a843d81a547a614b3d009362fac6799012"
+      "bytes": 2194,
+      "sha256": "12189115b2b7c2ec5ed4f496680abd2d3fc34e2d6189bd4c637f7e1f93ba9086"
     },
     "scripts/install-ci.mjs": {
       "bytes": 1685,
@@ -575,12 +603,12 @@
       "sha256": "9f2a6ddac64f543237414f0d75e9b4c6de7cdf782cd02358a3e871cf447d0612"
     },
     "src/components/entry.css": {
-      "bytes": 3909,
-      "sha256": "aaa81035fc65813506bd71441180fa43440b2a366d5d6677f02df05e365ff105"
+      "bytes": 3773,
+      "sha256": "2556c9784ef1074e5569ac2126f3c6b3c99863a20fda9139aedb344af08ec5fa"
     },
     "src/components/public-new.css": {
-      "bytes": 13755,
-      "sha256": "a77408a86862f1d71f5d6ca209457be6141f50a279b6544a112060018dcf7178"
+      "bytes": 13585,
+      "sha256": "671046a0c6083ba53c382a37e1bf421080c1bd00815c45b2abac5aaca069590d"
     },
     "src/components/task-planning.css": {
       "bytes": 6266,
@@ -635,12 +663,12 @@
       "sha256": "4bfa2218420c395aea6284d5eab667dc38350e24e3e4ac2e82cc4781e28b5129"
     },
     "src/fieldmanual.css": {
-      "bytes": 5556,
-      "sha256": "67789eff6c27c858ed7f6b2d7f0f71d0ed32d69d75f1a939698785fd30e7d842"
+      "bytes": 5525,
+      "sha256": "5e265b1925c0d737a49949a2e46bca3748c0b4680422bbb12525b3c2d742d5cf"
     },
     "src/fonts.css": {
-      "bytes": 2971,
-      "sha256": "6511e240273e975c7d600412d08d1e63c3766314afbe0b8393463d0003ef2008"
+      "bytes": 3178,
+      "sha256": "594f8337fc3780dd300e66e817af6fa848fa7de3f35b074849660fd1fb44a118"
     },
     "src/main.tsx": {
       "bytes": 382,
@@ -771,8 +799,8 @@
       "sha256": "c26fe489c90dbf6411301f0ac272af5372385dfc062521ed5d0b774739e9e31d"
     },
     "src/styles.css": {
-      "bytes": 22263,
-      "sha256": "2c5e00bd4b1ebd35df398018d0bd98e260278a1df530422a36f01c4165b8e977"
+      "bytes": 22232,
+      "sha256": "9a969bbb5c3db1846c53242e134bec63109bdfe6de3604bb6de7d66fb917a984"
     },
     "src/surfaces.css": {
       "bytes": 19592,
