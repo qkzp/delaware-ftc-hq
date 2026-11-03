@@ -1337,7 +1337,7 @@ test("workstream selection filters the queue, pins a real task, and opens its bu
     await app.update(() =>
       app.root
         .findByProps({
-          "aria-label": `Bring ${secondTask.title} to the workbench`,
+          "aria-label": `Details for ${secondTask.title}`,
         })
         .props.onClick(),
     );
@@ -1417,7 +1417,7 @@ test("student workbench keeps other-owner work read-only and hides private fundi
     await app.update(() =>
       app.root
         .findByProps({
-          "aria-label": `Bring ${selected.title} to the workbench`,
+          "aria-label": `Details for ${selected.title}`,
         })
         .props.onClick(),
     );

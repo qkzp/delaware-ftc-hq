@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:7a14a1c9260c6ffb032abc0fa70fc1e4dbf2dd2912c0894bc6271758fd1b7e0a",
+  "releaseId": "sha256:56073b53294e7509f9134017fb927d529a7d456ecc2f72b352e12238ec28c207",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -611,8 +611,8 @@
       "sha256": "665c38b69d376b618cab89aedcc1c72ee3a021eee1ac61e95185d47db019642b"
     },
     "src/components/WorkspaceChrome.tsx": {
-      "bytes": 7225,
-      "sha256": "fc3e8643c6a415a5fafc42ed84b01a904af601aae5fefc111ca32b7d78ce3cf0"
+      "bytes": 6006,
+      "sha256": "244c8e858786d1db090803735bf25cdb659498dc1ed3ae3472f246ba125863ac"
     },
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
@@ -653,6 +653,10 @@
     "src/components/workspace-new.css": {
       "bytes": 12891,
       "sha256": "f5af5a5ac4fd86f2144ccb54d95de919961900366c61fd54f907f66d9d99f88c"
+    },
+    "src/components/workspace-simple-nav.css": {
+      "bytes": 1191,
+      "sha256": "f9e5ada3605a7ec30285dfd2f65fec8ac3e87fb0af453853220d436b6d97f674"
     },
     "src/design.css": {
       "bytes": 22958,
@@ -742,6 +746,10 @@
       "bytes": 36,
       "sha256": "75d3e0f81a452fcc463ac9b5d02a25f0fba8cadd2f239d4d6e1dc2c2912fe116"
     },
+    "src/screens/HomeSimple.css": {
+      "bytes": 3713,
+      "sha256": "68d821e7f4c5c5228f3c5068c3f30037af4fcb031acc42fa788a0fb40d5b7199"
+    },
     "src/screens/Library.css": {
       "bytes": 22145,
       "sha256": "76a6dfbf1fc9dcfdc868e240856f941cae6f88e836b733d02992b4fbcd855ce7"
@@ -759,8 +767,8 @@
       "sha256": "912e013f02c025a50892a103a6bd67e5980aeb3861298b35c86c42c2127b8983"
     },
     "src/screens/Overview.tsx": {
-      "bytes": 16674,
-      "sha256": "4d975324a46028ee4da7272a43cf8ae3bd0a87ff7760ebd057fe1427e53ababc"
+      "bytes": 17015,
+      "sha256": "131f9eb7b3630b18c964e38b2f5ce181fe4ca223b75d0b524777b47b26e05262"
     },
     "src/screens/Pit.tsx": {
       "bytes": 14499,
@@ -872,6 +880,9 @@
     }
   },
   "sourceChanges": [
-    "docs/release-evidence.md"
+    "src/components/WorkspaceChrome.tsx",
+    "src/screens/Overview.tsx",
+    "src/components/workspace-simple-nav.css",
+    "src/screens/HomeSimple.css"
   ]
 }
