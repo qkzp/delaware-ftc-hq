@@ -24,7 +24,7 @@ function clock(milliseconds: number) {
 }
 
 export function FocusSession({ taskId, onClose }: FocusSessionProps) {
-  const { data, draftScope, canManage, saveRecord, notify, openRecord, storageError, myOwner, memberName, cloud } =
+  const { data, draftScope, canManage, saveRecord, notify, openRecord, storageError, myOwner, memberName, cloud, ephemeralDemo } =
     useHQ();
   const task = data.tasks.find((item) => item.id === taskId);
   const canEdit = !!task && (canManage || task.owner === myOwner);
@@ -382,7 +382,7 @@ export function FocusSession({ taskId, onClose }: FocusSessionProps) {
             <span>
               {storageError
                 ? "SAVE NEEDS ATTENTION — SEE WORKSPACE NOTICE"
-                : cloud.shared ? `Team session · ${cloud.status}` : "Demo session · saved in this browser"}
+                : ephemeralDemo ? "Fictional review · temporary" : cloud.shared ? `Team session · ${cloud.status}` : "Demo session · saved in this browser"}
             </span>
             <button
               className="btn btn-primary"

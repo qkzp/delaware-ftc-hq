@@ -11,6 +11,15 @@ const {calculateDrivetrain}=await vite.ssrLoadModule("/src/drivetrain.ts");
 const stats={kind:"motor",model:"Fictional test motor",purpose:"Drivetrain",configName:"leftDrive",port:"Control Hub motor 0",status:"Installed",servoType:"Positional",ratedRpm:300,measuredRpm:240,ticksPerRev:600,gearRatio:2,wheelDiameter:4};
 
 test("local system identification learns the synthetic motor and tunes a bounded stable simulated response",()=>{const model=fitMotorModel(syntheticMotorSamples(),"synthetic");assert.ok(Math.abs(model.maxVelocity-2200)<20);assert.ok(Math.abs(model.tau-.28)<.01);assert.ok(model.validationError<.01);const tuned=tunePID(model);assert.ok(tuned.points.every(point=>Number.isFinite(point.velocity)&&Math.abs(point.power)<=1));assert.ok(Math.abs(tuned.points.at(-1).velocity/model.maxVelocity-.5)<.03);assert.ok(tuned.overshoot<.2);assert.throws(()=>fitMotorModel(Array.from({length:100},(_,i)=>({time:i*.02,power:0,velocity:0})),"telemetry"));assert.throws(()=>parseMotorCSV("time,power,velocity\n1,foo,4"));});
+test("the bundled synthetic dataset cannot be reimported as telemetry, including the rounded CSV download",()=>{
+ const example=syntheticMotorSamples();
+ const csv="time,power,velocity\n"+example.map(s=>`${s.time.toFixed(3)},${s.power},${s.velocity.toFixed(5)}`).join("\n");
+ assert.throws(()=>fitMotorModel(example,"telemetry"),/built-in synthetic example/);
+ assert.throws(()=>fitMotorModel(parseMotorCSV(csv),"telemetry"),/built-in synthetic example/);
+ assert.equal(fitMotorModel(example,"synthetic").source,"synthetic");
+ const other=example.map(s=>({...s,velocity:s.velocity*.9}));
+ assert.equal(fitMotorModel(other,"telemetry").source,"telemetry");
+});
 test("route geometry supports mecanum and differential drives, validates hardware, and rejects unsafe boundary poses",()=>{const straight=[{x:24,y:24,heading:0},{x:24,y:72,heading:0}],commands=planRoute(defaultHardware,straight);assert.deepEqual(commands[0].wheels,[48,48,48,48]);const strafe=planRoute(defaultHardware,[straight[0],{x:48,y:24,heading:0}]);assert.deepEqual(strafe[0].wheels,[24,-24,-24,24]);const tank=planRoute({...defaultHardware,drive:"tank",names:["left","right"]},[straight[0],{x:48,y:24,heading:0}]);assert.equal(tank.length,3);assert.throws(()=>planRoute(defaultHardware,[straight[0],{x:1,y:1,heading:0}]));assert.throws(()=>planRoute({...defaultHardware,names:["same","same","same","same"]},straight));});
 test("Java exports are disabled reviewable scaffolds with time limits, stop handling and no synthetic learned calibration",()=>{const route=[{x:24,y:24,heading:0},{x:24,y:72,heading:90}],model=fitMotorModel(syntheticMotorSamples(),"synthetic"),gains=tunePID(model).gains;const code=generateAutonomousJava(defaultHardware,route,model,gains);assert.match(code,/@Disabled/);assert.match(code,/finally/);assert.match(code,/planTimer.seconds\(\)<28/);assert.match(code,/RUN_TO_POSITION/);assert.doesNotMatch(code,/MAX_VELOCITY=/);const calibrated=generateAutonomousJava(defaultHardware,route,{...model,source:"telemetry"},gains);assert.match(calibrated,/RUN_WITHOUT_ENCODER/);assert.match(calibrated,/Math.min\(0.5/);});
 

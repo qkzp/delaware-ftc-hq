@@ -22,7 +22,7 @@ test("keyboard opens and dismisses a dialog, returns focus, and exposes a useful
 });
 test("Robot Lab trains a synthetic model and exports a disabled encoder route without treating it as measured calibration",async({page})=>{
  await page.goto("/tests/browser/#robotlab");await page.getByRole("button",{name:"Train on a simulated motor"}).click();await expect(page.getByText("Synthetic model — simulation only",{exact:true})).toBeVisible();
- await page.getByRole("button",{name:"Autonomous planner",exact:true}).click();await expect(page.getByLabel(/Apply the telemetry-fitted/)).toBeDisabled();await page.getByLabel(/I checked the motor names/).check();await page.getByRole("button",{name:"Generate Java and route"}).click();await expect(page.getByLabel("Generated Java source")).toHaveValue(/@Disabled/);await expect(page.getByLabel("Generated Java source")).toHaveValue(/RUN_TO_POSITION/);
+ await page.getByRole("button",{name:"Autonomous planner",exact:true}).click();await expect(page.getByLabel(/I verified the imported data/)).toBeDisabled();await page.getByLabel(/I checked the motor names/).check();await page.getByRole("button",{name:"Generate Java and route"}).click();await expect(page.getByLabel("Generated Java source")).toHaveValue(/@Disabled/);await expect(page.getByLabel("Generated Java source")).toHaveValue(/RUN_TO_POSITION/);
  const result=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"]).analyze();expect(result.violations).toEqual([]);
 });
 test("an award deadline saved by a mentor is visible to a student with the same due date",async({page})=>{

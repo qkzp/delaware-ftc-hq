@@ -31,6 +31,7 @@ type Notice = {
   id: number;
 };
 interface HQContext {
+  ephemeralDemo: boolean;
   cloud: Cloud;
   myOwner: string;
   memberName: (owner: string) => string;
@@ -79,9 +80,10 @@ const validPages: Page[] = [
   "evidence",
   "opportunities",
 ];
-export function HQProvider({ children, accountMode=false, demoMode=false }: { children: ReactNode; accountMode?:boolean; demoMode?:boolean }) {
+export function HQProvider({ children, accountMode=false, demoMode=false, ephemeralDemo=false }: { children: ReactNode; accountMode?:boolean; demoMode?:boolean; ephemeralDemo?:boolean }) {
   const [storageError, setStorageError] = useState("");
   const [data, updateData] = useState<AppData>(() => {
+    if (ephemeralDemo) return createDemoData();
     if (accountMode) return createWorkspaceData();
     try {
       const saved = localRepository.read();
@@ -105,7 +107,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
       return createDemoData();
     }
   });
-  const cloud = useCloud(data, updateData, {enabled:!demoMode, autoOpen:accountMode});
+  const cloud = useCloud(data, updateData, {enabled:!demoMode&&!ephemeralDemo, autoOpen:accountMode&&!ephemeralDemo});
   const myOwner = cloud.session.user && cloud.shared ? cloud.session.user.userId : "Alex (you)";
   const memberName = (owner: string) => owner === myOwner ? "You" : cloud.shared?.members.find(m => m.userId === owner)?.name || owner;
   const dataRef = useRef(data);
@@ -136,6 +138,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
   const notify = (message: string, action?: () => void, actionLabel = "Undo") =>
     setNotice({ message, action, actionLabel, id: ++counter.current });
   useEffect(() => {
+    if (ephemeralDemo) return;
     if (cloud.shared) { setStorageError(cloud.error); return; }
     if (accountMode) { setStorageError(cloud.error); return; }
     try {
@@ -148,7 +151,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
           : "Your browser could not save these changes. Export a backup before closing this tab.",
       );
     }
-  }, [data, cloud.shared, cloud.error, accountMode]);
+  }, [data, cloud.shared, cloud.error, accountMode, ephemeralDemo]);
   useEffect(() => {
     if (!notice) return;
     const id = setTimeout(() => setNotice(null), 8000);
@@ -307,6 +310,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
     notify("Backup exported. Keep it in your team’s approved private storage.");
   };
   const importData = (text: string) => {
+    if (ephemeralDemo) { notify("Backup imports are unavailable in the fictional review."); return false; }
     if (cloud.shared) { notify("Use shared revision history to restore a team workspace. Browser imports are demo-only."); return false; }
     if (role !== "admin") {
       notify("Only the team admin preview can restore a backup.");
@@ -328,6 +332,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
     }
   };
   const replaceWorkspace = (fresh: AppData, message: string) => {
+    if (ephemeralDemo) { setData(fresh); notify(message); return; }
     try {
       localRepository.recover(fresh);
       setData(fresh);
@@ -385,6 +390,7 @@ export function HQProvider({ children, accountMode=false, demoMode=false }: { ch
     <Context.Provider
       value={{
         cloud,
+        ephemeralDemo,
         myOwner,
         memberName,
         data,

@@ -34,6 +34,7 @@ export default function Settings() {
     resetDemo,
     startFresh,
     storageError,
+    ephemeralDemo,
     cloud,
   } = useHQ();
   const [confirm, setConfirm] = useState<"reset" | "fresh" | null>(null);
@@ -132,9 +133,9 @@ export default function Settings() {
               <h2>Data & backups</h2>
             </div>
             <p className="muted" style={{ marginTop: 12 }}>
-              {cloud.shared ? "Changes sync across team members. Shared revision history provides recovery, and a mentor can export a private backup." : "Demo changes save in this browser. Sign in above for shared team records."}
+              {ephemeralDemo ? "Fictional review changes are temporary and reset on reload. Backup imports are unavailable." : cloud.shared ? "Changes sync across team members. Shared revision history provides recovery, and a mentor can export a private backup." : "Demo changes save in this browser. Sign in above for shared team records."}
             </p>
-            {storageError && !cloud.shared && (
+            {storageError && !cloud.shared && !ephemeralDemo && (
               <div className="settings-info">
                 <p>
                   <strong>Your previous saved snapshot is preserved.</strong>
@@ -179,7 +180,7 @@ export default function Settings() {
                 Export backup
               </button>
             </div>
-            <div className="settings-action">
+            {!ephemeralDemo && <div className="settings-action">
               <div>
                 <strong>Restore a team backup</strong>
                 <p>
@@ -211,8 +212,8 @@ export default function Settings() {
                   e.target.value = "";
                 }}
               />
-            </div>
-            {!cloud.shared && <div className="settings-action">
+            </div>}
+            {!cloud.shared && !ephemeralDemo && <div className="settings-action">
               <div>
                 <strong>Start with your own team</strong>
                 <p>
@@ -315,8 +316,7 @@ export default function Settings() {
           onClose={() => setConfirm(null)}
         >
           <p className="muted">
-            This replaces all records on this device. Export a private backup if
-            you want to keep your work.
+            {ephemeralDemo ? "This resets the fictional sample in this tab only. Existing saved workspaces on this device are not changed." : "This replaces all records on this device. Export a private backup if you want to keep your work."}
           </p>
           <div className="form-actions">
             <button

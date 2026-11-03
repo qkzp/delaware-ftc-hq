@@ -49,7 +49,7 @@ export default function SupportCenter(){
  return <SupportPanel key={JSON.stringify([cloud.session.user?.userId,cloud.shared?.id,cloud.shared?.role])}/>;
 }
 function SupportPanel(){
- const {cloud,setPage}=useHQ(),heading=useId(),checkHint=useId();
+ const {cloud,setPage,ephemeralDemo}=useHQ(),heading=useId(),checkHint=useId();
  const [topic,setTopic]=useState<Topic>("sync"),[choice,setChoice]=useState("");
  const [connection,setConnection]=useState<Connection>("unknown"),[check,setCheck]=useState<Check>("not-run"),[copyMessage,setCopyMessage]=useState("");
  const alive=useRef(true),running=useRef(false),controller=useRef<AbortController|null>(null);
@@ -60,6 +60,7 @@ function SupportPanel(){
   return()=>{alive.current=false;controller.current?.abort();window.removeEventListener("online",update);window.removeEventListener("offline",update);};
  },[]);
  async function runCheck(){
+  if(ephemeralDemo){setCheck("unavailable");return;}
   if(running.current)return;
   if(connection==="offline"){setCheck("offline");return;}
   running.current=true;setCheck("checking");
@@ -101,8 +102,8 @@ function SupportPanel(){
    <div className="support-center-diagnostics">
     <h3>Connection check</h3>
     <dl className="support-center-status"><div><dt>Browser signal</dt><dd>{connection==="online"?"Online signal":connection==="offline"?"Offline signal":"Not available"}</dd></div><div><dt>Account</dt><dd>{cloud.session.user?"Signed in":"Not signed in"}</dd></div><div><dt>Active role</dt><dd>{cloud.shared?roleLabels[cloud.shared.role]:"No shared team open"}</dd></div><div><dt>Sync</dt><dd>{sync}</dd></div></dl>
-    <p id={checkHint}>The check reads your current sign-in and team membership. It does not save, retry a mutation, open files, or reload your draft.</p>
-    <button type="button" className="btn btn-secondary" disabled={check==="checking"} aria-describedby={checkHint} onClick={()=>void runCheck()}>{check==="checking"?"Checking connection…":"Run read-only check"}</button>
+    <p id={checkHint}>{ephemeralDemo?"Account checks are unavailable in this fictional review workspace.":"The check reads your current sign-in and team membership. It does not save, retry a mutation, open files, or reload your draft."}</p>
+    <button type="button" className="btn btn-secondary" disabled={ephemeralDemo||check==="checking"} aria-describedby={checkHint} onClick={()=>void runCheck()}>{check==="checking"?"Checking connection…":"Run read-only check"}</button>
     <p role="status" className="support-center-result">{checkLabels[check]}</p>
    </div>
   </div>

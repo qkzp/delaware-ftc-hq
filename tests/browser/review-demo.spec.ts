@@ -1,0 +1,41 @@
+import {test,expect} from "@playwright/test";
+
+test("fictional review stays in tab memory and never touches the existing workspace or account APIs",async({page})=>{
+ await page.addInitScript(()=>{
+  const store=Storage.prototype,originalGet=store.getItem,originalSet=store.setItem;
+  originalSet.call(localStorage,"delaware-ftc-hq:v1","existing-private-sentinel");
+  (window as any).__reviewStorageAccess=[];
+  store.getItem=function(key){if(key==="delaware-ftc-hq:v1"||key==="delaware-ftc-hq:v1:recovery")(window as any).__reviewStorageAccess.push("read");return originalGet.call(this,key);};
+  store.setItem=function(key,value){if(key==="delaware-ftc-hq:v1"||key==="delaware-ftc-hq:v1:recovery")(window as any).__reviewStorageAccess.push("write");return originalSet.call(this,key,value);};
+ });
+ const api:string[]=[];page.on("request",request=>{if(new URL(request.url()).pathname.startsWith("/api/"))api.push(request.url());});
+ await page.goto("/tests/browser/?mode=review");
+ await expect(page.getByRole("note")).toContainText("do not enter student or personal data");
+ await expect(page.getByRole("heading",{name:"My work",exact:true})).toBeVisible();
+ await page.getByRole("button",{name:"New task",exact:true}).click();
+ await page.getByLabel("What needs to happen?",{exact:true}).fill("Fictional review-only task");
+ await page.getByLabel(/Done when/).fill("Complete the fictional review.");
+ await page.getByRole("dialog").getByRole("button",{name:"Add task",exact:true}).click();
+ await expect(page.getByText("Fictional review-only task").first()).toBeVisible();
+ expect(await page.evaluate(()=>(window as any).__reviewStorageAccess)).toEqual([]);
+ await page.reload();await expect(page.getByText("Fictional review-only task")).toHaveCount(0);
+ await page.getByLabel("Demo permission preview").first().selectOption("admin");
+ await page.getByRole("button",{name:"Workspace settings"}).click();
+ await expect(page.getByText("Backup imports are unavailable.")).toBeVisible();
+ await expect(page.getByRole("button",{name:"Import backup"})).toHaveCount(0);
+ await expect(page.getByRole("button",{name:"Start fresh"})).toHaveCount(0);
+ await page.getByRole("button",{name:"Reset demo",exact:true}).click();
+ await expect(page.getByRole("dialog")).toContainText("Existing saved workspaces on this device are not changed");
+ await page.getByRole("button",{name:"Restore demo",exact:true}).click();
+ await expect(page.getByRole("note")).toContainText("reset when you reload");
+ await page.getByLabel("Demo permission preview").first().selectOption("student");
+ await page.getByRole("navigation",{name:"Main navigation"}).getByRole("button",{name:/^Team hub/}).click();
+ await page.getByRole("button",{name:"Messages",exact:true}).click();
+ await expect(page.getByText("Live group chat and private messages are unavailable in this fictional review.")).toBeVisible();
+ await page.getByRole("button",{name:"Help desk",exact:true}).click();
+ await expect(page.getByRole("button",{name:"Run read-only check"})).toBeDisabled();
+ expect(await page.evaluate(()=>(window as any).__reviewStorageAccess)).toEqual([]);
+ await page.reload();await expect(page.getByRole("note")).toBeVisible();
+ expect(await page.evaluate(()=>(window as any).__reviewStorageAccess)).toEqual([]);
+ expect(api).toEqual([]);
+});

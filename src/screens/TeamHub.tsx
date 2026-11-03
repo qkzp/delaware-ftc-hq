@@ -13,7 +13,7 @@ export default function TeamHub(){
  return <TeamSpace key={draftScope}/>;
 }
 function TeamSpace(){
- const {data,myOwner,memberName,canManage,cloud,draftScope,saveRecord,openRecord,setPage,page,focusRecord,clearFocusRecord}=useHQ();
+ const {data,myOwner,memberName,canManage,cloud,draftScope,saveRecord,openRecord,setPage,page,focusRecord,clearFocusRecord,ephemeralDemo}=useHQ();
  const [messagesVisited,setMessagesVisited]=useState(false);
  const [view,setView]=useState("Conversations"),[channel,setChannel]=useState("All team"),[query,setQuery]=useState("");
  const [selected,setSelected]=useState<string|null>(null),[drafts,setDrafts]=useState<Record<string,string>>({}),[error,setError]=useState(""),[notice,setNotice]=useState("");
@@ -53,12 +53,12 @@ function TeamSpace(){
   const text=(drafts[selectedTask.id]||"").trim();if(!text)return;
   const accepted=saveRecord("tasks",{...selectedTask,comments:[...selectedTask.comments,{text,date:new Date().toISOString(),author:myOwner}]},{original:selectedTask,scope:scope.current});
   if(!accepted){setError("Your reply is still here. Review the workspace message before trying again.");return;}
-  setDrafts(current=>({...current,[selectedTask.id]:""}));setError("");setNotice("Reply added to the task. Wait for your workspace to finish syncing before closing.");
+  setDrafts(current=>({...current,[selectedTask.id]:""}));setError("");setNotice(ephemeralDemo?"Fictional reply added in this tab only.":"Reply added to the task. Wait for your workspace to finish syncing before closing.");
  }
  function postUpdate(event:FormEvent){
   event.preventDefault();if(!canManage||!title.trim()||!body.trim())return;
   if(!saveRecord("announcements",{id:crypto.randomUUID(),teamId:data.teamId,seasonId:data.seasonId,title:title.trim(),body:body.trim(),type:kind,date:dateKey(),author:myOwner},{original:null,scope:scope.current})){setError("Your update draft is still open. Review the workspace message and try again.");return;}
-  setPosting(false);setTitle("");setBody("");setNotice("Team update added. Wait for the workspace to finish syncing.");
+  setPosting(false);setTitle("");setBody("");setNotice(ephemeralDemo?"Fictional update added in this tab only.":"Team update added. Wait for the workspace to finish syncing.");
  }
  return <>
   <PageHeader eyebrow="Your team, connected" title="Keep everyone in the loop." description="Conversations, decisions and useful references stay connected to the work." actions={<>{canManage&&<button className="btn btn-primary" onClick={()=>{setPosting(true);setError("");}}><Plus size={16}/>Post team update</button>}<Badge>{cloud.shared?"Private team":"Demo workspace"}</Badge></>}/>
@@ -78,6 +78,6 @@ function TeamSpace(){
   {view==="Activity"&&<section className="card team-hub-activity" aria-labelledby="hub-activity-title"><div className="team-hub-section-head"><h2 id="hub-activity-title">Recent team activity</h2><span>Latest 30 posted updates and task replies</span></div><p className="muted">A feed of saved record content. This view does not track who read an item.</p>{activity.length?activity.map(item=><article key={item.id}><div className="team-hub-activity-icon"><MessageSquare size={17}/></div><div><div className="team-hub-activity-meta"><strong>{memberName(item.author)}</strong><span>{item.type}</span><time dateTime={item.date}>{formatDate(item.date)}</time></div><h3>{item.title}</h3><p className="team-hub-prose">{item.text}</p>{item.task&&<button className="text-link" onClick={()=>{setChannel(item.task!.area||"All team");setQuery("");selectTask(item.task!);setView("Conversations");}}>Open conversation</button>}</div></article>):<EmptyState title="Your team's activity starts here." description="Add a task reply or post a team update to start the feed."/>}</section>}
   <div hidden={view!=="Messages"}>{(messagesVisited||view==="Messages")&&<TeamMessages active={page==="team"&&view==="Messages"}/>}</div>
   {view==="Help desk"&&<SupportCenter/>}
-  {posting&&<Modal title="Post a team update" onClose={()=>setPosting(false)}><form className="stack" onSubmit={postUpdate}><p>Visible to every authorized team member. Use safe team notes and keep personal student information out.</p>{error&&<p role="alert">{error}</p>}<Field label="Update type"><select value={kind} onChange={event=>setKind(event.target.value as "Update"|"Decision")}><option>Update</option><option>Decision</option></select></Field><Field label="Title"><input required maxLength={160} value={title} onChange={event=>setTitle(event.target.value)}/></Field><Field label="Message"><textarea required maxLength={4000} rows={5} value={body} onChange={event=>setBody(event.target.value)}/></Field><div className="form-actions"><button type="button" className="btn btn-secondary" onClick={()=>setPosting(false)}>Keep draft and close</button><button className="btn btn-primary" disabled={!title.trim()||!body.trim()}>Post team update</button></div></form></Modal>}
+  {posting&&<Modal title="Post a team update" onClose={()=>setPosting(false)}><form className="stack" onSubmit={postUpdate}><p>{ephemeralDemo?"This fictional update stays in this tab. Do not enter personal information.":"Visible to every authorized team member. Use safe team notes and keep personal student information out."}</p>{error&&<p role="alert">{error}</p>}<Field label="Update type"><select value={kind} onChange={event=>setKind(event.target.value as "Update"|"Decision")}><option>Update</option><option>Decision</option></select></Field><Field label="Title"><input required maxLength={160} value={title} onChange={event=>setTitle(event.target.value)}/></Field><Field label="Message"><textarea required maxLength={4000} rows={5} value={body} onChange={event=>setBody(event.target.value)}/></Field><div className="form-actions"><button type="button" className="btn btn-secondary" onClick={()=>setPosting(false)}>Keep draft and close</button><button className="btn btn-primary" disabled={!title.trim()||!body.trim()}>Post team update</button></div></form></Modal>}
  </>;
 }

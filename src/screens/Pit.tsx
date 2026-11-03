@@ -350,7 +350,7 @@ export default function PitPage() {
           <div>
             <h2>Team notes & observations</h2>
             <p className="muted">
-              Saved locally. Export your recap to share it with the team.
+              Notes follow your workspace's storage. Export a recap to share it with the team.
             </p>
           </div>
           <Badge>{data.pitNotes.length} notes</Badge>

@@ -11,10 +11,39 @@ async function mockTeam(page:Page,data:any){
 }
 async function audit(page:Page){const result=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa"]).analyze();expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,reason:n.failureSummary}))}))).toEqual([]);expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);}
 
+test("the downloaded synthetic example cannot be reused as measured robot telemetry",async({page})=>{
+ await page.goto("/tests/browser/?mode=publiclab");
+ const fictional="time,power,velocity\n"+syntheticMotorSamples().map(s=>`${s.time},${s.power},${s.velocity*.9}`).join("\n");
+ await page.getByLabel("Train using measured motor CSV").setInputFiles({name:"fictional.csv",mimeType:"text/csv",buffer:Buffer.from(fictional)});
+ await expect(page.getByText("Imported CSV model - source unverified")).toBeVisible();
+ const downloadPromise=page.waitForEvent("download");
+ await page.getByRole("button",{name:"Download synthetic CSV example"}).click();
+ const download=await downloadPromise;
+ await page.getByLabel("Train using measured motor CSV").setInputFiles((await download.path())!);
+ await expect(page.getByRole("alert")).toContainText("built-in synthetic example");
+ await expect(page.getByText("Imported CSV model - source unverified")).toHaveCount(0);
+ await page.getByRole("button",{name:"Train on a simulated motor"}).click();
+ await expect(page.getByText("Synthetic model — simulation only")).toBeVisible();
+ await page.getByRole("button",{name:"Autonomous planner",exact:true}).click();
+ await expect(page.getByRole("checkbox",{name:/I verified the imported data/})).toBeDisabled();
+});
+
+test("a slow CSV import cannot replace a newer simulated model",async({page})=>{
+ await page.addInitScript(()=>{const original=File.prototype.text;File.prototype.text=function(){if(this.name!=="slow.csv")return original.call(this);const file=this;return new Promise(resolve=>{(window as any).completeSlowCsv=()=>original.call(file).then(resolve);});};});
+ await page.goto("/tests/browser/?mode=publiclab");
+ const fictional="time,power,velocity\n"+syntheticMotorSamples().map(s=>`${s.time},${s.power},${s.velocity*.9}`).join("\n");
+ await page.getByLabel("Train using measured motor CSV").setInputFiles({name:"slow.csv",mimeType:"text/csv",buffer:Buffer.from(fictional)});
+ await page.getByRole("button",{name:"Train on a simulated motor"}).click();
+ await expect(page.getByText("Synthetic model — simulation only")).toBeVisible();
+ await page.evaluate(async()=>{await (window as any).completeSlowCsv();});
+ await expect(page.getByText("Synthetic model — simulation only")).toBeVisible();
+ await expect(page.getByText("Imported CSV model - source unverified")).toHaveCount(0);
+});
+
 test("robot profiles retain per-device telemetry, servo presets and maintenance and preserve student read-only access",async({page},testInfo)=>{
  const data=createDemoData();data.parts=[device("drive-motor","motor"),device("claw-servo","servo")];const state=await mockTeam(page,data);await page.goto("/tests/browser/?mode=account#robotlab");
  await page.getByRole("button",{name:"Robot profiles",exact:true}).click();await page.getByLabel("New profile name",{exact:true}).fill("Fictional robot setup");await page.getByLabel("Robot name",{exact:true}).fill("Bench robot");await page.getByLabel("Profile season",{exact:true}).fill("2026–27");await page.getByRole("button",{name:"Save as new robot profile"}).click();await expect(page.getByRole("combobox",{name:"Active robot profile",exact:true})).not.toHaveValue("");
- await page.getByRole("button",{name:"Motor tests",exact:true}).click();await page.getByRole("combobox",{name:"Motor for telemetry",exact:true}).selectOption("drive-motor");await page.getByLabel("Motor test name",{exact:true}).fill("Fictional dyno run");const csv="time,power,velocity,current,temperature\n"+syntheticMotorSamples().map(s=>`${s.time},${s.power},${s.velocity},2,30`).join("\n");await page.getByLabel("Import and save measured motor test CSV",{exact:true}).setInputFiles({name:"fictional-bench.csv",mimeType:"text/csv",buffer:Buffer.from(csv)});await expect(page.getByRole("heading",{name:"Fictional dyno run",exact:true})).toBeVisible();await page.getByRole("button",{name:"Load Fictional dyno run model in PID trainer"}).click();await expect(page.getByText(/Measured model for Fictional drive motor: Fictional dyno run/)).toBeVisible();await page.getByRole("button",{name:"Autonomous planner",exact:true}).click();await expect(page.getByLabel("Encoder ticks per motor output revolution",{exact:true})).toHaveValue("600");
+ await page.getByRole("button",{name:"Motor tests",exact:true}).click();await page.getByRole("combobox",{name:"Motor for telemetry",exact:true}).selectOption("drive-motor");await page.getByLabel("Motor test name",{exact:true}).fill("Fictional dyno run");const csv="time,power,velocity,current,temperature\n"+syntheticMotorSamples().map(s=>`${s.time},${s.power},${s.velocity*.9},2,30`).join("\n");await page.getByLabel("Import and save measured motor test CSV",{exact:true}).setInputFiles({name:"fictional-bench.csv",mimeType:"text/csv",buffer:Buffer.from(csv)});await expect(page.getByRole("heading",{name:"Fictional dyno run",exact:true})).toBeVisible();await page.getByRole("button",{name:"Load Fictional dyno run model in PID trainer"}).click();await expect(page.getByText(/User-supplied model for Fictional drive motor: Fictional dyno run/)).toBeVisible();await page.getByRole("button",{name:"Autonomous planner",exact:true}).click();await expect(page.getByLabel("Encoder ticks per motor output revolution",{exact:true})).toHaveValue("600");
  await page.getByRole("button",{name:"Motor tests",exact:true}).click();await page.getByLabel("Motor test name",{exact:true}).fill("Fictional manual observation");await page.getByLabel("Observed motor RPM",{exact:true}).fill("250");await page.getByLabel("Observed current in amps",{exact:true}).fill("3");await page.getByLabel("Observed temperature in Celsius",{exact:true}).fill("35");await page.getByRole("button",{name:"Start new manual recording"}).click();await page.getByRole("button",{name:"Record current observation"}).click();await page.getByRole("button",{name:"Stop manual recording"}).click();await page.getByRole("button",{name:"Save manual motor test"}).click();await expect(page.getByRole("heading",{name:"Fictional manual observation",exact:true})).toBeVisible();
  await page.getByRole("button",{name:"Servo & maintenance",exact:true}).click();await page.getByRole("button",{name:"Add servo calibration"}).click();await page.getByRole("combobox",{name:"Servo to calibrate",exact:true}).selectOption("claw-servo");await page.getByLabel("Servo minimum position",{exact:true}).fill("0.1");await page.getByLabel("Servo maximum position",{exact:true}).fill("0.9");await page.getByRole("button",{name:"Add mechanism preset"}).click();await page.getByLabel("Preset 1 name",{exact:true}).fill("Grip");await page.getByLabel("Preset 1 command",{exact:true}).fill("0.7");await audit(page);await page.getByRole("button",{name:"Save servo calibration"}).click();await expect(page.getByText("Grip: 0.7 position",{exact:true})).toBeVisible();
  await page.getByRole("button",{name:"Add maintenance reminder"}).click();await page.getByLabel("Maintenance check",{exact:true}).fill("Belt tension");await page.getByLabel("Maintenance due date",{exact:true}).fill(addDays(localDay(),2));await page.getByLabel("Repeat interval in days (0 for one-time)",{exact:true}).fill("30");await page.getByRole("button",{name:"Save maintenance reminder"}).click();await expect(page.getByRole("heading",{name:"Belt tension",exact:true})).toBeVisible();

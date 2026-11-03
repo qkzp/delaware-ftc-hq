@@ -6,7 +6,8 @@ import "./team-messages.css";
 type Message={id:string;senderId:string;recipientId:string;body:string;created:string;removed:number};
 type Settings={dmEnabled:boolean;retentionDays:number;updated:string};
 export default function TeamMessages({active=true}:{active?:boolean}){
- const {cloud,data}=useHQ();
+ const {cloud,data,ephemeralDemo}=useHQ();
+ if(ephemeralDemo)return <section className="card"><h2>Team messages</h2><p>Live group chat and private messages are unavailable in this fictional review. No messages are sent to teammates.</p></section>;
  if(!cloud.shared||!cloud.session.user)return <section className="card"><h2>Team messages</h2><p>Sign in and open a private team to use team chat and direct messages. Demo records do not send messages.</p></section>;
  return <MessagingPanel key={`${cloud.session.user.userId}:${cloud.shared.id}:${cloud.shared.role}:${data.seasonId}`} active={active}/>;
 }

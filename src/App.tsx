@@ -25,7 +25,7 @@ import SignIn from "./components/SignIn";
 import WorkspaceChrome from "./components/WorkspaceChrome";
 
 export function Workspace() {
-  const {myOwner, memberName, cloud,
+  const {myOwner, memberName, cloud, ephemeralDemo,
     data,
     role,
     page,
@@ -66,6 +66,7 @@ export function Workspace() {
       </a>
       <WorkspaceChrome onSearch={()=>setSearch(true)} onCreate={()=>setQuickTask(true)} onAccount={()=>setAccount(true)} onUpdates={()=>setNotifications(true)} onHelp={()=>setHelp(true)}/>
       <main className="main-content" id="main-content" tabIndex={-1}>
+        {ephemeralDemo && <div className="review-demo-notice" role="note"><strong>Fictional review workspace.</strong> Use sample information only; do not enter student or personal data. Changes stay in this tab and reset when you reload. <a href="/">Return to the website</a></div>}
         {storageError && (
           <div className="storage-error" role="alert">
             {storageError}
@@ -114,7 +115,7 @@ export function Workspace() {
           )}
         </div>
         <footer className="workspace-footer">
-          <span className="storage-status"><span className={`storage-dot ${storageError ? "has-error" : ""}`}/>{cloud.shared ? cloud.status : storageError ? "Save needs attention" : "Saved in this browser"}</span>
+          <span className="storage-status"><span className={`storage-dot ${storageError ? "has-error" : ""}`}/>{ephemeralDemo ? "Review changes are temporary" : cloud.shared ? cloud.status : storageError ? "Save needs attention" : "Saved in this browser"}</span>
           <span>{cloud.shared ? "Private team workspace" : "Fictional demo records"}</span>
           <a className="workspace-privacy-link" href="/privacy">Privacy & data help</a>
           <button onClick={() => navigate("onboarding")}>
@@ -126,7 +127,7 @@ export function Workspace() {
       {quickTask && <QuickTask onClose={() => setQuickTask(false)} />}
       {account && <Modal title="Your account" onClose={()=>setAccount(false)}>
         <div className="stack">
-          {cloud.session.user ? <><h3>{cloud.shared ? memberName(myOwner) === "You" ? cloud.shared.members.find(m=>m.userId===myOwner)?.name || "Signed in" : memberName(myOwner) : "Signed in with your approved account"}</h3><p>{cloud.shared ? `${data.teamName} · ${role === 'admin' ? 'Team admin' : role === 'mentor' ? 'Mentor / coach' : role === 'lead' ? 'Student lead' : 'Student'}` : "Choose or create a private team to save shared records."}</p><button className="btn btn-secondary" onClick={()=>{navigate('settings');setAccount(false);}}>Team access & settings</button><a className="btn btn-primary" href="#sign-out" onClick={async e=>{e.preventDefault();if(cloud.hasUnsaved()){notify("Wait for your changes to save, or download them in Settings before signing out.");return;}const {signOut}=await import("next-auth/react");await signOut({callbackUrl:"/"});}}>Sign out</a></> : <><p>You’re exploring the demo. Sign in to create or join a private team.</p><a className="btn btn-primary" href="/signin">Choose a sign-in method</a></>}
+          {ephemeralDemo ? <><p>This is a fictional review. Real team sign-in and shared access are still being configured.</p><a className="btn btn-secondary" href="/privacy">Privacy and data help</a></> : cloud.session.user ? <><h3>{cloud.shared ? memberName(myOwner) === "You" ? cloud.shared.members.find(m=>m.userId===myOwner)?.name || "Signed in" : memberName(myOwner) : "Signed in with your approved account"}</h3><p>{cloud.shared ? `${data.teamName} · ${role === 'admin' ? 'Team admin' : role === 'mentor' ? 'Mentor / coach' : role === 'lead' ? 'Student lead' : 'Student'}` : "Choose or create a private team to save shared records."}</p><button className="btn btn-secondary" onClick={()=>{navigate('settings');setAccount(false);}}>Team access & settings</button><a className="btn btn-primary" href="#sign-out" onClick={async e=>{e.preventDefault();if(cloud.hasUnsaved()){notify("Wait for your changes to save, or download them in Settings before signing out.");return;}const {signOut}=await import("next-auth/react");await signOut({callbackUrl:"/"});}}>Sign out</a></> : <><p>You’re exploring the demo. Sign in to create or join a private team.</p><a className="btn btn-primary" href="/signin">Choose a sign-in method</a></>}
           <p className="privacy-note">Private records are limited to your team. Account passwords are handled by your sign-in provider.</p>
         </div>
       </Modal>}
@@ -201,7 +202,7 @@ export function Workspace() {
               </button>
             ))}
             <div className="settings-info">
-              {cloud.shared ? "Team records save to your private shared workspace. Your role is enforced by the server. Use Settings for invitations, backups, and member access." : "The demo saves in this browser. Open Settings and sign in with an approved account to create or join a private shared team."}
+              {ephemeralDemo ? "This fictional review stays in this tab and resets when reloaded. Do not enter real student or personal data." : cloud.shared ? "Team records save to your private shared workspace. Your role is enforced by the server. Use Settings for invitations, backups, and member access." : "The demo saves in this browser. Open Settings and sign in with an approved account to create or join a private shared team."}
             </div>
           </div>
         </Modal>
@@ -221,9 +222,9 @@ export function AccountWorkspace() {
   </div>;
   return <Workspace/>;
 }
-export default function App({accountMode=false,demoMode=false}:{accountMode?:boolean;demoMode?:boolean}) {
+export default function App({accountMode=false,demoMode=false,ephemeralDemo=false}:{accountMode?:boolean;demoMode?:boolean;ephemeralDemo?:boolean}) {
   return (
-    <HQProvider accountMode={accountMode} demoMode={demoMode}>
+    <HQProvider accountMode={accountMode} demoMode={demoMode} ephemeralDemo={ephemeralDemo}>
       {accountMode ? <AccountWorkspace/> : <Workspace />}
     </HQProvider>
   );

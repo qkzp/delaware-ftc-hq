@@ -5,7 +5,8 @@ import { useHQ } from "../store";
 import { Field, Modal } from "./ui";
 import { downloadFile, dateKey } from "../utils";
 export default function TeamAccess() {
- const {cloud,data}=useHQ();
+ const {cloud,data,ephemeralDemo}=useHQ();
+ if(ephemeralDemo)return <section className="card settings-section team-access"><h2>Team access</h2><p>Real team access is still being set up. This review uses fictional records in this tab and cannot connect to a team.</p></section>;
  // A new access boundary gets a fresh panel before it can display an old code,
  // revision, confirmation dialog, or another member's learning details.
  const scope=JSON.stringify([cloud.session.user?.userId,cloud.shared?.id,cloud.shared?.role,data.teamId,data.seasonId]);
