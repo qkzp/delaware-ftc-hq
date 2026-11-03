@@ -15,6 +15,18 @@ test("display preferences and view choices survive reloads and device theme chan
  await page.goto("/tests/browser/#tasks");await page.getByRole("button",{name:"List view",exact:true}).click();await page.reload();await expect(page.getByRole("button",{name:"List view",exact:true})).toHaveAttribute("aria-pressed","true");expect(await page.evaluate(()=>JSON.parse(localStorage.getItem("myftcspace:preferences")!))).toMatchObject({theme:"system",textScale:1.25,taskView:"list"});
 });
 
+test("mobile navigation labels remain readable at enlarged text sizes",async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem("myftcspace:preferences",JSON.stringify({theme:"dark",textScale:2})));
+ await page.setViewportSize({width:320,height:900});await page.goto("/tests/browser/?mode=review#home");
+ const section=page.getByRole("combobox",{name:"Workspace section"});await section.selectOption("team");
+ await expect(page.getByRole("heading",{name:"Team hub",exact:true})).toBeVisible();
+ for(const picker of [section,page.getByRole("combobox",{name:"Preview role on mobile"})]){
+  const dimensions=await picker.evaluate((element:HTMLSelectElement)=>{const style=getComputedStyle(element),canvas=document.createElement("canvas"),context=canvas.getContext("2d")!;context.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;return {width:element.getBoundingClientRect().width,text:context.measureText(element.selectedOptions[0].text).width};});
+  expect(dimensions.width).toBeGreaterThan(dimensions.text+32);
+ }
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
+});
+
 test("double taps add one stage and tap feedback respects reduced motion",async({page})=>{
  await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/tests/browser/?mode=publiclab");await page.getByRole("button",{name:"Wheel RPM & speed",exact:true}).click();await page.getByRole("button",{name:"Use gears, belts or chain",exact:true}).click();await page.getByText("More than one drive stage",{exact:true}).click();const add=page.getByRole("button",{name:"Add another stage",exact:true});await add.dblclick();await expect(page.locator(".wheel-drive-content fieldset")).toHaveCount(2);expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("tap-confirm");await page.emulateMedia({reducedMotion:"reduce"});expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
 });

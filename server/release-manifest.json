@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:eef8f087332ae3cad1aaec0247dfbb68e4cb3b783322b1023a17a6d8577432d1",
+  "releaseId": "sha256:663ad5a974322dcdd91c1aab4d19ed25d866b59169de093df3792b2c37b03222",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -611,8 +611,8 @@
       "sha256": "665c38b69d376b618cab89aedcc1c72ee3a021eee1ac61e95185d47db019642b"
     },
     "src/components/WorkspaceChrome.tsx": {
-      "bytes": 6231,
-      "sha256": "2cf2ba58a10251d07c23c153e115dc66f4263b9fca78a6663abd945881339638"
+      "bytes": 6274,
+      "sha256": "f135191552a5d04defddb48bd10425cdb7885b9e952f68e5e50e68d15112dd1a"
     },
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
@@ -655,8 +655,8 @@
       "sha256": "f5af5a5ac4fd86f2144ccb54d95de919961900366c61fd54f907f66d9d99f88c"
     },
     "src/components/workspace-refresh.css": {
-      "bytes": 5043,
-      "sha256": "b92432e5d8ffeaed6eb955ac6fc0e1976ed76426a441d7f7d53016eb6cce2225"
+      "bytes": 5508,
+      "sha256": "7fc1f3b84fd8a08fe0b0ad64df40c3c8150009706bd0723423262733670dbc58"
     },
     "src/components/workspace-simple-nav.css": {
       "bytes": 1191,
@@ -751,8 +751,8 @@
       "sha256": "75d3e0f81a452fcc463ac9b5d02a25f0fba8cadd2f239d4d6e1dc2c2912fe116"
     },
     "src/screens/HomeClean.css": {
-      "bytes": 4027,
-      "sha256": "391ca733ccc95039bb3a78718ca371d98877214f1eec6492dcc62de73b4cc1c6"
+      "bytes": 4190,
+      "sha256": "08f2cb3db10ecc6098e3eb8af2862d460be1c514433ff8e514823bb1b4bc259e"
     },
     "src/screens/HomeSimple.css": {
       "bytes": 3713,
@@ -811,8 +811,8 @@
       "sha256": "6ceabb6e9aa9ef9efb2ca06ff1e34981bbbaef5fd1b26a730a152348596a8c86"
     },
     "src/screens/TeamHubSimple.css": {
-      "bytes": 7632,
-      "sha256": "7212c642adb370be35c81af020dbd839d19056ebbb19eadccb794a09d80b9dec"
+      "bytes": 7672,
+      "sha256": "21183d66435d859b0339c1aaae65e2c60aabf00a62faaf31fcd0c428b3f315e3"
     },
     "src/screens/funding.css": {
       "bytes": 20219,
@@ -827,8 +827,8 @@
       "sha256": "e6023966200c4d3d06d067dd42d0d7146ea321cb1a5cc7304ef77c4343080e10"
     },
     "src/screens/workspace-screens-simple.css": {
-      "bytes": 2449,
-      "sha256": "662bc2aee20949d4f9a666bd892b27ff7f5dc14d631e4a8bf3a07adadb076f0b"
+      "bytes": 2571,
+      "sha256": "d0663f02dd4faa76323ae3b7befa66915ebeb6752f6e1c1d934555964e893e01"
     },
     "src/seed.ts": {
       "bytes": 14937,
@@ -897,10 +897,6 @@
   },
   "sourceChanges": [
     "src/components/WorkspaceChrome.tsx",
-    "src/screens/Calendar.tsx",
-    "src/screens/Overview.tsx",
-    "src/screens/Tasks.tsx",
-    "src/screens/TeamHub.tsx",
     "src/components/workspace-refresh.css",
     "src/screens/HomeClean.css",
     "src/screens/TeamHubSimple.css",

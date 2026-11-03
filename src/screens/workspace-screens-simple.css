@@ -9,6 +9,7 @@ html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calenda
 html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary:before{content:"+";margin-right:8px;color:var(--accent);font-size:1.125rem}
 html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)[open]>summary:before{content:"-"}
 html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html body .app-shell :is(.tc-extra-filters,.tc-calendar-file-actions,.tc-calendar-key)>summary:hover{color:var(--accent)}
 html body .app-shell .tc-extra-filter-fields,
 html body .app-shell .tc-calendar-file-buttons{display:flex;flex-wrap:wrap;gap:8px;padding:4px 0 10px}
 html body .app-shell .tc-extra-filter-fields select{flex:1 1 145px;min-width:0}
