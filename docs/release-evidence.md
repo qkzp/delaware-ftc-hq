@@ -170,7 +170,7 @@ Automated tests use fictional data and synthetic identities. They cover hidden r
 
 Before approval, run and retain results for phone (320/400 CSS px), tablet (768 px), desktop (1280 px), 200%/400% zoom and keyboard-only core flows. Check tasks, schedule/list/map fallback, forms/errors preserving drafts, team switching, invitations, consent/upload, export and cleanup receipts. Verify visible focus, logical order, no clipping/horizontal traps, status/error announcements, text contrast, labels, alternatives for map/media and reduced motion. Test with an actual screen reader and two independently signed-in hosted accounts on separate devices. The school/district must record the applicable accessibility standard and remediation plan. [DOJ web accessibility guidance](https://www.ada.gov/resources/small-entity-compliance-guide/)
 
-Current browser automation and live Vercel deployment access were unavailable and must be recorded as verification limits, not passed tests. Prior screenshots, an old published URL and local build success do not certify this release.
+The earlier review could not run browser automation or inspect the live Vercel deployment. Later local Chromium simulations and read-only hosted checks are recorded in [the release review](release-review-2026-11-02.md); they do not replace real assistive-technology, physical-device or authenticated multi-account acceptance. Prior screenshots, a published URL and local build success do not certify this release.
 
 ## All 43 checklist evidence references
 

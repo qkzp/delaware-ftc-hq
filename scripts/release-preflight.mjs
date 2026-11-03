@@ -11,8 +11,9 @@ export async function hostedChecks(origin,{fetcher=fetch,expectedRelease}={}){
  const checks=[];let deployment=null;
  for(const pathname of ["/","/robot-lab","/signin","/privacy","/api/session","/api/deployment/status","/static-cache-sw.js","/api/maintenance/retention"]){
   try{const response=await fetcher(origin+pathname,{cache:"no-store",redirect:"manual",signal:AbortSignal.timeout(15000)}),expected=pathname==="/api/maintenance/retention"?401:200;let ok=response.status===expected,detail="http-status";
-   if(pathname==="/api/session")ok=ok&&/no-store/.test(response.headers.get("cache-control")||"");
-   if(pathname==="/api/deployment/status"&&ok){const raw=await response.json();deployment={schemaVersion:raw.schemaVersion,sourceChanges:Array.isArray(raw.sourceChanges)?raw.sourceChanges.filter(name=>typeof name==="string"&&(/^(?:app|src|server|db|drizzle|worker|lib|scripts|public|docs|config|types)\/[a-zA-Z0-9_./\[\]-]+$/.test(name)||["vercel.json","package.json","package-lock.json","next.config.ts","tsconfig.json","README.md"].includes(name))):[],releaseMatches:raw.releaseId===expectedRelease,teamAccess:["paused","setup-required","review-required","enabled"].includes(raw.teamAccess)?raw.teamAccess:"unknown",configuration:{signInMethods:Array.isArray(raw.configuration?.signInMethods)?raw.configuration.signInMethods.filter(name=>["google","azure-ad","apple","email"].includes(name)):[],database:raw.configuration?.database===true,privateFiles:raw.configuration?.privateFiles===true,scheduledCleanup:raw.configuration?.scheduledCleanup===true}};ok=raw.schemaVersion===1&&deployment.releaseMatches;detail="release-and-configuration";}
+   const noStore=/(?:^|,)\s*no-store\s*(?:,|$)/i.test(response.headers.get("cache-control")||"");
+   if(pathname==="/api/session")ok=ok&&noStore;
+   if(pathname==="/api/deployment/status"&&ok){const raw=await response.json();deployment={schemaVersion:raw.schemaVersion,sourceChanges:Array.isArray(raw.sourceChanges)?raw.sourceChanges.filter(name=>typeof name==="string"&&(/^(?:app|src|server|db|drizzle|worker|lib|scripts|public|docs|config|types)\/[a-zA-Z0-9_./\[\]-]+$/.test(name)||["vercel.json","package.json","package-lock.json","next.config.ts","tsconfig.json","README.md"].includes(name))):[],releaseMatches:raw.releaseId===expectedRelease,teamAccess:["paused","setup-required","review-required","enabled"].includes(raw.teamAccess)?raw.teamAccess:"unknown",configuration:{signInMethods:Array.isArray(raw.configuration?.signInMethods)?raw.configuration.signInMethods.filter(name=>["google","azure-ad","apple","email"].includes(name)):[],database:raw.configuration?.database===true,privateFiles:raw.configuration?.privateFiles===true,scheduledCleanup:raw.configuration?.scheduledCleanup===true}};ok=raw.schemaVersion===1&&deployment.releaseMatches&&noStore;detail="release-configuration-and-cache-policy";}
    checks.push({path:pathname,ok,status:response.status,detail});
   }catch{checks.push({path:pathname,ok:false,status:null,detail:"unavailable-or-unreadable"});}
  }
@@ -41,6 +42,13 @@ export async function preflight({env=process.env,origin="https://delaware-ftc-hq
  if(!online)blockers.push("Hosted deployment checks were not run.");
  if(hosted?.checks.some(check=>!check.ok))blockers.push("Hosted smoke checks or the deployed source fingerprint need attention.");
  if(hosted?.deployment?.teamAccess!=="enabled")blockers.push("The deployed team release remains closed or unverified.");
+ if(hosted?.deployment){
+  const deployed=hosted.deployment.configuration;
+  if(!deployed.signInMethods.length)blockers.push("The deployed release reports no configured sign-in method.");
+  if(!deployed.database)blockers.push("The deployed release database configuration is missing or unverified.");
+  if(!deployed.privateFiles)blockers.push("The deployed release private-file storage configuration is missing or unverified.");
+  if(!deployed.scheduledCleanup)blockers.push("The deployed release scheduled cleanup configuration is missing or unverified.");
+ }
  if(!remoteSchema.ok)blockers.push("Production database schema and migration acceptance remain unverified.");
 
  return {schemaVersion:1,releaseId:release.releaseId,origin,localSourceMatches,configuration:presence,migrationRehearsal:{ok:migration.ok,migrations:migration.migrations,tables:migration.tables.length,indexes:migration.indexes.length,productionModified:false},hosted,remoteSchema,technicalPreflightPassed:blockers.length===0,readiness:{enabled:assessment.enabled,issues:assessment.issues},releaseDecision:"operator-approval-required",manualAcceptance:["Verify named adult/operator authority and actual monitored contacts.","Retain signed review and hosted multi-account/provider evidence; configuration presence does not verify delivery or sign-in.","Complete real phone-keyboard, assistive-technology and installed-SDK/robot acceptance; this script cannot authenticate signatures or physical results."],blockers};

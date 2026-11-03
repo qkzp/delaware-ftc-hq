@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:720f8213fcf8c5e98fe0516de153da639a1891fa6a6ba5ba166b63f519148162",
+  "releaseId": "sha256:6b6ffd546416ac51d6f35cc3ec0fe6b9e3c42c0bba69eab75b1d9a75435e182c",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -27,8 +27,8 @@
       "sha256": "8c6e1c8c7cc535d0e6e8488d80b999408cef26d98fa69131383628673b41855a"
     },
     "app/api/maintenance/retention/route.ts": {
-      "bytes": 818,
-      "sha256": "79d9e61a39454c9f353d4cb0c34ab0a224846761eaea1501dd7ea5766fcc501a"
+      "bytes": 387,
+      "sha256": "4cfac4405a0d0312e230126d2786dae8c580417167b25918d7ee024fb8c55784"
     },
     "app/auth-identity.ts": {
       "bytes": 394,
@@ -67,8 +67,8 @@
       "sha256": "4ec6bf053cd94d2762d71aa8f06a29b9233459a12675d2b483bbbd7524564d54"
     },
     "app/privacy/page.tsx": {
-      "bytes": 16741,
-      "sha256": "065289f0dc9d5664e8ee0dced657b68f669014193ad5e71a85f87f4fe6f5a09e"
+      "bytes": 16977,
+      "sha256": "2239b72fe47d9759ea48aa64c6d58e03f1875ea59d05ff57befbf328760cac22"
     },
     "app/privacy/privacy.css": {
       "bytes": 5136,
@@ -127,8 +127,12 @@
       "sha256": "6859b7e94c1f51dfbd36421323b50ead064343d695405bd16dac25393234ee65"
     },
     "docs/release-evidence.md": {
-      "bytes": 41007,
-      "sha256": "08ec9b288c2b78787a379205cb06dd59c3e0af77cae5d593b427df99c5221133"
+      "bytes": 41187,
+      "sha256": "a6a8d0f739e0df6a53b3ce6d46d3aac6b6f9e8979b8add83befd61c3dfb04bb0"
+    },
+    "docs/release-review-2026-11-02.md": {
+      "bytes": 6009,
+      "sha256": "31cba689bfdd45ae17180560ecc8afe06dc9a3c7135272b0824bb7abf1553b3a"
     },
     "docs/thermal-model.md": {
       "bytes": 6039,
@@ -363,8 +367,8 @@
       "sha256": "6e1189cfb591bf95a75315579f393c4a5dcb7b67712c5d7fca028ff4ddb100e0"
     },
     "scripts/release-preflight.mjs": {
-      "bytes": 9531,
-      "sha256": "8234ba6c0e140e101b62d9cbe66f2b269d469640bddda6799005d910e3079f73"
+      "bytes": 10160,
+      "sha256": "1d4595c7ad3b64458c541ed0c96aa4001a386bcb9ecfb32742eae3ba1c92f6e1"
     },
     "scripts/run-framework.mjs": {
       "bytes": 1170,
@@ -414,6 +418,10 @@
       "bytes": 8924,
       "sha256": "dd5963e1aa518a7137c6714500af80265913b86d935237a58cd632ca2ee2dca5"
     },
+    "server/d1-validation.ts": {
+      "bytes": 1972,
+      "sha256": "51ea40bc498139ef8a68c077f6748ad5517912e9d0479c711881e9a262595be0"
+    },
     "server/deployment-status.ts": {
       "bytes": 1324,
       "sha256": "9b33e46e54be9bb0ba52ebbe0027ef0ce33f7e3fc36d874aa98c79493e5a35e5"
@@ -423,8 +431,8 @@
       "sha256": "97f0bb75d72f88184c43e3572878ebf229c8d70d2d8c0d04dd77f58bca006569"
     },
     "server/platform-storage.ts": {
-      "bytes": 5592,
-      "sha256": "4519d5cc1a300a7e5e4a79a9063a4ae7e002e2dff11283005545265a9fa38929"
+      "bytes": 5506,
+      "sha256": "de24afa43f7fc9fd88ef0fd6e1b03bde192853618d4087d8022d60f68fcebe3f"
     },
     "server/policy.ts": {
       "bytes": 13288,
@@ -439,8 +447,8 @@
       "sha256": "f8e37932ef6912fd9d8eeac007c459bb7299d5962adcf4bcab2ede88515bb107"
     },
     "server/retention.ts": {
-      "bytes": 501,
-      "sha256": "d437b5a39bfe363b6cc061edf92d945c7e08f03afdfd5b7a97208aec370dc06c"
+      "bytes": 2129,
+      "sha256": "6a556dac69fda4629aea7e8b0c7525bad833f5dda99346d14dc4e94145e554bf"
     },
     "server/runtime.ts": {
       "bytes": 581,
@@ -856,8 +864,6 @@
     }
   },
   "sourceChanges": [
-    "src/components/public-new.css",
-    "src/components/workspace-new.css",
-    "src/fieldmanual.css"
+    "app/privacy/page.tsx"
   ]
 }

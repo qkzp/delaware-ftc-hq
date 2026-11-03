@@ -1,5 +1,6 @@
 import "server-only";
 import { Buffer } from "node:buffer";
+import {validateD1Response} from "./d1-validation";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -27,7 +28,7 @@ function d1Endpoint() {
   return `https://api.cloudflare.com/client/v4/accounts/${encodeURIComponent(required("CLOUDFLARE_ACCOUNT_ID"))}/d1/database/${encodeURIComponent(required("CLOUDFLARE_D1_DATABASE_ID"))}/query`;
 }
 
-async function executeD1<T = unknown>(body: { sql: string; params: unknown[] } | { batch: Array<{ sql: string; params: unknown[] }> }): Promise<D1Result<T>[]> {
+async function executeD1<T = unknown>(body: { sql: string; params: unknown[] } | { batch: Array<{ sql: string; params: unknown[] }> },requireRows=false): Promise<D1Result<T>[]> {
   const response = await fetch(d1Endpoint(), {
     method: "POST",
     headers: {
@@ -43,15 +44,11 @@ async function executeD1<T = unknown>(body: { sql: string; params: unknown[] } |
   } catch {
     throw new Error("The D1 storage provider returned an unreadable response.");
   }
-  if (!response.ok || payload.success !== true || !payload.result?.every((item) => item.success !== false)) {
+  if (!response.ok || payload.success !== true) {
     const providerMessage = payload.errors?.[0]?.message;
     throw new Error(`D1 query failed${providerMessage ? `: ${providerMessage}` : "."}`);
   }
-  return payload.result.map((item) => ({
-    success: item.success !== false,
-    results: item.results ?? [],
-    meta: { changes: item.meta?.changes ?? 0, last_row_id: item.meta?.last_row_id },
-  }));
+  return validateD1Response<T>(payload, "batch" in body ? body.batch.map(()=>false) : [requireRows]);
 }
 
 class RemoteStatement {
@@ -72,7 +69,7 @@ class RemoteStatement {
   }
 
   async all<T = unknown>() {
-    const [result] = await executeD1<T>({ sql: this.sql, params: this.boundParams });
+    const [result] = await executeD1<T>({ sql: this.sql, params: this.boundParams },true);
     return result;
   }
 
