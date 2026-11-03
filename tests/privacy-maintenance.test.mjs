@@ -75,6 +75,17 @@ test("an initiating admin recovers and retries pending team erasure after a full
  });
 });
 
+test("a pending student founder recovers an interrupted team cancellation after reload",async()=>{
+ const initial=session("account-a","lead");initial.teams.forEach(team=>{team.studentFounder=true;team.adultSupervisionPending=true;});
+ await fixture({initial,job:{jobId:"founder-receipt",status:"pending"}},async app=>{
+  assert.match(app.text,/founder-receipt/);await app.reload();assert.match(app.text,/founder-receipt/);
+  app.state.cleanupStatus="complete";await app.update(()=>button(app,"Retry ").props.onClick());
+  assert.match(app.text,/Team erasure is complete/);
+  assert.deepEqual(app.requests.filter(request=>request.method==="DELETE").at(-1).body,{jobId:"founder-receipt"});
+  assert.ok(app.requests.every(request=>request.path.endsWith("/privacy/erase")));
+ });
+});
+
 test("maintenance unpauses a team while preserving reviewed upload and retention settings",async()=>{
  await fixture({paused:true,pendingFiles:2},async app=>{
   assert.match(app.text,/interrupted or pending file operations remain tracked/);

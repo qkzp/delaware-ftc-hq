@@ -3,8 +3,8 @@ import type { AppData, Member, Role } from "./types";
 import { rebaseWorkspace } from "../server/policy";
 import { createWorkspaceData } from "./workspace-data";
 import {userError} from "./user-errors";
-export type Session = {user: {userId:string}|null; teams:{id:string;teamName:string;name:string;role:Role}[]; accessModel?:"allowlist"|"self-service"};
-type Shared = {id:string;version:number;role:Role;members:Member[];updated:string};
+export type Session = {user: {userId:string}|null; teams:{id:string;teamName:string;name:string;role:Role;studentFounder?:boolean;adultSupervisionPending?:boolean}[]; accessModel?:"allowlist"|"self-service"};
+type Shared = {id:string;version:number;role:Role;members:Member[];updated:string;canInvite?:boolean;adultSupervisionPending?:boolean};
 const pendingWrites=new Map<string,Promise<any>>();let requestAccount="",sessionSequence=0;
 export function api(path:string, method="GET", body?:unknown):Promise<any> {
  const sequence=path==="/api/session"?++sessionSequence:0;
@@ -46,10 +46,19 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=tr
    const team=active.current;lock("Your team role changed. Checking current permissions…",next);active.current={...team,role:nextRole};
    void readTeam(true).then(()=>{if(active.current?.id===team.id&&active.current.role===nextRole)setError("Your team role changed. Records were reloaded with your current permissions.");}).catch(e=>{if(active.current?.id===team.id)setError(userError(e));});
   }
+  else if(active.current&&nextRole&&next.accessModel==='self-service'){
+   const membership=next.teams.find(t=>t.id===active.current?.id);
+   if(membership&&typeof membership.studentFounder==='boolean'&&typeof membership.adultSupervisionPending==='boolean'){
+    const canInvite=nextRole==='admin'||membership.studentFounder;
+    if(active.current.canInvite!==canInvite||active.current.adultSupervisionPending!==membership.adultSupervisionPending){
+     const updated={...active.current,canInvite,adultSupervisionPending:membership.adultSupervisionPending};active.current=updated;setShared(updated);
+    }
+   }
+  }
   else if(!active.current)setError("");
   sessionRef.current=next;setSession(next);return next;
  };
- function accept(id:string,result:any){const next={id,version:result.version,role:result.role,members:result.members,updated:result.updated};active.current=next;setShared(next);}
+ function accept(id:string,result:any){const previous=active.current?.id===id&&active.current.role===result.role?active.current:null;const next={id,version:result.version,role:result.role,members:result.members,updated:result.updated,canInvite:result.canInvite??previous?.canInvite,adultSupervisionPending:result.adultSupervisionPending??previous?.adultSupervisionPending};active.current=next;setShared(next);}
  const openTeam=async(id:string)=>{
   if(!enabled)throw new Error("Sign in to open a private team.");
   if(dirty.current||saving.current||reading.current)throw new Error("Save or download your unsaved changes, then reload before switching teams.");
@@ -121,7 +130,7 @@ export function useCloud(data:AppData, replace:(data:AppData)=>void, {enabled=tr
     if(reading.current)return;
     if(!validAccess(generation,team.id,identity,team.role))return;
     if(dirty.current){if(!blocked.current&&navigator.onLine)await save();return;}if(saving.current)return;
-    const result=await api(`/api/teams/${team.id}`);await refreshSession();if(!dirty.current&&!saving.current&&active.current?.id===team.id&&validResult(generation,team.id,identity,team.role,result)&&(result.version!==active.current.version||JSON.stringify(result.members)!==JSON.stringify(active.current.members))){accept(team.id,result);latest.current=result.data;replaceRef.current(result.data);setStatus("Synced");}
+    const result=await api(`/api/teams/${team.id}`);await refreshSession();if(!dirty.current&&!saving.current&&active.current?.id===team.id&&validResult(generation,team.id,identity,team.role,result)&&(result.version!==active.current.version||JSON.stringify(result.members)!==JSON.stringify(active.current.members)||result.canInvite!==active.current.canInvite||result.adultSupervisionPending!==active.current.adultSupervisionPending)){accept(team.id,result);latest.current=result.data;replaceRef.current(result.data);setStatus("Synced");}
    }catch(e){if(generation!==accessGeneration.current||active.current?.id!==team.id)return;const code=(e as Error & {status?:number}).status;if(code===401||code===403)lock("Your session or team access ended. Sign in again to reopen your team.");else{setError(userError(e));setStatus("Connection needs attention");}}
    finally{checking=false;}
   };

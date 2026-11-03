@@ -16,7 +16,7 @@ const kinds=[["access","Access or export"],["correction","Correction"],["withdra
 
 /** Privacy maintenance deliberately never requests a workspace, roster or attachment. */
 export default function PrivacyMaintenance({initialSession}:{initialSession:Session}){
- const accountScope=JSON.stringify([initialSession.user?.userId,initialSession.teams.map(t=>[t.id,t.role])]);
+ const accountScope=JSON.stringify([initialSession.user?.userId,initialSession.teams.map(t=>[t.id,t.role,t.studentFounder,t.adultSupervisionPending])]);
  return <MaintenanceAccount key={accountScope} session={initialSession}/>;
 }
 function MaintenanceAccount({session}:{session:Session}){
@@ -31,14 +31,14 @@ function MaintenanceAccount({session}:{session:Session}){
    <p>This page opens privacy records without loading team tasks, student work or files. Use your existing school channel for urgent concerns.</p>
    {accessEnded?<p role="alert">Your account or permissions changed. Private maintenance records have been cleared. <a className="text-link" href="/maintenance">Reload authorized access</a>.</p>:!session.user?<p role="alert">Your session is unavailable. Reload this page and sign in with your own approved account.</p>:!team?<p>No approved team membership is available. Contact the responsible coach or school privacy office through your existing school channel.</p>:<>
     <Field label="Team for privacy maintenance"><select value={teamId} onChange={e=>setTeamId(e.target.value)}>{session.teams.map(t=><option key={t.id} value={t.id}>{t.teamName}</option>)}</select></Field>
-    <MaintenanceTeam key={JSON.stringify([session.user.userId,team.id,team.role])} accountId={session.user.userId} team={team} onAccessEnded={()=>setAccessEnded(true)}/>
+    <MaintenanceTeam key={JSON.stringify([session.user.userId,team.id,team.role,team.studentFounder,team.adultSupervisionPending])} accountId={session.user.userId} team={team} onAccessEnded={()=>setAccessEnded(true)}/>
    </>}
    <p><a className="text-link" href="/">Return to team access</a></p>
   </main>
  </div>;
 }
 function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:Team;onAccessEnded:()=>void}){
- const admin=team.role==="admin",staff=admin||team.role==="mentor",base=`/api/teams/${encodeURIComponent(team.id)}/privacy`;
+ const admin=team.role==="admin",staff=admin||team.role==="mentor",founderPending=team.role==="lead"&&team.studentFounder&&team.adultSupervisionPending,base=`/api/teams/${encodeURIComponent(team.id)}/privacy`;
  const alive=useRef(true),running=useRef(false),readGeneration=useRef(0),accessEnded=useRef(false),accessEpoch=useRef(0),operation=useRef(0);
  const [busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [contacts,setContacts]=useState<TeamContacts|null|undefined>(undefined);
@@ -61,7 +61,7 @@ function MaintenanceTeam({accountId,team,onAccessEnded}:{accountId:string;team:T
  }
  async function load(){
   const generation=++readGeneration.current;
-  const erasure=admin?await call(base+"/erase"):null;check();
+  const erasure=admin||founderPending?await call(base+"/erase"):null;check();
   if(generation!==readGeneration.current)return;
   if(erasure?.job){
    setContacts(undefined);setRecords([]);setSettings(null);setPendingFiles(0);

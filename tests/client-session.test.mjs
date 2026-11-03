@@ -23,20 +23,20 @@ const {AccountWorkspace}=await vite.ssrLoadModule('/src/App.tsx');
 const {createDemoData}=await vite.ssrLoadModule('/src/seed.ts');
 const {STORAGE_KEY}=await vite.ssrLoadModule('/src/persistence.ts');
 const teamId='private-team';
-async function fixture({signedIn=true,member=true,demoMode=false}={},check){
+async function fixture({signedIn=true,member=true,demoMode=false,pending=false}={},check){
  const values=new Map([['myftcspace:team',teamId]]),writes=[],requests=[];
  const storage={getItem:k=>values.get(k)??null,setItem(k,v){values.set(k,String(v));writes.push(String(v));},removeItem:k=>values.delete(k)};
  Object.defineProperty(globalThis,'localStorage',{value:storage,configurable:true});
  const data=createDemoData();data.teamName='PRIVATE TEAM SENTINEL';
- const state={user:signedIn?'account-a':null,member,role:'admin',data,putStatus:200,version:1};
+ const state={user:signedIn?'account-a':null,member,role:pending?'lead':'admin',pending,selfService:pending,data,putStatus:200,version:1};
  const originalFetch=globalThis.fetch;
  globalThis.fetch=async(path,options={})=>{
   const method=options.method||'GET';requests.push({path,method});
-  if(path==='/api/session')return Response.json({user:state.user?{userId:state.user}:null,teams:state.user&&state.member?[{id:state.teamId||teamId,teamName:state.data.teamName,name:'Student A',role:state.role}]:[]});
+  if(path==='/api/session')return Response.json({user:state.user?{userId:state.user}:null,accessModel:state.selfService?'self-service':'allowlist',teams:state.user&&state.member?[{id:state.teamId||teamId,teamName:state.data.teamName,name:'Student A',role:state.role,...(state.selfService?{studentFounder:state.role==='lead',adultSupervisionPending:state.pending}:{})}]:[]});
   if(!state.user)return Response.json({error:'Sign in required'},{status:401});
   if(!state.member)return Response.json({error:'Membership removed'},{status:403});
   if(method==='PUT'&&state.putStatus!==200)return Response.json({error:'Sign in required'},{status:state.putStatus});
-  if(path===`/api/teams/${state.teamId||teamId}`){if(method==='PUT'){state.data=JSON.parse(options.body).data;state.version++;}return Response.json({data:structuredClone(state.data),version:state.version,role:state.role,members:[{userId:state.user,name:'Student A',role:state.role}],updated:'2026-11-01'});}
+  if(path===`/api/teams/${state.teamId||teamId}`){if(method==='PUT'){state.data=JSON.parse(options.body).data;state.version++;}return Response.json({data:structuredClone(state.data),version:state.version,role:state.role,members:[{userId:state.user,name:'Student A',role:state.role}],updated:'2026-11-01',...(method==='PUT'?{}:{canInvite:state.role==='lead',adultSupervisionPending:state.pending})});}
   if(path===`/api/teams/${teamId}/privacy/consent-review`&&method==='POST'){
    const body=JSON.parse(options.body),record=state.data.evidence.find(e=>e.id===body.evidenceId);
    assert.equal(body.confirmation,'REVIEWED COLLECTION CONSENT');assert.equal(body.baseVersion,state.version);
@@ -70,6 +70,20 @@ test('signed-out accounts see a real sign-in link; signed-in nonmembers see team
 });
 test('private account records open for an existing member and never enter browser demo storage',async()=>{
  await fixture({},async app=>{assert.ok(app.context.cloud.shared);assert.match(app.text,/PRIVATE TEAM SENTINEL/);assert.equal(app.values.has(STORAGE_KEY),false);assert.ok(app.writes.every(v=>!v.includes('PRIVATE TEAM SENTINEL')));});
+});
+test('a pending student founder sees team setup until an adult joins',async()=>{
+ await fixture({pending:true},async app=>{
+  assert.match(app.text,/Invite your coach or mentor/);
+  assert.match(app.text,/Create one-use invitation/);
+  assert.doesNotMatch(app.text,/Main navigation|New task/);
+  app.state.pending=false;await app.update(()=>app.context.cloud.refreshSession());
+  assert.doesNotMatch(app.text,/Your team is ready for a responsible adult to join/);
+  assert.match(app.text,/Main navigation/);
+  await app.update(()=>app.context.setData(d=>({...d,teamName:'Changed team'})));
+  await app.update(()=>app.context.cloud.save());
+  assert.equal(app.context.cloud.shared.canInvite,true);
+  assert.equal(app.context.cloud.shared.adultSupervisionPending,false);
+ });
 });
 test('sign-out in another tab clears private records on focus and returns to sign-in',async()=>{
  await fixture({},async app=>{app.state.user=null;await app.focus();assert.equal(app.context.cloud.shared,null);assert.equal(app.context.cloud.session.user,null);assert.doesNotMatch(app.text,/PRIVATE TEAM SENTINEL|Main navigation/);assert.match(app.text,/Sign in/);assert.equal(app.values.has(STORAGE_KEY),false);});

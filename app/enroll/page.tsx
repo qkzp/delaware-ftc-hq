@@ -18,9 +18,9 @@ export default async function EnrollmentPage() {
     <main className="entry-layout" id="enroll-content" aria-labelledby="enroll-title">
       <p className="entry-status">Team setup</p>
       <h1 id="enroll-title">Create a team workspace.</h1>
-      <p className="entry-description">A coach, mentor, or other responsible adult can set up a private workspace and invite their team.</p>
+      <p className="entry-description">Students and adults can start a private workspace and invite their teammates, coaches and mentors. Students need the required parent or guardian permission.</p>
       {available ? <>
-        <p>Sign in with your own account, then choose <strong>Create a team</strong> in team settings. You can invite teammates and additional adult operators after creating your team.</p>
+        <p>Sign in with your own account, then choose <strong>Create a team</strong> in team settings. Student founders can invite teammates and a responsible adult coach or mentor. Adult-only controls remain with adult operators.</p>
         <a className="btn btn-primary entry-primary-action" href={user ? "/#settings" : "/signin?callbackUrl=%2F%23settings"}>{user ? "Continue to team settings" : "Sign in to get started"}</a>
       </> : <p role="status">Self-service team creation is not open yet. The service is still being prepared for team access.</p>}
       {!available && authConfigured && !user && <p><a href="/signin?callbackUrl=%2Fenroll">Sign in for roster-based release setup</a></p>}

@@ -39,3 +39,45 @@ test("adult invitations require confirmation and students cannot be promoted aro
   assert.equal((await f.request("student",`/teams/${team}/invites`,"POST",{role:"admin"},scope)).status,403);
  } finally {f.db.close();}
 });
+
+test("a student founder can invite a responsible adult while team activity waits for supervision",async()=>{
+ const f=fixture(service);
+ try {
+  const create={name:"Student A.",teamName:"Student team",creatorType:"student"};
+  assert.equal((await f.request("founder","/teams","POST",create,scope)).status,400);
+  const created=await f.request("founder","/teams","POST",{...create,studentConfirmed:true},scope);
+  assert.equal(created.status,201);const team=(await created.json()).id;
+  const teamState=await(await f.request("founder",`/teams/${team}`,"GET",undefined,scope)).json();
+  assert.equal(teamState.role,"lead");assert.equal(teamState.canInvite,true);assert.equal(teamState.adultSupervisionPending,true);
+  assert.equal((await f.request("founder",`/teams/${team}/chat`,"GET",undefined,scope)).status,423);
+  assert.equal((await f.request("founder",`/teams/${team}`,"PUT",{data:teamState.data,baseVersion:teamState.version},scope)).status,423);
+  assert.equal((await f.request("founder",`/teams/${team}/members`,"PUT",{userId:"founder",role:"admin"},scope)).status,423);
+  const invite=async role=>(await(await f.request("founder",`/teams/${team}/invites`,"POST",{role},scope)).json()).token;
+  const studentToken=await invite("student");
+  assert.equal((await f.request("teammate","/join","POST",{name:"Teammate",token:studentToken},scope)).status,403);
+  const adultToken=await invite("admin");
+  assert.equal((await f.request("adult","/join","POST",{name:"Adult",token:adultToken},scope)).status,400);
+  assert.equal((await f.request("adult","/join","POST",{name:"Adult",token:adultToken,adultConfirmed:true},scope)).status,200);
+  assert.equal((await f.request("teammate","/join","POST",{name:"Teammate",token:studentToken},scope)).status,200);
+  const after=await(await f.request("founder",`/teams/${team}`,"GET",undefined,scope)).json();
+  assert.equal(after.adultSupervisionPending,false);assert.equal(after.canInvite,true);
+  const leadToken=await invite("lead");
+  assert.equal((await f.request("otherlead","/join","POST",{name:"Other lead",token:leadToken},scope)).status,200);
+  assert.equal((await f.request("otherlead",`/teams/${team}/invites`,"POST",{role:"admin"},scope)).status,403);
+  assert.equal((await f.request("founder",`/teams/${team}/members`,"PUT",{userId:"founder",role:"admin"},scope)).status,403);
+  assert.equal((await f.request("adult",`/teams/${team}/members`,"PUT",{userId:"founder",role:"student"},scope)).status,200);
+  assert.equal((await f.request("adult",`/teams/${team}/members`,"PUT",{userId:"founder",role:"lead"},scope)).status,200);
+  assert.equal((await f.request("founder",`/teams/${team}/invites`,"POST",{role:"student"},scope)).status,403);
+ } finally {f.db.close();}
+});
+
+test("student founder invite creation rechecks the founder role atomically",async()=>{
+ const f=fixture(service);
+ try {
+  const created=await f.request("founder","/teams","POST",{name:"Student",teamName:"Team",creatorType:"student",studentConfirmed:true},scope);
+  const team=(await created.json()).id;
+  f.db.beforeRun=sql=>{if(sql.startsWith("INSERT INTO invitations")){f.db.beforeRun=null;f.db.sqlite.prepare("UPDATE memberships SET role='student',student_founder=0 WHERE team_id=? AND user_id=?").run(team,"founder");}};
+  assert.equal((await f.request("founder",`/teams/${team}/invites`,"POST",{role:"admin"},scope)).status,409);
+  assert.equal(f.db.sqlite.prepare("SELECT count(*) AS n FROM invitations WHERE team_id=?").get(team).n,0);
+ } finally {f.db.close();}
+});

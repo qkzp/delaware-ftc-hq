@@ -41,6 +41,15 @@ async function deleteObjects(db:D1Database,bucket:R2Bucket,teamId:string,evidenc
  if(results.some(file=>file.upload_state==='uploading'))return false;
  try {for(const f of results)await bucket.delete(teamId+"/"+f.id);return true;} catch {return false;}
 }
+async function finishTeamErasure(db:D1Database,bucket:R2Bucket,teamId:string,digest:string,job:Job):Promise<Response> {
+ if(job.status==="complete")return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});
+ if(!await deleteObjects(db,bucket,teamId))return response({ok:true,status:"pending",pendingCleanup:true,jobId:job.job_id,message:"Team access is blocked. Storage cleanup will need a retry."},202);
+ await db.batch([
+ ...["revisions","invitations","files","privacy_requests","evidence_erasures","team_privacy","chat_messages","chat_settings","chat_blocks","memberships"].map(table=>db.prepare("DELETE FROM "+table+" WHERE team_id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job.job_id,digest)),
+ db.prepare("DELETE FROM teams WHERE id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job.job_id,digest),
+ db.prepare("UPDATE team_erasures SET status='complete',completed=? WHERE team_id=? AND job_id=? AND actor_hash=?").bind(new Date().toISOString(),teamId,job.job_id,digest)]);
+ return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});
+}
 export async function eraseTeam(request:Request,db:D1Database,bucket:R2Bucket,teamId:string,userId:string,input:any):Promise<Response> {
  const digest=await actorHash(teamId,userId);let job=await db.prepare("SELECT * FROM team_erasures WHERE team_id=?").bind(teamId).first<Job>();
  if(job){if(input.jobId!==job.job_id||digest!==job.actor_hash)throw new ApiError(403,"Only the initiating authorized admin can retry this cleanup with its job ID.");}
@@ -53,13 +62,23 @@ export async function eraseTeam(request:Request,db:D1Database,bucket:R2Bucket,te
   if(!result.meta.changes)throw new ApiError(409,"Team or admin membership changed. Reload before erasing.");
   job={job_id:id,actor_hash:digest,status:"pending"};
  }
- if(job.status==="complete")return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});
- if(!await deleteObjects(db,bucket,teamId))return response({ok:true,status:"pending",pendingCleanup:true,jobId:job.job_id,message:"Team access is blocked. Storage cleanup will need a retry."},202);
- await db.batch([
- ...["revisions","invitations","files","privacy_requests","evidence_erasures","team_privacy","chat_messages","chat_settings","chat_blocks","memberships"].map(table=>db.prepare("DELETE FROM "+table+" WHERE team_id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job!.job_id,digest)),
- db.prepare("DELETE FROM teams WHERE id=? AND EXISTS(SELECT 1 FROM team_erasures WHERE team_id=? AND job_id=? AND actor_hash=?)").bind(teamId,teamId,job.job_id,digest),
- db.prepare("UPDATE team_erasures SET status='complete',completed=? WHERE team_id=? AND job_id=? AND actor_hash=?").bind(new Date().toISOString(),teamId,job.job_id,digest)]);
- return response({ok:true,status:"complete",pendingCleanup:false,jobId:job.job_id});
+ return finishTeamErasure(db,bucket,teamId,digest,job);
+}
+/** A student founder may cancel only while no adult operator has joined. */
+export async function cancelPendingStudentTeam(request:Request,db:D1Database,bucket:R2Bucket,teamId:string,userId:string,input:any):Promise<Response> {
+ const digest=await actorHash(teamId,userId);let job=await db.prepare("SELECT * FROM team_erasures WHERE team_id=?").bind(teamId).first<Job>();
+ if(job){if(input.jobId!==job.job_id||digest!==job.actor_hash)throw new ApiError(403,"Only the person who started cancellation can retry it with its job ID.");}
+ else {
+  const row=await db.prepare("SELECT data,version FROM teams WHERE id=?").bind(teamId).first<any>();
+  if(!row||input.baseVersion!==row.version||input.confirmation!==JSON.parse(row.data).workspace.teamName)throw new ApiError(409,"Confirm the exact current team name and revision before cancellation.");
+  const id=crypto.randomUUID(),created=new Date().toISOString();
+  // This insertion and adult invitation redemption each check the other's state
+  // in SQL, so only one can win if they race.
+  const result=await db.prepare("INSERT OR IGNORE INTO team_erasures(team_id,job_id,actor_hash,status,created) SELECT id,?,?,'pending',? FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role='lead' AND student_founder=1) AND NOT EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND role='admin')").bind(id,digest,created,teamId,row.version,teamId,userId,teamId).run();
+  if(!result.meta.changes)throw new ApiError(409,"This team changed or has an adult operator. Only the student founder can cancel a pending team.");
+  job={job_id:id,actor_hash:digest,status:"pending"};
+ }
+ return finishTeamErasure(db,bucket,teamId,digest,job);
 }
 async function withdrawEvidence(c:Context):Promise<Response> {
  const {db,bucket,teamId,userId,member,row,envelope,input}=c,id=String(input.evidenceId||""),digest=await actorHash(teamId,userId);

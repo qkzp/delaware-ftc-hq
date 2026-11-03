@@ -26,7 +26,7 @@ const button=(app,text)=>app.root.findAllByType("button").find(node=>node.childr
 async function fixture(check){
  const originalFetch=globalThis.fetch,originalFormData=globalThis.FormData,originalError=console.error;
  const values=new Map([["myftcspace:team","team-a"]]),requests=[];
- const state={user:"account-a",role:"admin",accessModel:undefined,extraMembers:[]};
+ const state={user:"account-a",role:"admin",accessModel:undefined,extraMembers:[],canInvite:false,adultSupervisionPending:false};
  Object.defineProperty(globalThis,"localStorage",{value:{getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,String(value)),removeItem:key=>values.delete(key)},configurable:true});
  globalThis.FormData=class {constructor(form){this.values=form.values;}get(key){return this.values[key];}};
  const teams=Object.fromEntries(["a","b"].map(letter=>{const data=createWorkspaceData();data.teamId=`team-${letter}`;data.teamName=`Fictional team ${letter.toUpperCase()}`;return [data.teamId,data];}));
@@ -36,8 +36,9 @@ async function fixture(check){
   const match=path.match(/^\/api\/teams\/(team-[ab])(?:\/(.+))?$/);
   if(!match)throw new Error(`Unexpected test request: ${method} ${path}`);
   const [,id,resource]=match;
-  if(!resource)return Response.json({data:structuredClone(teams[id]),version:1,role:state.role,members:[{userId:state.user,name:"Fictional alias",role:state.role},...state.extraMembers],updated:"2026-11-01"});
+  if(!resource)return Response.json({data:structuredClone(teams[id]),version:1,role:state.role,members:[{userId:state.user,name:"Fictional alias",role:state.role},...state.extraMembers],updated:"2026-11-01",canInvite:state.canInvite,adultSupervisionPending:state.adultSupervisionPending});
   if(resource==="invites")return Response.json(method==="POST"?{token:`PRIVATE-CODE-${id}`}:{invites:[{id:`invite-${id}`,role:"student",expires:"2099-01-01",used:false}]});
+  if(resource==="privacy/erase"&&method==="DELETE")return Response.json({ok:true,status:"pending",pendingCleanup:true,jobId:"receipt"},{status:202});
   if(resource==="history")return Response.json({history:[{id:`revision-${id}`,version:id==="team-a"?411:922,created:"2026-11-01",actor:`PRIVATE-HISTORY-${id}`}]});
   if(resource==="learning")return Response.json({learning:[{userId:`PRIVATE-LEARNING-${id}`,steps:["fictional"],skills:[]}]});
   throw new Error(`Unexpected test request: ${method} ${path}`);
@@ -67,6 +68,24 @@ test("self-service members must accept an adult invitation instead of being prom
   app.state.accessModel="allowlist";await app.update(()=>app.context.cloud.refreshSession());
   assert.deepEqual(options("Student B"),["student","lead","mentor","admin"]);
   assert.doesNotMatch(app.text,/remove their access and send them an adult invitation/);
+ });
+});
+
+test("a student founder can invite an adult while the team awaits supervision",async()=>{
+ await fixture(async app=>{
+  app.state.accessModel="self-service";app.state.role="lead";app.state.canInvite=true;app.state.adultSupervisionPending=true;
+  await app.update(()=>app.context.cloud.refreshSession());
+  assert.match(app.text,/waiting for a responsible adult/);
+  assert.ok(button(app,"Create one-use invitation"));
+  assert.equal(app.root.findByProps({name:"role"}).props.defaultValue,"admin");
+  assert.equal(button(app,"Review saved revisions"),undefined);
+  await app.update(()=>button(app,"Cancel this pending team").props.onClick());
+  assert.equal(button(app,"Cancel pending team").props.disabled,true);
+  await app.update(()=>app.root.findAllByType("input").find(input=>input.props.value==="").props.onChange({target:{value:"Fictional team A"}}));
+  await app.update(()=>button(app,"Cancel pending team").props.onClick());
+  assert.match(app.text,/cleanup is still pending/);
+  assert.match(app.text,/privacy and safety maintenance/);
+  assert.equal(app.requests.some(request=>request.path==="/api/teams/team-a/privacy/erase"&&request.method==="DELETE"),true);
  });
 });
 
