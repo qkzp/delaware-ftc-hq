@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:663ad5a974322dcdd91c1aab4d19ed25d866b59169de093df3792b2c37b03222",
+  "releaseId": "sha256:70b0269a7efaee630b0eb199479448fbdc57c05946837f26881fd3174fd37e96",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -83,8 +83,8 @@
       "sha256": "4e606db55ed6e8a64c05f9ff012118c0f6ae0eafb5e48ac8b9c24b139d0e54b0"
     },
     "app/signin/page.tsx": {
-      "bytes": 2125,
-      "sha256": "0170447ca118b7250cca45aa4f647fc5214fa92362ac8d0601d0147bc77807e4"
+      "bytes": 2297,
+      "sha256": "379422065308e1185d2b2ee50b10dd6fb7e45bdf0963118617e58674507e7b97"
     },
     "app/workspace-client.tsx": {
       "bytes": 1956,
@@ -543,8 +543,8 @@
       "sha256": "ef2d7fcb0a1e69d9a4c78047c88260b658a3e86532c0d402b971597b837aa6ac"
     },
     "src/components/PublicWelcome.tsx": {
-      "bytes": 6393,
-      "sha256": "f34d5c8c1655459bf2fecf9675ad5bc1f3363a48143514a66c78dd3c4b3031db"
+      "bytes": 6364,
+      "sha256": "e7f58d84e97909067e1f6b81b09bcc5a1c453e7bed2c1964dc2fb9d1976e4200"
     },
     "src/components/ResourceSpaces.css": {
       "bytes": 9226,
@@ -619,12 +619,12 @@
       "sha256": "9f2a6ddac64f543237414f0d75e9b4c6de7cdf782cd02358a3e871cf447d0612"
     },
     "src/components/entry.css": {
-      "bytes": 3773,
-      "sha256": "2556c9784ef1074e5569ac2126f3c6b3c99863a20fda9139aedb344af08ec5fa"
+      "bytes": 4140,
+      "sha256": "abc5aeaca37039eda1e54736565dc91414ce9c9c329b7b1f5023a993473dcade"
     },
     "src/components/public-new.css": {
-      "bytes": 14756,
-      "sha256": "0cffd68d1d2c74bb0fa0e8f07684e739b39a46883ab529dfb29dcfcd605cf266"
+      "bytes": 14973,
+      "sha256": "c6c0de97c70379460338e139acb1594a5bb36251d0e911cf0624727412144d96"
     },
     "src/components/task-planning.css": {
       "bytes": 6266,
@@ -896,10 +896,9 @@
     }
   },
   "sourceChanges": [
-    "src/components/WorkspaceChrome.tsx",
-    "src/components/workspace-refresh.css",
-    "src/screens/HomeClean.css",
-    "src/screens/TeamHubSimple.css",
-    "src/screens/workspace-screens-simple.css"
+    "app/signin/page.tsx",
+    "src/components/PublicWelcome.tsx",
+    "src/components/entry.css",
+    "src/components/public-new.css"
   ]
 }

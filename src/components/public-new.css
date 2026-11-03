@@ -39,6 +39,8 @@ html body .field-welcome .sheet-actions{display:flex;align-items:center;gap:10px
 html body .field-welcome .sheet-action{display:inline-flex;justify-content:center;align-items:center;gap:12px;min-height:46px;padding:10px 16px;font-size:.875rem;font-weight:600;text-decoration:none;border:1px solid transparent;border-radius:0}
 html body .field-welcome .sheet-action-primary{background:var(--sheet-accent);border-color:var(--sheet-accent);color:var(--sheet-onaccent)}
 html body .field-welcome .sheet-action-primary:hover{filter:brightness(.9)}
+html body .field-welcome .sheet-action-demo{border-color:var(--sheet-rule);color:var(--sheet-ink);font-size:.75rem;padding-inline:12px}
+html body .field-welcome .sheet-action-demo:hover{border-color:var(--sheet-ink)}
 html body .field-welcome .sheet-action-link{color:var(--sheet-ink);border-bottom:1px solid var(--sheet-ink);padding-inline:0}
 html body .field-welcome .sheet-action-link:hover{text-decoration:underline}
 html body .field-welcome .sheet-hero-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:26px;color:var(--sheet-muted)}
