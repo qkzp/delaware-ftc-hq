@@ -16,7 +16,7 @@ export default function PrivacyPage(){
     <h2 id="operator-title">Who operates this service</h2>
     <p>The initial rollout is for teams based in Delaware, United States. Expansion to other states is planned and requires a review of the additional organizations, users and requirements before team data access is offered.</p>
     {gate.record ? <p>The responsible organization is <strong>{gate.record.organization}</strong>, with <strong>{gate.record.adultOwner}</strong> as the adult service owner. Contact <a href={`mailto:${gate.record.privacyEmail}`}>{gate.record.privacyEmail}</a> for privacy questions and data requests.</p> : <p>The responsible organization, named adult service owner and monitored privacy contact have not yet been configured for this deployment. Team data access remains unavailable until those details and the required release review are complete.</p>}
-    <p>Each team uses a designated adult coach or mentor for privacy and safety concerns. Team leads coordinate routine work and refer these concerns to an adult.</p>
+    <p>Teams can invite coaches and mentors. When a team has adult operators, members can contact them for privacy and safety concerns. Once configured, the service-wide contact is also available to teams without an adult operator.</p>
    </section>
    <section id="account-access" aria-labelledby="account-access-title">
     <h2 id="account-access-title">Access and ages</h2>
@@ -73,6 +73,6 @@ export default function PrivacyPage(){
     <p>When signed in to an approved team, use <strong>Settings → Privacy and safety</strong> to submit a request or concern. If team work is paused or a deletion is still cleaning up, use <a href="/maintenance">private requests and cleanup</a>. Members see their own requests; approved coaches, mentors and admins see and review the team's requests. Team leads help with routine work and route privacy or safety matters to an adult. An adult must verify the requester, track applicable deadlines and coordinate provider/export copies. The app does not determine legal applicability or guarantee vendor completion.</p>
     <p>Keep passwords, invitation codes, student details and sensitive attachments out of reports. Give the screen and record title, the type of problem and a safe way to follow up through your school. Report urgent student-safety concerns directly to a trusted adult; this app is not an emergency service.</p>
    </section>
-  </main><footer className="privacy-footer"><span>MyFTCSpace</span><a href="/third-party-notices.txt">Open source notices</a><span>Private team work with adult oversight</span></footer>
+  </main><footer className="privacy-footer"><span>MyFTCSpace</span><a href="/third-party-notices.txt">Open source notices</a><span>Private team work</span></footer>
  </div>;
 }

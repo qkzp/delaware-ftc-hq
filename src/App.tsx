@@ -215,9 +215,9 @@ export function AccountWorkspace() {
   const {cloud,notice,clearNotice}=useHQ();
   if(!cloud.ready)return <div className="account-entry"><main className="account-login" role="status" aria-busy="true"><img src="/favicon.svg" alt="" width="48" height="48"/><h1>Checking your account.</h1><p>Opening your private team workspace…</p></main></div>;
   if(!cloud.session.user)return <>{cloud.error&&<div className="account-connection-message" role="alert">{cloud.error} <button className="text-link" onClick={()=>void cloud.refreshSession().catch(()=>{})}>Retry connection</button></div>}<SignIn/></>;
-  if(!cloud.shared||cloud.shared.adultSupervisionPending)return <div className="account-entry">
+  if(!cloud.shared)return <div className="account-entry">
     <header className="account-entry-header"><a href="/"><img src="/favicon.svg" alt="" width="38" height="38"/><strong>MyFTCSpace</strong></a><a href="#sign-out" onClick={async e=>{e.preventDefault();const {signOut}=await import("next-auth/react");await signOut({callbackUrl:"/"});}}>Sign out</a></header>
-    <main className="account-team-setup"><h1>{cloud.shared?.adultSupervisionPending ? "Invite your coach or mentor." : cloud.session.teams.length ? "Choose your team." : "Set up your team."}</h1><p>{cloud.shared?.adultSupervisionPending ? "Your team is ready for a responsible adult to join. Invite them as an adult operator to open the workspace." : "Choose an existing workspace, join with an invitation, or start a private team."}</p><TeamAccess/>{notice&&<p className="account-connection-message" role="alert">{notice.message} <button className="text-link" onClick={clearNotice}>Dismiss</button></p>}</main>
+    <main className="account-team-setup"><h1>{cloud.session.teams.length ? "Choose your team." : "Set up your team."}</h1><p>Choose an existing workspace, join with an invitation, or start a private team.</p><TeamAccess/>{notice&&<p className="account-connection-message" role="alert">{notice.message} <button className="text-link" onClick={clearNotice}>Dismiss</button></p>}</main>
     <footer className="account-entry-footer">Private team records · Memberships and permissions are checked on the server.<br/><a href="/privacy">Privacy & data help</a></footer>
   </div>;
   return <Workspace/>;

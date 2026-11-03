@@ -71,21 +71,36 @@ test("self-service members must accept an adult invitation instead of being prom
  });
 });
 
-test("a student founder can invite an adult while the team awaits supervision",async()=>{
+test("a student founder can invite teammates and delete an unshared team",async()=>{
  await fixture(async app=>{
   app.state.accessModel="self-service";app.state.role="lead";app.state.canInvite=true;app.state.adultSupervisionPending=true;
   await app.update(()=>app.context.cloud.refreshSession());
-  assert.match(app.text,/waiting for a responsible adult/);
+  assert.doesNotMatch(app.text,/waiting for a responsible adult/);
   assert.ok(button(app,"Create one-use invitation"));
-  assert.equal(app.root.findByProps({name:"role"}).props.defaultValue,"admin");
+  assert.equal(app.root.findByProps({name:"role"}).props.defaultValue,"student");
   assert.equal(button(app,"Review saved revisions"),undefined);
-  await app.update(()=>button(app,"Cancel this pending team").props.onClick());
-  assert.equal(button(app,"Cancel pending team").props.disabled,true);
+  await app.update(()=>button(app,"Delete this unshared team").props.onClick());
+  assert.equal(button(app,"Delete team").props.disabled,true);
   await app.update(()=>app.root.findAllByType("input").find(input=>input.props.value==="").props.onChange({target:{value:"Fictional team A"}}));
-  await app.update(()=>button(app,"Cancel pending team").props.onClick());
+  await app.update(()=>button(app,"Delete team").props.onClick());
   assert.match(app.text,/cleanup is still pending/);
   assert.match(app.text,/privacy and safety maintenance/);
   assert.equal(app.requests.some(request=>request.path==="/api/teams/team-a/privacy/erase"&&request.method==="DELETE"),true);
+ });
+});
+
+test("a student founder can remove student teammates even when a mentor has joined",async()=>{
+ await fixture(async app=>{
+  app.state.accessModel="self-service";app.state.role="lead";app.state.canInvite=true;app.state.adultSupervisionPending=true;
+  app.state.extraMembers=[{userId:"student-b",name:"Student B",role:"student"}];
+  await app.update(()=>app.context.cloud.refreshSession());
+  await app.update(()=>app.context.cloud.reload());
+  assert.ok(app.root.findByProps({"aria-label":"Remove access for Student B"}));
+  app.state.extraMembers.push({userId:"mentor-c",name:"Mentor C",role:"mentor"});
+  await app.update(()=>app.context.cloud.reload());
+  assert.ok(app.root.findByProps({"aria-label":"Remove access for Student B"}));
+  assert.equal(app.root.findAllByProps({"aria-label":"Remove access for Mentor C"}).length,0);
+  assert.equal(button(app,"Delete this unshared team"),undefined);
  });
 });
 

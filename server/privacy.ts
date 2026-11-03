@@ -64,7 +64,7 @@ export async function eraseTeam(request:Request,db:D1Database,bucket:R2Bucket,te
  }
  return finishTeamErasure(db,bucket,teamId,digest,job);
 }
-/** A student founder may cancel only while no adult operator has joined. */
+/** A student founder may cancel only while they are the sole member. */
 export async function cancelPendingStudentTeam(request:Request,db:D1Database,bucket:R2Bucket,teamId:string,userId:string,input:any):Promise<Response> {
  const digest=await actorHash(teamId,userId);let job=await db.prepare("SELECT * FROM team_erasures WHERE team_id=?").bind(teamId).first<Job>();
  if(job){if(input.jobId!==job.job_id||digest!==job.actor_hash)throw new ApiError(403,"Only the person who started cancellation can retry it with its job ID.");}
@@ -72,10 +72,9 @@ export async function cancelPendingStudentTeam(request:Request,db:D1Database,buc
   const row=await db.prepare("SELECT data,version FROM teams WHERE id=?").bind(teamId).first<any>();
   if(!row||input.baseVersion!==row.version||input.confirmation!==JSON.parse(row.data).workspace.teamName)throw new ApiError(409,"Confirm the exact current team name and revision before cancellation.");
   const id=crypto.randomUUID(),created=new Date().toISOString();
-  // This insertion and adult invitation redemption each check the other's state
-  // in SQL, so only one can win if they race.
-  const result=await db.prepare("INSERT OR IGNORE INTO team_erasures(team_id,job_id,actor_hash,status,created) SELECT id,?,?,'pending',? FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role='lead' AND student_founder=1) AND NOT EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND role='admin')").bind(id,digest,created,teamId,row.version,teamId,userId,teamId).run();
-  if(!result.meta.changes)throw new ApiError(409,"This team changed or has an adult operator. Only the student founder can cancel a pending team.");
+  // Erasure and invitation redemption each check the other's state atomically.
+  const result=await db.prepare("INSERT OR IGNORE INTO team_erasures(team_id,job_id,actor_hash,status,created) SELECT id,?,?,'pending',? FROM teams WHERE id=? AND version=? AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role='lead' AND student_founder=1) AND NOT EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id<>?)").bind(id,digest,created,teamId,row.version,teamId,userId,teamId,userId).run();
+  if(!result.meta.changes)throw new ApiError(409,"This team changed or has other members. A student founder can cancel only a team they have not yet shared.");
   job={job_id:id,actor_hash:digest,status:"pending"};
  }
  return finishTeamErasure(db,bucket,teamId,digest,job);

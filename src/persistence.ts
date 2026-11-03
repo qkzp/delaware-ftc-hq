@@ -295,7 +295,7 @@ export function validateData(value: unknown): value is AppData {
       (a) =>
         strings(a, ["title", "body", "author", "date"]) &&
         day(a.date, false) &&
-        oneOf(a.type, ["Decision", "Update"]),
+        oneOf(a.type, ["Decision", "Update", "Announcement"]),
     )
   )
     return false;

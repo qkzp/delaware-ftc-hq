@@ -153,7 +153,7 @@ export interface Announcement extends Base {
   body: string;
   author: string;
   date: string;
-  type: "Decision" | "Update";
+  type: "Decision" | "Update" | "Announcement";
 }
 export interface TeamContacts { supportEmail:string; privacyEmail:string; }
 export interface AppData {

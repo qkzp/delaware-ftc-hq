@@ -1,0 +1,25 @@
+.award-tracker { margin:24px 0; }
+.award-tracker>header { display:flex; flex-wrap:wrap; gap:12px 24px; align-items:end; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:16px; }
+.award-tracker h2 { margin:0 0 6px; }
+.award-tracker header p { margin:0; }
+.award-tracker-kicker { color:var(--accent); font-size:.75rem; font-weight:700; letter-spacing:.04em; margin-bottom:8px!important; }
+.award-tracker header a { min-height:44px; display:inline-flex; align-items:center; }
+.award-tracker-note { color:var(--muted); font-size:.875rem; line-height:1.6; }
+.award-tracker-award { border-bottom:1px solid var(--line); }
+.award-tracker-award summary { cursor:pointer; display:flex; min-height:68px; align-items:center; justify-content:space-between; gap:16px; padding:10px 0; list-style:none; }
+.award-tracker-award summary::-webkit-details-marker { display:none; }
+.award-tracker-award summary:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.award-tracker-award summary strong,.award-tracker-award summary small { display:block; }
+.award-tracker-award summary small { color:var(--muted); margin-top:4px; }
+.award-tracker-award[open] .award-tracker-arrow { transform:rotate(45deg); }
+.award-tracker-arrow { color:var(--accent); font-size:1.25rem; }
+.award-tracker-criteria { border-top:1px solid var(--line); }
+.award-tracker-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 20px; padding:14px 0; border-bottom:1px solid var(--line); }
+.award-tracker-row:last-child { border-bottom:0; }
+.award-tracker-row>div { flex:1 1 300px; }
+.award-tracker-row p { margin:4px 0 0; line-height:1.5; }
+.award-tracker-row small { color:var(--muted); }
+.award-tracker-kind { color:var(--accent); font-size:.75rem; font-weight:700; }
+.award-tracker-row select { min-height:44px; min-width:132px; max-width:100%; }
+.award-tracker-visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+@media(max-width:480px) { .award-tracker-row>label,.award-tracker-row select { width:100%; } }

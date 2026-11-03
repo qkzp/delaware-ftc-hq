@@ -104,7 +104,10 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
      updated.verifiedAt = now.slice(0,10); updated.verifiedBy = userId;
     } else if (contentChanged && previous?.verification === "verified") { updated.verification = "needs-review"; updated.verifiedAt = ""; updated.verifiedBy = ""; }
    }
-   if (key === "announcements") updated.author = previous?.author || userId;
+   if (key === "announcements") {
+    if (!reviews(role) && (record.type === "Announcement" || previous?.type === "Announcement")) throw new ApiError(403, "Only a coach, mentor or adult operator can post or change an announcement.");
+    updated.author = previous?.author || userId;
+   }
    if (key === "resources") {
     const changed = !previous || !same({...record,approved: previous.approved},previous);
     if (record.approved && (changed || !previous?.approved) && !reviews(role)) updated.approved = false;
@@ -133,6 +136,7 @@ export function mergeWorkspace(envelope: Envelope, incoming: AppData, role: Role
   }
   for (const previous of visibleOld) if (!received.some(r => r.id === previous.id)) {
    if (!manages(role)) throw new ApiError(403, "A student lead or mentor must remove records.");
+   if (key === "announcements" && previous.type === "Announcement" && !reviews(role)) throw new ApiError(403, "Only a coach, mentor or adult operator can remove an announcement.");
    all.splice(all.findIndex(r => r.id === previous.id),1);
   }
   (next.workspace as any)[key] = all;

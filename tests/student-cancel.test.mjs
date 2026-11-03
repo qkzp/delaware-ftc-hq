@@ -40,6 +40,16 @@ test("an adult joining before the cancellation claim prevents deletion",async()=
  }finally{f.db.close();}
 });
 
+test("a founder cannot delete a team after another student joins",async()=>{
+ const f=fixture();try{
+  const id=await pendingTeam(f);
+  const invite=await (await f.request("founder",`/teams/${id}/invites`,"POST",{role:"student"})).json();
+  assert.equal((await f.request("teammate","/join","POST",{token:invite.token,name:"B.",studentConfirmed:true})).status,200);
+  assert.equal((await cancel(f,id)).status,409);
+  assert.equal(f.db.sqlite.prepare("SELECT count(*) AS n FROM memberships WHERE team_id=?").get(id).n,2);
+ }finally{f.db.close();}
+});
+
 test("simultaneous cancellation requests create only one cleanup claim",async()=>{
  const f=fixture();try{
   const id=await pendingTeam(f);

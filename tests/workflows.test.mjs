@@ -90,6 +90,7 @@ const pages = Object.fromEntries(
   ),
 );
 const { Workspace } = await server.ssrLoadModule("/src/App.tsx");
+const { default: AwardTracker } = await server.ssrLoadModule("/src/components/AwardTracker.tsx");
 
 test("competition map opens real team records and requests location only after a click", async () => {
   const initial = createDemoData();
@@ -230,6 +231,26 @@ function fieldControl(root, label, type = "input") {
   assert.ok(field, `Field “${label}” should be rendered`);
   return field.findByType(type);
 }
+
+test("award progress saves to the team task data and respects ownership", async () => {
+  await fixture({page:AwardTracker}, async app => {
+    assert.equal(app.root.findAllByType("details").length,8);
+    await app.update(()=>app.root.findAllByType("select")[0].props.onChange({target:{value:"Done"}}));
+    const task=app.context.data.tasks.find(t=>t.id==="award-biobuzz-inspire-r1");
+    assert.equal(task.status,"Done");
+    assert.equal(task.due,"");
+    assert.equal(task.area,"Awards");
+    assert.equal(validateData(JSON.parse(localStorage.getItem(STORAGE_KEY))),true);
+    assert.equal(JSON.parse(localStorage.getItem(STORAGE_KEY)).tasks.find(t=>t.id===task.id).status,"Done");
+    assert.equal(app.root.findAllByType("summary")[0].findByType("small").children.join(""),"1 of 4 required items marked done");
+  });
+  const initial=createDemoData();
+  initial.tasks.push({id:"award-biobuzz-inspire-r1",teamId:initial.teamId,seasonId:initial.seasonId,title:"Award task",owner:"Another member",area:"Awards",due:"",priority:"Medium",status:"In progress",done:"",effort:"",description:"",dependencies:[],comments:[]});
+  await fixture({initial,page:AwardTracker,role:"student"}, async app => {
+    assert.equal(app.root.findAllByType("select")[0].props.disabled,true);
+    assert.match(app.text,/Ask the owner or a team lead to update it/);
+  });
+});
 
 test("workspace tabs, exact-record search, and role changes keep the redesigned shell connected", async () => {
   const initial = createDemoData();

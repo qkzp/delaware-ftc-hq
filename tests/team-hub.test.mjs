@@ -76,6 +76,24 @@ test("students can reply to team tasks while private resources and announcement 
   for(const resource of app.context.data.resources.filter(resource=>resource.visibility==="private"||!resource.approved))assert.equal(app.text.includes(resource.title),false);
  },{role:"student"});
 });
+test("a mentor posts a distinct announcement that the team can read",async()=>{
+ await fixture(async app=>{
+  await app.update(()=>button(app.root,"Post announcement").props.onClick());
+  assert.equal(field(app.root,"Update type").props.value,"Announcement");
+  await app.update(()=>field(app.root,"Title").props.onChange({target:{value:"Fictional meeting reminder"}}));
+  await app.update(()=>field(app.root,"Message").props.onChange({target:{value:"Bring safety glasses."}}));
+  await app.update(()=>app.root.findByType("form").props.onSubmit({preventDefault(){}}));
+  assert.equal(validateData(app.context.data),true);
+  assert.ok(app.context.data.announcements.some(item=>item.type==="Announcement"&&item.title==="Fictional meeting reminder"));
+  await app.update(()=>button(app.root,"Team brief").props.onClick());assert.match(app.text,/Fictional meeting reminder/);
+  await app.update(()=>button(app.root,"Post team update").props.onClick());assert.equal(field(app.root,"Update type").props.value,"Update");
+  await app.update(()=>field(app.root,"Update type").props.onChange({target:{value:"Decision"}}));
+  await app.update(()=>field(app.root,"Title").props.onChange({target:{value:"Draft decision"}}));
+  await app.update(()=>button(app.root,"Keep draft and close").props.onClick());
+  await app.update(()=>button(app.root,"Post update").props.onClick());assert.equal(field(app.root,"Update type").props.value,"Decision");assert.equal(field(app.root,"Title").props.value,"Draft decision");
+ },{role:"mentor"});
+ await fixture(async app=>{assert.equal(button(app.root,"Post announcement"),undefined);},{role:"lead"});
+});
 test("a lead records a valid team decision that appears in the brief and activity",async()=>{
  await fixture(async app=>{
   await app.update(()=>button(app.root,"Post team update").props.onClick());

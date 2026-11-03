@@ -9,6 +9,20 @@ const {service}=await vite.ssrLoadModule('/server/service.ts');
 const {view,mergeWorkspace}=await vite.ssrLoadModule('/server/policy.ts');
 const {rebaseWorkspace}=await vite.ssrLoadModule('/server/policy.ts');
 const {createDemoData}=await vite.ssrLoadModule('/src/seed.ts');
+test('coaches and mentors can post announcements visible to students; leads cannot forge, alter or remove them',()=>{
+ const data=createDemoData(),envelope={workspace:data,rsvps:{},learning:{}};
+ const mentorView=view(envelope,'mentor','mentor');
+ mentorView.announcements.push({id:'coach-announcement',teamId:data.teamId,seasonId:data.seasonId,title:'Build night',body:'Bring the robot.',author:'Forged name',date:'2026-11-03',type:'Announcement'});
+ const result=mergeWorkspace(envelope,mentorView,'mentor','mentor');
+ assert.equal(view(result,'student','student').announcements.find(a=>a.id==='coach-announcement').author,'mentor');
+ const leadView=view(result,'lead','lead');
+ leadView.announcements.find(a=>a.id==='coach-announcement').body='Changed';
+ assert.throws(()=>mergeWorkspace(result,leadView,'lead','lead'),/Only a coach/);
+ const removed=view(result,'lead','lead');removed.announcements=removed.announcements.filter(a=>a.id!=='coach-announcement');
+ assert.throws(()=>mergeWorkspace(result,removed,'lead','lead'),/Only a coach/);
+ const forged=view(result,'lead','lead');forged.announcements.push({...forged.announcements.find(a=>a.id==='coach-announcement'),id:'forged'});
+ assert.throws(()=>mergeWorkspace(result,forged,'lead','lead'),/Only a coach/);
+});
 test('venue coordinates follow event verification and server validation rules',()=>{
  const data=createDemoData();const event=data.events[0];event.demo=false;event.source='https://firstdelaware.org/events';
  const envelope={workspace:data,rsvps:{},learning:{}};

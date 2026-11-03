@@ -63,11 +63,10 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    if(scope&&!selfService&&!scope.allowedTeamIds.includes(invite.team_id))throw new ApiError(403,"This team is outside the approved release scope.");
    if(scope&&!selfService&&reviews(invite.role)&&!scope.adultAccountIds.includes(user.userId))throw new ApiError(403,"A mentor invitation requires an approved adult account.");
    if(selfService&&reviews(invite.role)&&input.adultConfirmed!==true)throw new ApiError(400,"Confirm that you are an adult age 18 or older to accept an adult invitation.");
-   if(selfService&&!reviews(invite.role)&&!(await db.prepare("SELECT 1 FROM memberships WHERE team_id=? AND role='admin'").bind(invite.team_id).first()))throw new ApiError(403,"A responsible adult operator must join before students can join this team.");
+   if(selfService&&!reviews(invite.role)&&input.studentConfirmed!==true)throw new ApiError(400,"Confirm you are age 13–18 and have the required parent or guardian permission to accept a student invitation.");
    if(await teamErasing(db,invite.team_id))throw new ApiError(423,"This team is being permanently erased.");
    if(await db.prepare("SELECT 1 FROM memberships WHERE team_id=? AND user_id=?").bind(invite.team_id,user.userId).first()) throw new ApiError(400,"You already belong to this team.");
-   const supervisedJoin=selfService&&!reviews(invite.role)?" AND EXISTS(SELECT 1 FROM memberships WHERE team_id=invitations.team_id AND role='admin')":"";
-   const r=await db.batch([db.prepare("INSERT INTO memberships(team_id,user_id,name,role) SELECT team_id,?,?,role FROM invitations WHERE id=? AND used_by IS NULL AND expires>? AND EXISTS(SELECT 1 FROM teams WHERE id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_privacy WHERE team_id=invitations.team_id AND paused=1)"+supervisedJoin).bind(user.userId,name,invite.id,new Date().toISOString()),db.prepare("UPDATE invitations SET used_by=? WHERE id=? AND used_by IS NULL AND EXISTS(SELECT 1 FROM memberships WHERE team_id=invitations.team_id AND user_id=?) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id)").bind(user.userId,invite.id,user.userId)]);
+   const r=await db.batch([db.prepare("INSERT INTO memberships(team_id,user_id,name,role) SELECT team_id,?,?,role FROM invitations WHERE id=? AND used_by IS NULL AND expires>? AND EXISTS(SELECT 1 FROM teams WHERE id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id) AND NOT EXISTS(SELECT 1 FROM team_privacy WHERE team_id=invitations.team_id AND paused=1)").bind(user.userId,name,invite.id,new Date().toISOString()),db.prepare("UPDATE invitations SET used_by=? WHERE id=? AND used_by IS NULL AND EXISTS(SELECT 1 FROM memberships WHERE team_id=invitations.team_id AND user_id=?) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=invitations.team_id)").bind(user.userId,invite.id,user.userId)]);
    if(!r[0].meta.changes) throw new ApiError(409,"This invitation was already used.");
    return json({id:invite.team_id});
   }
@@ -100,8 +99,6 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
   }
   const privacy=await privacySettings(db,teamId);
   if(privacy.paused&&!(path.length===2&&request.method==="GET"))throw new ApiError(423,"The team admin paused normal operations. Privacy requests and erasure remain available.");
-  if(adultSupervisionPending&&path[2]==="chat")throw new ApiError(423,"A responsible adult operator must join before team chat opens.");
-  if(adultSupervisionPending&&!['GET','HEAD'].includes(request.method)&&path[2]!=="invites"&&path[2]!=="privacy")throw new ApiError(423,"A responsible adult operator must join before shared team activity opens.");
   if(path[2]==="chat")return await handleChat({request,db,teamId,userId:user.userId,member,path,input:['GET','HEAD','DELETE'].includes(request.method)?{}:await body(request)});
   const members=async()=> (await db.prepare("SELECT user_id AS userId,name,role FROM memberships WHERE team_id=? ORDER BY name").bind(teamId).all<Member>()).results;
   const accessGuard=" AND EXISTS(SELECT 1 FROM memberships AS actor WHERE actor.team_id=? AND actor.user_id=? AND actor.role=?) AND NOT EXISTS(SELECT 1 FROM team_erasures WHERE team_id=?) AND NOT EXISTS(SELECT 1 FROM team_privacy WHERE team_id=? AND paused=1)";
@@ -147,8 +144,10 @@ export async function service(request: Request, db: D1Database, bucket: R2Bucket
    const result=await db.prepare("UPDATE memberships SET role=?"+(selfService?",student_founder=CASE WHEN ?='lead' THEN student_founder ELSE 0 END":"")+" WHERE team_id=? AND user_id=?"+(selfService&&reviews(input.role)?" AND role IN ('mentor','admin')":"")+accessGuard).bind(input.role,...(selfService?[input.role]:[]),teamId,input.userId,...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed before role assignment.");return json({ok:true});
   }
   if(path[2]==="members" && request.method==="DELETE") {
-   if(member.role!=="admin" || path[3]===user.userId) throw new ApiError(403,"An admin may remove another member.");
-   const result=await db.prepare("DELETE FROM memberships WHERE team_id=? AND user_id=?"+accessGuard).bind(teamId,path[3],...accessArgs).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed before removal.");return json({ok:true});
+   const studentManager=founder&&adultSupervisionPending;
+   if((member.role!=="admin"&&!studentManager) || path[3]===user.userId) throw new ApiError(403,"An authorized team manager may remove another member.");
+   const founderOnly=studentManager?" AND role IN ('student','lead') AND EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND user_id=? AND role='lead' AND student_founder=1) AND NOT EXISTS(SELECT 1 FROM memberships WHERE team_id=? AND role='admin')":"";
+   const result=await db.prepare("DELETE FROM memberships WHERE team_id=? AND user_id=?"+accessGuard+founderOnly).bind(teamId,path[3],...accessArgs,...(studentManager?[teamId,user.userId,teamId]:[])).run();if(!result.meta.changes)throw new ApiError(409,"Membership changed or this member cannot be removed.");return json({ok:true});
   }
   if(path[2]==="learning" && request.method==="GET") { if(!reviews(member.role))throw new ApiError(403,"A mentor can review skill sign-offs.");return json({learning:(await members()).map(m=>({userId:m.userId,steps:envelope.learning[m.userId]?.steps||[],skills:envelope.learning[m.userId]?.skills||[]}))}); }
   if(path[2]==="learning" && request.method==="PUT") {

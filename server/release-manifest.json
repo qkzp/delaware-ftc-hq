@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:4ca0ee0c3bc51b1a8bd6539ed9b94cf00a7f7bea8852839fd7196a68b4b3d3ba",
+  "releaseId": "sha256:edbdb8b9ab23f36244f76de11c8baf08dad3c97da750a7e69074b298402f0c08",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -67,8 +67,8 @@
       "sha256": "e3032a865b9d5f51612731ac5e9cfa94082439499e9f987e26b90920e043bcb0"
     },
     "app/privacy/page.tsx": {
-      "bytes": 17449,
-      "sha256": "de75a534e28487b11315ebe5b7c5f7dc7de5ee433b7a8d654810f6f25feca29a"
+      "bytes": 17497,
+      "sha256": "d3f9eef2fcab89236df8e9fd2a6356a77217717ad98a8427a93fcf1e1ea1b638"
     },
     "app/privacy/privacy.css": {
       "bytes": 5136,
@@ -131,8 +131,8 @@
       "sha256": "340d1a726d7c06f5d06003fa2ca2ed329905275e951387bf54276e089eb33d13"
     },
     "docs/provider-setup.md": {
-      "bytes": 6688,
-      "sha256": "d4cd871433ace4cbaf8e59971c49d32f3a686cc86a8c93cbb19f8dff424ef978"
+      "bytes": 6867,
+      "sha256": "d5962f5624c5d6dae1ee372d97e99d261d42dbf1d7b39a98c2f66229f53a292c"
     },
     "docs/release-evidence.md": {
       "bytes": 41975,
@@ -451,12 +451,12 @@
       "sha256": "de24afa43f7fc9fd88ef0fd6e1b03bde192853618d4087d8022d60f68fcebe3f"
     },
     "server/policy.ts": {
-      "bytes": 13288,
-      "sha256": "cf37d8598c17aa9c21743d75a87b36b42ae46ebd716dc20885535c6820597640"
+      "bytes": 13680,
+      "sha256": "171fd59817ad353dc53d209970718eb9f739a39b56fbcf1d01b48f3cbdc27495"
     },
     "server/privacy.ts": {
-      "bytes": 19125,
-      "sha256": "c4933515daedde020c11965611d27c5d376b8ad25bffc01828521f81eca21fc8"
+      "bytes": 19089,
+      "sha256": "04d4458797b00b0d850f6c4f575deead9aa69b24912b385b145d27d58469c744"
     },
     "server/readiness.ts": {
       "bytes": 7140,
@@ -471,12 +471,12 @@
       "sha256": "2fdef61ec950b2bd357a450a5f6686a1d2c4890f182fd72fdfb1163fe46fae6a"
     },
     "server/service.ts": {
-      "bytes": 32964,
-      "sha256": "7ee8c233673e00d0debe80bb62e98d331f1c644a0257c711ec9f9aa45b46cf4a"
+      "bytes": 32830,
+      "sha256": "863bc00a3165e8fe13178ab6c561c77fd1015ad36ec51c7fe28126808e1fc4e7"
     },
     "src/App.tsx": {
-      "bytes": 12352,
-      "sha256": "c25ec11996687cad6fe6f3d9e9945c835fed2c2b3298c5b28b3fc0bc76fd498d"
+      "bytes": 12085,
+      "sha256": "5261e37734e4fd8072698c336e660ef117f641a04d117e4923a91bd6732409ac"
     },
     "src/actuators.ts": {
       "bytes": 2068,
@@ -485,6 +485,10 @@
     "src/atelier.css": {
       "bytes": 32118,
       "sha256": "764c02bf51706b88e153188d2f862bb53a434407305d22d99cd0557dd39b6f2a"
+    },
+    "src/award-criteria.ts": {
+      "bytes": 4279,
+      "sha256": "3c36f438733fd869a50fcbc0485b10bc6fc10ff4826fd7d3922251718d892ae2"
     },
     "src/cloud.ts": {
       "bytes": 14184,
@@ -497,6 +501,10 @@
     "src/components/ActuatorTracker.tsx": {
       "bytes": 9422,
       "sha256": "3cd3433054771de7b10fca1a85bbcbfe5aafb3f86be2f6f8e1fb3bf04ee7d42f"
+    },
+    "src/components/AwardTracker.tsx": {
+      "bytes": 2980,
+      "sha256": "2b01b1c239b0efe462cb6cc2c9dcbfbe24506093cdbb93d3928c3f39d4fdfd21"
     },
     "src/components/CompetitionMap.css": {
       "bytes": 6401,
@@ -551,8 +559,8 @@
       "sha256": "ef2d7fcb0a1e69d9a4c78047c88260b658a3e86532c0d402b971597b837aa6ac"
     },
     "src/components/PublicWelcome.tsx": {
-      "bytes": 6364,
-      "sha256": "e7f58d84e97909067e1f6b81b09bcc5a1c453e7bed2c1964dc2fb9d1976e4200"
+      "bytes": 6348,
+      "sha256": "17b347466f8cdca810866bc6e53e2622a4ce279642477d10965392f2eaca207f"
     },
     "src/components/ResourceSpaces.css": {
       "bytes": 9226,
@@ -591,8 +599,8 @@
       "sha256": "678a985aa7144f8c11ae27ce3b7c7b6a6b675147dbdbb6d76cbef76bdd0d4078"
     },
     "src/components/TeamAccess.tsx": {
-      "bytes": 15226,
-      "sha256": "d57e32d3264d4c77585d4778c7fd4e7520dfeb5622a869423b2e939227025c91"
+      "bytes": 15478,
+      "sha256": "18d24eed64ee7b0486c31218322d27f3b5f8c87ff66c746b7be596862469a055"
     },
     "src/components/TeamContactDetails.tsx": {
       "bytes": 1055,
@@ -625,6 +633,10 @@
     "src/components/WorkspaceDialogs.tsx": {
       "bytes": 7897,
       "sha256": "9f2a6ddac64f543237414f0d75e9b4c6de7cdf782cd02358a3e871cf447d0612"
+    },
+    "src/components/award-tracker.css": {
+      "bytes": 2157,
+      "sha256": "1631b8d8a331e80f44333f883d93128dcd5cda6a813704782542933f4e3843bc"
     },
     "src/components/entry.css": {
       "bytes": 4140,
@@ -711,8 +723,8 @@
       "sha256": "fefaff1ea5c87784259cfd731a155767924f71dbe0e7e2614d16f538c242d1a7"
     },
     "src/persistence.ts": {
-      "bytes": 13198,
-      "sha256": "0432d73b4671cd240f67dc16f23f2a67e865367848d83605e650073dd136630b"
+      "bytes": 13214,
+      "sha256": "0c53973c076e2c4ac07718e22fc920d0a3e59a6c6ee01142a1ec022ae69eb272"
     },
     "src/preferences.ts": {
       "bytes": 2449,
@@ -735,8 +747,8 @@
       "sha256": "14597cabcd146a993192813073f355e47a35b08e73ab91f2c2b2ee6a6517f84c"
     },
     "src/screens/Awards.tsx": {
-      "bytes": 6475,
-      "sha256": "0ba6a9e17cce194ebc0677376e719c50c593d6c509c45dfa9f9e9eda30017413"
+      "bytes": 6556,
+      "sha256": "15b1466b5b4aa5eea006283459a8a648f9c20a76016d8491b44f048c211ace7d"
     },
     "src/screens/Calendar.tsx": {
       "bytes": 45307,
@@ -815,8 +827,8 @@
       "sha256": "f95cf410bd9d97a037e08f6955a20ca8e4f2db0c85bf45b68c10a9337c4008e1"
     },
     "src/screens/TeamHub.tsx": {
-      "bytes": 16841,
-      "sha256": "6ceabb6e9aa9ef9efb2ca06ff1e34981bbbaef5fd1b26a730a152348596a8c86"
+      "bytes": 17305,
+      "sha256": "ebd0c87d92c57267ef29ef934650a1913f1c36e86ac671fe451e5aac7117cbc7"
     },
     "src/screens/TeamHubSimple.css": {
       "bytes": 7672,
@@ -863,8 +875,8 @@
       "sha256": "87d401a4cd858d98cf3139d1336dfb4274afba54679d87accc61b28317b3f0a8"
     },
     "src/types.ts": {
-      "bytes": 7097,
-      "sha256": "0679f8ed879a9b83aab6fe7f8f8909afb424f923d9aa43c4b851d68034ed7062"
+      "bytes": 7114,
+      "sha256": "7b280b6c03a3e477c3a6fdd1023d7b40e54a0a67cc3084da02b8efbc11121ac4"
     },
     "src/use-preferences.ts": {
       "bytes": 1247,
@@ -904,18 +916,8 @@
     }
   },
   "sourceChanges": [
-    "app/enroll/page.tsx",
-    "app/privacy/page.tsx",
-    "db/schema.ts",
     "docs/provider-setup.md",
-    "drizzle/meta/_journal.json",
-    "server/privacy.ts",
     "server/service.ts",
-    "src/App.tsx",
-    "src/cloud.ts",
-    "src/components/PrivacyMaintenance.tsx",
-    "src/components/TeamAccess.tsx",
-    "drizzle/0003_student_founder.sql",
-    "drizzle/meta/0003_snapshot.json"
+    "src/components/TeamAccess.tsx"
   ]
 }

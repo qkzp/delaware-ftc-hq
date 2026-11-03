@@ -71,11 +71,11 @@ test('signed-out accounts see a real sign-in link; signed-in nonmembers see team
 test('private account records open for an existing member and never enter browser demo storage',async()=>{
  await fixture({},async app=>{assert.ok(app.context.cloud.shared);assert.match(app.text,/PRIVATE TEAM SENTINEL/);assert.equal(app.values.has(STORAGE_KEY),false);assert.ok(app.writes.every(v=>!v.includes('PRIVATE TEAM SENTINEL')));});
 });
-test('a pending student founder sees team setup until an adult joins',async()=>{
+test('a student founder can open the workspace before an adult joins',async()=>{
  await fixture({pending:true},async app=>{
-  assert.match(app.text,/Invite your coach or mentor/);
-  assert.match(app.text,/Create one-use invitation/);
-  assert.doesNotMatch(app.text,/Main navigation|New task/);
+  assert.match(app.text,/Main navigation/);
+  assert.equal(app.context.cloud.shared.canInvite,true);
+  assert.equal(app.context.cloud.shared.adultSupervisionPending,true);
   app.state.pending=false;await app.update(()=>app.context.cloud.refreshSession());
   assert.doesNotMatch(app.text,/Your team is ready for a responsible adult to join/);
   assert.match(app.text,/Main navigation/);
