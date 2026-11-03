@@ -19,6 +19,20 @@ test("double taps add one stage and tap feedback respects reduced motion",async(
  await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/tests/browser/?mode=publiclab");await page.getByRole("button",{name:"Wheel RPM & speed",exact:true}).click();await page.getByRole("button",{name:"Use gears, belts or chain",exact:true}).click();await page.getByText("More than one drive stage",{exact:true}).click();const add=page.getByRole("button",{name:"Add another stage",exact:true});await add.dblclick();await expect(page.locator(".wheel-drive-content fieldset")).toHaveCount(2);expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("tap-confirm");await page.emulateMedia({reducedMotion:"reduce"});expect(await add.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
 });
 
+test("dialog motion respects the app setting and the device setting",async({page})=>{
+ await page.emulateMedia({reducedMotion:"no-preference"});await page.goto("/tests/browser/?mode=publiclab");
+ await page.getByRole("button",{name:"Motor & servo tracker",exact:true}).click();
+ const open=page.getByRole("button",{name:"Add motor or servo",exact:true});await open.click();
+ const dialog=page.getByRole("dialog");await expect(dialog).toBeVisible();
+ expect(await dialog.evaluate(e=>getComputedStyle(e).animationName)).toBe("dialog-arrive");
+ await page.keyboard.press("Escape");await page.getByText("Display settings",{exact:true}).click();
+ await page.getByRole("combobox",{name:"Motion",exact:true}).selectOption("reduced");await open.click();
+ expect(await dialog.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
+ await page.keyboard.press("Escape");await page.getByRole("combobox",{name:"Motion",exact:true}).selectOption("system");
+ await page.emulateMedia({reducedMotion:"reduce"});await open.click();
+ expect(await dialog.evaluate(e=>getComputedStyle(e).animationName)).toBe("none");
+});
+
 test("a fresh team has meaningful content and next steps on every screen and tool",async({page})=>{
  for(const screen of screens){await page.goto(`/tests/browser/?mode=fresh#${screen}`);await expect(page.getByRole("heading",{level:1})).toBeVisible();expect((await page.locator("#main-content").innerText()).trim().length).toBeGreaterThan(100);expect(await page.locator("#main-content").getByRole("button").count()).toBeGreaterThan(0);}
  await page.goto("/tests/browser/?mode=publiclab");for(const tool of ["PID trainer","Autonomous planner","Motor & servo tracker","Wheel RPM & speed","Robot profiles","Motor tests","Servo & maintenance","Compare drivetrains"]){await page.getByRole("button",{name:tool,exact:true}).click();await expect(page.getByRole("heading",{level:2}).first()).toBeVisible();}

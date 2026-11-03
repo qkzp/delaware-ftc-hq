@@ -64,3 +64,14 @@ html body .privacy-intro h1, html body .entry-page .entry-layout h1 { font-famil
   html body .standalone-lab>main { padding-inline: 16px; }
   html body .app-shell .page-header { align-items: flex-start; }
 }
+
+/* Short, optional motion gives feedback without delaying a task. */
+@keyframes dialog-arrive { from { transform: translateY(6px); } to { transform: translateY(0); } }
+@keyframes notice-arrive { from { transform: translateY(3px); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion=reduced]) body .modal-backdrop .modal { animation: dialog-arrive 180ms ease-out; }
+  html:not([data-motion=reduced]) body .toast { animation: notice-arrive 160ms ease-out; }
+  html:not([data-motion=reduced]) body :is(.robot-lab-tabs button, .filter-tabs button, .work-view-tabs button) {
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  }
+}

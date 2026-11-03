@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:d91077025d08f43a04e45e2225b01ff64903130345a1bb4ac65dff8053bf175f",
+  "releaseId": "sha256:720f8213fcf8c5e98fe0516de153da639a1891fa6a6ba5ba166b63f519148162",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -607,8 +607,8 @@
       "sha256": "2556c9784ef1074e5569ac2126f3c6b3c99863a20fda9139aedb344af08ec5fa"
     },
     "src/components/public-new.css": {
-      "bytes": 13585,
-      "sha256": "671046a0c6083ba53c382a37e1bf421080c1bd00815c45b2abac5aaca069590d"
+      "bytes": 14756,
+      "sha256": "0cffd68d1d2c74bb0fa0e8f07684e739b39a46883ab529dfb29dcfcd605cf266"
     },
     "src/components/task-planning.css": {
       "bytes": 6266,
@@ -635,8 +635,8 @@
       "sha256": "86e2ca3778e8885207ee7eab2d823266401fa42afb13d212a3a4fef207f19200"
     },
     "src/components/workspace-new.css": {
-      "bytes": 11257,
-      "sha256": "297ec20495b86a363806bd6d6245db2dd4e0917f47b2f5861bcc4c4b29ec4444"
+      "bytes": 12596,
+      "sha256": "b4ce9b4f5327d41d7ec0b05a45ff06080e66d74716e7942c365031598346a971"
     },
     "src/design.css": {
       "bytes": 22958,
@@ -663,8 +663,8 @@
       "sha256": "4bfa2218420c395aea6284d5eab667dc38350e24e3e4ac2e82cc4781e28b5129"
     },
     "src/fieldmanual.css": {
-      "bytes": 5525,
-      "sha256": "5e265b1925c0d737a49949a2e46bca3748c0b4680422bbb12525b3c2d742d5cf"
+      "bytes": 6248,
+      "sha256": "61dbfe0563b355ce96be3814194dee7ab5fb673fe89a06cb9de01a974b9c55b8"
     },
     "src/fonts.css": {
       "bytes": 3178,
@@ -856,6 +856,8 @@
     }
   },
   "sourceChanges": [
-    "src/components/public-new.css"
+    "src/components/public-new.css",
+    "src/components/workspace-new.css",
+    "src/fieldmanual.css"
   ]
 }
