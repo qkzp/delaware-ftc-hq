@@ -19,10 +19,11 @@ export default async function EnrollmentPage() {
       <p className="entry-status">Team setup</p>
       <h1 id="enroll-title">Create a team workspace.</h1>
       <p className="entry-description">Students and adults can start a private workspace and invite their teammates, coaches and mentors. Students need the required parent or guardian permission.</p>
+      {user && !available && <p role="status">{readiness.enabled ? "You are signed in. Your organization manages team access." : "You are signed in. Team access is still being prepared."}</p>}
       {available ? <>
         <p>Sign in with your own account, then choose <strong>Create a team</strong> in team settings. Student founders can invite teammates and a responsible adult coach or mentor. Adult-only controls remain with adult operators.</p>
         <a className="btn btn-primary entry-primary-action" href={user ? "/#settings" : "/signin?callbackUrl=%2F%23settings"}>{user ? "Continue to team settings" : "Sign in to get started"}</a>
-      </> : <p role="status">Self-service team creation is not open yet. The service is still being prepared for team access.</p>}
+      </> : <p role="status">{readiness.enabled ? "Self-service team creation is not available. Team access is managed by your organization." : "Self-service team creation is not open yet. The service is still being prepared for team access."}</p>}
       {!available && authConfigured && !user && <p><a href="/signin?callbackUrl=%2Fenroll">Sign in for roster-based release setup</a></p>}
       {user && !available && <details className="entry-detail"><summary>Account ID for a roster-based release</summary><p>For an approved roster-based release, send this ID privately to the responsible service owner through the organization’s approved channel. Do not post it publicly or include it in a student record.</p><p><strong>Provider-scoped account ID</strong></p><code style={{display:"block",overflowWrap:"anywhere",padding:"12px"}}>{user.userId}</code><p>Different sign-in methods for the same person have different IDs.</p></details>}
       <div className="entry-demo"><span>Want to see the workspace?</span><a href="/review">Try the demo</a><small>Fictional data only. Changes reset when you reload.</small></div>
