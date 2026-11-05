@@ -26,6 +26,9 @@
 .entry-page .entry-description { margin:0 0 30px; color:var(--entry-muted); font-size:0.875rem; line-height:1.7; }
 .entry-page .entry-primary-action { display:flex; width:100%; min-height:42px; align-items:center; justify-content:center; gap:10px; border:1px solid var(--border-strong); border-radius:6px; padding:11px 14px; color:var(--on-strong); background:var(--strong); font:500 0.8125rem/1.4 var(--body, Arial, sans-serif); text-decoration:none; box-shadow:0 1px 1px #0000000a; }
 .entry-page .entry-primary-action:hover { background:var(--strong); border-color:var(--border-strong); text-decoration:none; }
+.entry-page .entry-primary-action:focus-visible { outline:3px solid var(--border-strong); outline-offset:4px; }
+.entry-page .entry-primary-action:disabled { cursor:wait; opacity:.7; }
+.entry-oauth-method { margin:1em 0; }
 .entry-access-note { margin:22px 0; font-size:0.75rem; color:var(--entry-muted); line-height:1.85; }
 .entry-demo { display:flex; align-items:center; flex-wrap:wrap; gap:0 12px; padding:12px 0; margin:12px 0; border-top:1px solid var(--entry-line); border-bottom:1px solid var(--entry-line); }
 .entry-demo a { display:inline-flex; align-items:center; min-height:44px; font-weight:600; }
