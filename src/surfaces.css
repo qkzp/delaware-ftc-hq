@@ -48,8 +48,11 @@
 .app-shell .tc-calendar-cell.today {background:var(--surface)}
 .app-shell .tc-day-number {font:0.75rem var(--body); color:var(--muted)}
 .app-shell .tc-calendar-event {font-size:0.6875rem; border-radius:3px; background:var(--surface); color:var(--muted); padding:4px 6px; line-height:1.4}
-.app-shell .tc-agenda-list {display:grid; gap:0; border-top:1px solid var(--line)}
-.app-shell .tc-agenda-date {display:grid; grid-template-columns:64px minmax(0,1fr); gap:20px; padding:20px 0; background:var(--paper); border:0; border-bottom:1px solid var(--line); border-radius:0}
+.app-shell .tc-agenda-list {display:grid; gap:0; width:min(100%,1440px); border-top:1px solid var(--line)}
+.app-shell .tc-agenda-date {display:grid; grid-template-columns:64px minmax(0,1fr) max-content; align-items:start; gap:20px; padding:20px 0; background:var(--paper); border:0; border-bottom:1px solid var(--line); border-radius:0}
+.app-shell .tc-agenda-side {min-width:176px; display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between; gap:15px}
+.app-shell .tc-agenda-actions {display:flex; flex-wrap:nowrap; gap:7px}
+.app-shell .tc-agenda-actions .btn {white-space:nowrap}
 .app-shell .tc-date-tile {background:transparent; border:0; border-radius:0; align-self:start; padding:0 10px 0 0; border-right:1px solid var(--line)}
 .app-shell .tc-date-tile strong {font:600 1.4375rem var(--body)}
 .app-shell .tc-agenda-info h3 {font:600 0.9375rem var(--body); letter-spacing:-.2px}
@@ -201,6 +204,8 @@
   .app-shell .robot-link {border-right:0; border-bottom:1px solid var(--line); padding:16px 0}
   .app-shell .robot-link:last-child {border-bottom:0}
   .app-shell .tc-agenda-date {grid-template-columns:50px minmax(0,1fr); gap:15px; padding:17px 0}
+  .app-shell .tc-agenda-side {grid-column:2 / -1; width:100%; min-width:0; flex-direction:row; align-items:center; flex-wrap:wrap; justify-content:space-between}
+  .app-shell .tc-agenda-actions {flex-wrap:wrap}
   .app-shell .tc-calendar-month h2 {font-size:1.0625rem}
   .app-shell .tc-calendar-cell {min-height:90px}
   .app-shell .tc-calendar-event {font-size:0.625rem; padding:3px 4px}
