@@ -1,5 +1,5 @@
 {
-  "releaseId": "sha256:8df979549a8ed9311800afcb82fe0ebcbd792e904ee8aed037948ff06e1e72d2",
+  "releaseId": "sha256:17ea48602726eb0362f8769d7fb908e954ba79a0fdca563c9397f7acde113bf9",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
@@ -143,8 +143,8 @@
       "sha256": "340d1a726d7c06f5d06003fa2ca2ed329905275e951387bf54276e089eb33d13"
     },
     "docs/provider-setup.md": {
-      "bytes": 7029,
-      "sha256": "6b1a7c02594ba570a91474feb8ef2a3c6ed57ce0539697f5bd49b96e97d0f757"
+      "bytes": 7632,
+      "sha256": "ab46a2d3334061c40f977f4d78547c0314be8342e4971fd60c24488645f0de3b"
     },
     "docs/release-evidence.md": {
       "bytes": 41975,
@@ -1004,33 +1004,6 @@
     }
   },
   "sourceChanges": [
-    ".env.example",
-    "app/api/auth/[...nextauth]/route.ts",
-    "app/enroll/page.tsx",
-    "auth.ts",
-    "docs/launch-acceptance.md",
-    "docs/provider-setup.md",
-    "docs/vercel-deployment.md",
-    "next.config.ts",
-    "scripts/build-verified.sh",
-    "scripts/install-ci.sh",
-    "scripts/install-pnpm.sh",
-    "scripts/release-fingerprint.mjs",
-    "scripts/sites-env.sh",
-    "scripts/vite/sites-vite-plugin.LICENSE",
-    "server/auth-profile.ts",
-    "server/retention.ts",
-    "src/components/OAuthSignIn.tsx",
-    "app/ios/auth/confirm/route.ts",
-    "app/ios/auth/snapshot/route.ts",
-    "app/ios/auth/start/page.tsx",
-    "drizzle/0004_native_auth_handoff.sql",
-    "server/auth-route-options.ts",
-    "server/native-auth-confirm.ts",
-    "server/native-auth-handoff.ts",
-    "server/native-auth-options.ts",
-    "server/native-auth-origin.ts",
-    "server/native-auth-provider.ts",
-    "src/components/NativeOAuthStart.tsx"
+    "docs/provider-setup.md"
   ]
 }
