@@ -27,4 +27,11 @@ export async function runScheduledRetention(db:D1Database,now=Date.now()){
   db.prepare("DELETE FROM invitations WHERE expires<=? OR used_by IS NOT NULL").bind(iso),
   db.prepare("DELETE FROM privacy_requests WHERE status IN ('resolved','rejected') AND updated<?").bind(new Date(now-30*86400000).toISOString()),
  ]);
+ // Keep existing retention effective even if an operator has not yet applied
+ // the additive native-auth migration; the second failure remains visible.
+ await db.batch([
+  db.prepare("DELETE FROM native_auth_tickets WHERE expires<=?").bind(now),
+  db.prepare("DELETE FROM native_auth_used_flows WHERE expires<=?").bind(now),
+  db.prepare("DELETE FROM native_auth_rate WHERE expires<=?").bind(now),
+ ]);
 }

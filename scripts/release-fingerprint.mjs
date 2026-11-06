@@ -1,4 +1,5 @@
 import {createHash} from "node:crypto";
+import {isUtf8} from "node:buffer";
 import {readdirSync,readFileSync,writeFileSync,existsSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
@@ -19,7 +20,10 @@ export function sourceHashes(root) {
  const sources={};
  for(const file of [...new Set(files)].sort()){
   let bytes=readFileSync(path.join(root,file));
-  if(/\.(?:[cm]?[jt]sx?|json|css|md|sql|html|svg|txt)$/.test(file))bytes=Buffer.from(bytes.toString("utf8").replace(/\r\n/g,"\n"));
+  // Only normalize recognized UTF-8 text. Shell scripts and the tracked
+  // example environment and license files can also receive CRLF on Windows.
+  const textSource=file===".env.example"||/\.(?:[cm]?[jt]sx?|json|css|md|sql|html|svg|txt|sh|LICENSE)$/.test(file);
+  if(textSource&&isUtf8(bytes)&&!bytes.includes(0))bytes=Buffer.from(bytes.toString("utf8").replace(/\r\n/g,"\n"));
   // Vercel reserializes this file before the build; retain configuration semantics.
   if(file==="vercel.json")bytes=Buffer.from(JSON.stringify(JSON.parse(bytes.toString("utf8")))+"\n");
   sources[file]={bytes:bytes.byteLength,sha256:createHash("sha256").update(bytes).digest("hex")};

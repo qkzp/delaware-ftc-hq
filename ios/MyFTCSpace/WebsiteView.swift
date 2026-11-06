@@ -1,3 +1,6 @@
+import AuthenticationServices
+import CryptoKit
+import Security
 import SwiftUI
 import UIKit
 import WebKit
@@ -57,6 +60,44 @@ private func isWebsiteOrigin(_ url: URL) -> Bool {
     return (url.port ?? defaultPort) == (websiteURL.port ?? defaultPort)
 }
 
+private let nativeAuthScheme = "com.myftcspace.ios.auth"
+
+private func randomAuthValue() -> String? {
+    var bytes = [UInt8](repeating: 0, count: 32)
+    let status = bytes.withUnsafeMutableBytes { buffer in
+        SecRandomCopyBytes(kSecRandomDefault, buffer.count, buffer.baseAddress!)
+    }
+    guard status == errSecSuccess else { return nil }
+    return base64URL(Data(bytes))
+}
+
+private func base64URL(_ data: Data) -> String {
+    data.base64EncodedString().replacingOccurrences(of: "+", with: "-")
+        .replacingOccurrences(of: "/", with: "_").replacingOccurrences(of: "=", with: "")
+}
+
+private func isAuthValue(_ value: String) -> Bool {
+    value.utf8.count == 43 && value.unicodeScalars.allSatisfy {
+        CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_").contains($0)
+    }
+}
+
+private func isAuthSnapshot(_ value: String) -> Bool {
+    value.utf8.count == 101 && value.range(
+        of: "^[0-9]{13}\\.[A-Za-z0-9_-]{43}\\.[A-Za-z0-9_-]{43}$",
+        options: .regularExpression
+    ) != nil
+}
+
+private func isSafeReturnPath(_ path: String) -> Bool {
+    guard path.hasPrefix("/"), !path.hasPrefix("//"), !path.contains("\\"),
+          path.unicodeScalars.allSatisfy({ !CharacterSet.controlCharacters.contains($0) }),
+          let components = URLComponents(string: path), components.scheme == nil, components.host == nil,
+          components.path != "/api", !components.path.hasPrefix("/api/"),
+          let target = URL(string: path, relativeTo: websiteURL)?.absoluteURL else { return false }
+    return isWebsiteOrigin(target)
+}
+
 @MainActor
 private final class WorkspaceNavigationHandler: NSObject, WKScriptMessageHandler {
     weak var model: WebsiteModel?
@@ -71,7 +112,34 @@ private final class WorkspaceNavigationHandler: NSObject, WKScriptMessageHandler
 }
 
 @MainActor
-final class WebsiteModel: NSObject, ObservableObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate {
+private final class NativeAuthHandler: NSObject, WKScriptMessageHandler {
+    weak var model: WebsiteModel?
+
+    init(model: WebsiteModel) { self.model = model }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let model, message.webView === model.webView, message.frameInfo.isMainFrame,
+              let url = message.frameInfo.request.url, isWebsiteOrigin(url), url.path == "/signin",
+              let current = model.webView.url, isWebsiteOrigin(current), current.path == "/signin",
+              let payload = message.body as? [String: Any],
+              Set(payload.keys) == Set(["provider", "callbackUrl"]),
+              let provider = payload["provider"] as? String,
+              let callback = payload["callbackUrl"] as? String else { return }
+        model.beginNativeSignIn(provider: provider, callback: callback, source: current)
+    }
+}
+
+private struct NativeAuthFlow {
+    let state: String
+    let verifier: String
+    let snapshot: String
+    let callback: String
+    let source: URL
+    let pageGeneration: UInt
+}
+
+@MainActor
+final class WebsiteModel: NSObject, ObservableObject, WKNavigationDelegate, WKUIDelegate, WKDownloadDelegate, ASWebAuthenticationPresentationContextProviding {
     let webView: WKWebView
     @Published var isLoading = true
     @Published var hasLoadedPage = false
@@ -87,6 +155,12 @@ final class WebsiteModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     private var pendingURL: URL?
     private var failedURL: URL?
     private var downloadLocations: [ObjectIdentifier: URL] = [:]
+    private var nativeAuthBusy = false
+    private var nativeAuthAttempt: UUID?
+    private var nativeAuthSession: ASWebAuthenticationSession?
+    private var nativeAuthAnchor: UIWindow?
+    private var nativeAuthFlow: NativeAuthFlow?
+    private var pageGeneration: UInt = 0
 
     override init() {
         let configuration = WKWebViewConfiguration()
@@ -129,10 +203,191 @@ final class WebsiteModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         webView = WKWebView(frame: .zero, configuration: configuration)
         super.init()
         webView.configuration.userContentController.add(WorkspaceNavigationHandler(model: self), name: "myftcWorkspacePage")
+        webView.configuration.userContentController.add(NativeAuthHandler(model: self), name: "myftcNativeAuth")
         webView.navigationDelegate = self
         webView.uiDelegate = self
         webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
+    }
+
+    func beginNativeSignIn(provider: String, callback: String, source: URL) {
+        guard !nativeAuthBusy else { notifyNativeSignInFinished(); return }
+        guard provider == "google" else {
+            finishNativeSignIn("This sign-in method is not available in the iPhone app yet. Open the MyFTCSpace website in your browser to use it.")
+            return
+        }
+        guard websiteURL.scheme?.lowercased() == "https",
+              isWebsiteOrigin(source), source.path == "/signin", webView.url == source,
+              !webView.isLoading, isSafeReturnPath(callback) else {
+            finishNativeSignIn("Sign-in requires the secure MyFTCSpace sign-in page. Open it and try again.")
+            return
+        }
+        nativeAuthBusy = true
+        let attempt = UUID()
+        nativeAuthAttempt = attempt
+        let generation = pageGeneration
+        presentDialog("Continue with Google?", message: "A secure sign-in window will open.", ifUnavailable: { [weak self] in
+            guard let self, self.nativeAuthAttempt == attempt else { return }
+            self.finishNativeSignIn("The sign-in window could not be opened. Try again.")
+        }) { [weak self] alert in
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+                guard let self, self.nativeAuthAttempt == attempt else { return }
+                self.finishNativeSignIn()
+            })
+            alert.addAction(UIAlertAction(title: "Continue", style: .default) { [weak self] _ in
+                self?.startNativeAuthSession(provider: provider, callback: callback, source: source, generation: generation, attempt: attempt)
+            })
+        }
+    }
+
+    private func startNativeAuthSession(provider: String, callback: String, source: URL, generation: UInt, attempt: UUID) {
+        guard nativeAuthAttempt == attempt else { return }
+        guard nativeAuthBusy, pageGeneration == generation, webView.url == source else {
+            finishNativeSignIn("Sign-in could not start. Return to the sign-in page and try again.")
+            return
+        }
+        let script = """
+        const response = await fetch('/ios/auth/snapshot', {credentials: 'same-origin', cache: 'no-store'});
+        if (!response.ok) throw new Error('Could not prepare sign-in');
+        const data = await response.json();
+        return typeof data.snapshot === 'string' ? data.snapshot : null;
+        """
+        webView.callAsyncJavaScript(script, arguments: [:], in: nil, in: .page) { [weak self] result in
+            Task { @MainActor in
+                guard let self, self.nativeAuthAttempt == attempt else { return }
+                guard self.nativeAuthBusy, self.pageGeneration == generation, self.webView.url == source,
+                      case let .success(value) = result, let snapshot = value as? String,
+                      isAuthSnapshot(snapshot) else {
+                    self.finishNativeSignIn("Could not prepare sign-in. Return to the sign-in page and try again.")
+                    return
+                }
+                self.launchNativeAuthSession(provider: provider, callback: callback, source: source,
+                                             generation: generation, attempt: attempt, snapshot: snapshot)
+            }
+        }
+    }
+
+    private func launchNativeAuthSession(provider: String, callback: String, source: URL, generation: UInt, attempt: UUID, snapshot: String) {
+        guard nativeAuthAttempt == attempt else { return }
+        guard nativeAuthBusy, pageGeneration == generation, webView.url == source,
+              let anchor = webView.window, let state = randomAuthValue(), let verifier = randomAuthValue(),
+              let start = URL(string: "/ios/auth/start", relativeTo: websiteURL)?.absoluteURL,
+              isWebsiteOrigin(start), var components = URLComponents(url: start, resolvingAgainstBaseURL: false) else {
+            finishNativeSignIn("Sign-in could not start. Return to the sign-in page and try again.")
+            return
+        }
+        let challenge = base64URL(Data(SHA256.hash(data: Data(verifier.utf8))))
+        components.queryItems = [URLQueryItem(name: "provider", value: provider),
+                                 URLQueryItem(name: "state", value: state),
+                                 URLQueryItem(name: "challenge", value: challenge),
+                                 URLQueryItem(name: "snapshot", value: snapshot),
+                                 URLQueryItem(name: "callbackUrl", value: callback)]
+        guard let startURL = components.url, isWebsiteOrigin(startURL) else {
+            finishNativeSignIn("Sign-in could not start. Try again.")
+            return
+        }
+        nativeAuthAnchor = anchor
+        nativeAuthFlow = NativeAuthFlow(state: state, verifier: verifier, snapshot: snapshot, callback: callback, source: source, pageGeneration: generation)
+        let session = ASWebAuthenticationSession(url: startURL, callbackURLScheme: nativeAuthScheme) { [weak self] url, error in
+            Task { @MainActor in self?.completeNativeAuthSession(url: url, error: error, expectedState: state) }
+        }
+        session.presentationContextProvider = self
+        session.prefersEphemeralWebBrowserSession = true
+        nativeAuthSession = session
+        guard session.start() else { finishNativeSignIn("The sign-in window could not be opened. Try again."); return }
+    }
+
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        nativeAuthAnchor ?? ASPresentationAnchor()
+    }
+
+    private func completeNativeAuthSession(url: URL?, error: Error?, expectedState: String) {
+        guard let flow = nativeAuthFlow, flow.state == expectedState else { return }
+        nativeAuthSession = nil
+        nativeAuthAnchor = nil
+        if let error {
+            let reported = error as NSError
+            let cancelled = reported.domain == ASWebAuthenticationSessionErrorDomain &&
+                reported.code == ASWebAuthenticationSessionError.Code.canceledLogin.rawValue
+            finishNativeSignIn(cancelled ? nil : "Sign-in could not be completed. Try again.")
+            return
+        }
+        guard let url, let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              components.scheme == nativeAuthScheme, components.host == "complete", components.path == "/",
+              components.user == nil, components.password == nil, components.port == nil, components.fragment == nil,
+              let items = components.queryItems, items.count == 2,
+              Set(items.map(\.name)) == Set(["state", "ticket"]),
+              let state = items.first(where: { $0.name == "state" })?.value, state == flow.state,
+              let ticket = items.first(where: { $0.name == "ticket" })?.value, isAuthValue(ticket),
+              pageGeneration == flow.pageGeneration, webView.url == flow.source else {
+            finishNativeSignIn("Sign-in could not be verified. Return to the sign-in page and try again.")
+            return
+        }
+        redeemNativeTicket(ticket, flow: flow)
+    }
+
+    private func redeemNativeTicket(_ ticket: String, flow: NativeAuthFlow) {
+        let script = """
+        const response = await fetch('/api/auth/csrf', {credentials: 'same-origin', cache: 'no-store'});
+        if (!response.ok) throw new Error('Could not prepare sign-in');
+        const data = await response.json();
+        return typeof data.csrfToken === 'string' ? data.csrfToken : null;
+        """
+        webView.callAsyncJavaScript(script, arguments: [:], in: nil, in: .page) { [weak self] result in
+            Task { @MainActor in
+                guard let self, self.nativeAuthFlow?.state == flow.state else { return }
+                guard self.pageGeneration == flow.pageGeneration, self.webView.url == flow.source,
+                      case let .success(value) = result, let csrf = value as? String,
+                      !csrf.isEmpty, csrf.count <= 512,
+                      let url = URL(string: "/api/auth/callback/native-handoff", relativeTo: websiteURL)?.absoluteURL,
+                      isWebsiteOrigin(url), let body = self.nativeAuthBody(csrf: csrf, ticket: ticket, flow: flow) else {
+                    self.finishNativeSignIn("Could not finish sign-in. Return to the sign-in page and try again.")
+                    return
+                }
+                var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+                request.httpMethod = "POST"
+                request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                request.httpBody = body
+                guard self.webView.load(request) != nil else {
+                    self.finishNativeSignIn("Could not finish sign-in. Please try again.")
+                    return
+                }
+                self.finishNativeSignIn()
+            }
+        }
+    }
+
+    private func nativeAuthBody(csrf: String, ticket: String, flow: NativeAuthFlow) -> Data? {
+        let allowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~")
+        let fields = [("csrfToken", csrf), ("ticket", ticket), ("verifier", flow.verifier), ("snapshot", flow.snapshot), ("callbackUrl", flow.callback)]
+        let encoded = fields.compactMap { pair -> String? in
+            let (name, value) = pair
+            guard let part = value.addingPercentEncoding(withAllowedCharacters: allowed) else { return nil }
+            return "\(name)=\(part)"
+        }
+        guard encoded.count == fields.count else { return nil }
+        return encoded.joined(separator: "&").data(using: .utf8)
+    }
+
+    private func notifyNativeSignInFinished() {
+        guard let current = webView.url, isWebsiteOrigin(current) else { return }
+        webView.evaluateJavaScript("window.dispatchEvent(new Event('myftc:native-auth-finished'))", completionHandler: nil)
+    }
+
+    private func finishNativeSignIn(_ message: String? = nil) {
+        let pendingSession = nativeAuthSession
+        nativeAuthFlow = nil
+        nativeAuthSession = nil
+        nativeAuthAnchor = nil
+        nativeAuthBusy = false
+        nativeAuthAttempt = nil
+        pendingSession?.cancel()
+        notifyNativeSignInFinished()
+        if let message {
+            presentDialog("Sign-in", message: message, ifUnavailable: {}) { alert in
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+            }
+        }
     }
 
     func start() {
@@ -224,6 +479,8 @@ final class WebsiteModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     }
 
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        pageGeneration &+= 1
+        if nativeAuthBusy { finishNativeSignIn() }
         isLoading = true
         hasError = false
         workspacePage = nil

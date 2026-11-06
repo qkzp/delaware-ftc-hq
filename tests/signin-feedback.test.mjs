@@ -6,16 +6,21 @@ import {renderToStaticMarkup} from "react-dom/server";
 
 const vite=await createServer({configFile:false,cacheDir:".sites-runtime/signin-feedback-"+process.pid,esbuild:{jsx:"automatic"},plugins:[{
  name:"fictional-session",enforce:"pre",
+ transform(source,id){
+  if(id.replaceAll("\\","/").endsWith("/app/enroll/page.tsx"))return source.replace('"next/headers"','"virtual:fictional-headers"');
+ },
  resolveId(id,importer){
   if(id==="server-only")return "\0server-only-test";
+  if(id==="virtual:fictional-headers")return "\0fictional-headers";
   if(id==="../auth-identity"&&importer?.replaceAll("\\","/").endsWith("/app/enroll/page.tsx"))return "\0fictional-session";
  },
  load(id){
   if(id==="\0server-only-test")return "export {}";
   if(id==="\0fictional-session")return "export async function getCurrentUser(){return globalThis.__testSignInUser ?? null}";
+  if(id==="\0fictional-headers")return 'export async function headers(){return new Headers(globalThis.__testRequestHeaders ?? {host:"team.test","x-forwarded-proto":"https"})}';
  }
 }],server:{middlewareMode:true,watch:null,hmr:false},appType:"custom",logLevel:"silent"});
-after(async()=>{delete globalThis.__testSignInUser;await vite.close();});
+after(async()=>{delete globalThis.__testSignInUser;delete globalThis.__testRequestHeaders;await vite.close();});
 const {default:LoginPage}=await vite.ssrLoadModule("/app/signin/page.tsx");
 const {default:EnrollmentPage}=await vite.ssrLoadModule("/app/enroll/page.tsx");
 const {assessReadiness,checklistIds}=await vite.ssrLoadModule("/server/readiness.ts");
@@ -31,7 +36,8 @@ function approvedRecord(){
  const releaseId=JSON.parse(readFileSync("server/release-manifest.json","utf8")).releaseId;
  return {schemaVersion:1,releaseId,origin:"https://team.test",scope:"team-pilot",adultOwner:"Reviewer A",organization:"Robotics organization",supportEmail:"support@school.test",privacyEmail:"privacy@school.test",approvedAt,expiresAt,minimumAge:13,maximumAge:18,minorPermissionConfirmed:true,allowedAccountIds:["adult-a"],adultAccountIds:["adult-a"],allowedTeamIds:["team-a"],teamCreationAccountIds:[],checklist:Object.fromEntries(checklistIds.map(id=>[id,{decision:"PASS",evidence:"review/"+id,reviewer:"Reviewer A",reviewedAt:approvedAt}]))};
 }
-const names=["NODE_ENV","NEXTAUTH_SECRET","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","MYFTC_DATA_ENABLED","MYFTC_SERVICE_PAUSED","MYFTC_READINESS_RECORD","MYFTC_SELF_SERVICE_ENABLED"];
+const storageConfig={CLOUDFLARE_ACCOUNT_ID:"fictional",CLOUDFLARE_D1_DATABASE_ID:"fictional",CLOUDFLARE_D1_API_TOKEN:"fictional",CLOUDFLARE_R2_BUCKET_NAME:"fictional",CLOUDFLARE_R2_ACCESS_KEY_ID:"fictional",CLOUDFLARE_R2_SECRET_ACCESS_KEY:"fictional",CRON_SECRET:"fictional"};
+const names=["NODE_ENV","NEXTAUTH_SECRET","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","MYFTC_DATA_ENABLED","MYFTC_SERVICE_PAUSED","MYFTC_READINESS_RECORD","MYFTC_SELF_SERVICE_ENABLED",...Object.keys(storageConfig)];
 async function withEnvironment(fn){
  const original=Object.fromEntries(names.map(name=>[name,process.env[name]]));
  try{
@@ -40,6 +46,7 @@ async function withEnvironment(fn){
   await fn();
  }finally{
   for(const name of names){if(original[name]===undefined)delete process.env[name];else process.env[name]=original[name];}
+  delete globalThis.__testRequestHeaders;
  }
 }
 
@@ -78,6 +85,7 @@ test("setup acknowledges an authenticated user without implying the team gate is
 
 test("an approved roster-based release describes organization-managed access",()=>withEnvironment(async()=>{
  const record=approvedRecord();
+ Object.assign(process.env,storageConfig);
  process.env.MYFTC_DATA_ENABLED="true";
  process.env.MYFTC_READINESS_RECORD=JSON.stringify(record);
  globalThis.__testSignInUser={userId:"adult-a"};
@@ -88,5 +96,36 @@ test("an approved roster-based release describes organization-managed access",()
  assert.match(markup,/Self-service team creation is not available/);
  assert.match(markup,/Account ID for a roster-based release/);
  assert.doesNotMatch(markup,/Continue to team settings/);
+ globalThis.__testSignInUser=null;
+}));
+
+test("self-service setup stays closed when any required storage or cleanup configuration is missing",()=>withEnvironment(async()=>{
+ const record={...approvedRecord(),scope:"public-multi-team",accessModel:"self-service",allowedAccountIds:[],adultAccountIds:[],allowedTeamIds:[],teamCreationAccountIds:[]};
+ record.selfServiceReview={evidence:"review/self-service",reviewer:"Reviewer A",reviewedAt:record.approvedAt};
+ Object.assign(process.env,storageConfig,{MYFTC_DATA_ENABLED:"true",MYFTC_SELF_SERVICE_ENABLED:"true",MYFTC_READINESS_RECORD:JSON.stringify(record)});
+ globalThis.__testSignInUser={userId:"fictional-provider-id"};
+ let markup=renderToStaticMarkup(await EnrollmentPage());
+ assert.match(markup,/Continue to team settings/);
+ assert.doesNotMatch(markup,/Team access is still being prepared/);
+ for(const requestHeaders of [
+  {host:"preview.team.test","x-forwarded-proto":"https"},
+  {host:"team.test","x-forwarded-proto":"http"},
+  {host:"team.test"},
+  {host:"team.test@preview.team.test","x-forwarded-proto":"https"},
+ ]){
+  globalThis.__testRequestHeaders=requestHeaders;
+  markup=renderToStaticMarkup(await EnrollmentPage());
+  assert.doesNotMatch(markup,/Continue to team settings/,JSON.stringify(requestHeaders));
+  assert.match(markup,/Team access is still being prepared/,JSON.stringify(requestHeaders));
+ }
+ delete globalThis.__testRequestHeaders;
+ for(const name of Object.keys(storageConfig)){
+  delete process.env[name];
+  markup=renderToStaticMarkup(await EnrollmentPage());
+  assert.doesNotMatch(markup,/Continue to team settings/,name);
+  assert.match(markup,/You are signed in\. Team access is still being prepared\./,name);
+  assert.match(markup,/Self-service team creation is not open yet/,name);
+  process.env[name]=storageConfig[name];
+ }
  globalThis.__testSignInUser=null;
 }));

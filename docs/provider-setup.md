@@ -24,7 +24,7 @@ In the student-founder flow, a student declares that they are 13–18 and have t
 
 Before enabling messaging or email, the database administrator must back up the intended database and apply `drizzle/0002_messaging_and_email.sql` through the organization's approved Cloudflare D1 migration workflow. It adds chat messages, messaging settings, DM blocks, authentication lookups, hashed verification tokens and mail-rate counters. Use the exact database intended for the production environment. These migrations are not automatically applied by a Vercel build.
 
-Confirm `0000_tidy_infant_terrible.sql` and `0001_privacy_controls.sql` were previously applied. Apply `0003_student_founder.sql` after the earlier migrations before enabling student-created teams; it adds a server-controlled founder flag to memberships. For a new empty database, apply migrations in order. Do not rerun table-creation migrations against an existing database without checking its migration history.
+Confirm `0000_tidy_infant_terrible.sql` and `0001_privacy_controls.sql` were previously applied. Apply `0003_student_founder.sql` after the earlier migrations before enabling student-created teams; it adds a server-controlled founder flag to memberships. Apply `0004_native_auth_handoff.sql` after the earlier migrations before using Google sign-in in the iPhone app; it adds short-lived, single-use handoff records. For a new empty database, apply migrations in order. Do not rerun table-creation migrations against an existing database without checking its migration history.
 
 ## Required verification after setup
 

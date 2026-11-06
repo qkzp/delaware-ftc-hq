@@ -1,10 +1,10 @@
 {
-  "releaseId": "sha256:4d8b5116c916ba6d561c5f96cd266a819528c80c1b9eccef552dd024ee8e40f7",
+  "releaseId": "sha256:8df979549a8ed9311800afcb82fe0ebcbd792e904ee8aed037948ff06e1e72d2",
   "algorithm": "sha256",
   "sources": {
     ".env.example": {
-      "bytes": 1007,
-      "sha256": "1b133d6fe2d1060f9ee7bd9dacadc372f402027f445f7d23186639a21d8543ac"
+      "bytes": 1019,
+      "sha256": "46ec5c0871764039d8caa6f337e06e7bc24b8f124f2072c6bd2bf42a23969840"
     },
     ".openai/hosting.json": {
       "bytes": 95,
@@ -19,8 +19,8 @@
       "sha256": "95b782946c66d82a393411d351112bcf3251e7c78e6d0e1d4a660efc1966103e"
     },
     "app/api/auth/[...nextauth]/route.ts": {
-      "bytes": 239,
-      "sha256": "14c2445e1782763bbc9ec09f4f077ec0080d8c2dca6fee118cee8c1324db27cd"
+      "bytes": 1110,
+      "sha256": "d023d0bd647051919f242f627a50aa3573f4e82142cedce632c91f2637216b86"
     },
     "app/api/deployment/status/route.ts": {
       "bytes": 348,
@@ -39,12 +39,24 @@
       "sha256": "4b43ffd6ff3542ad06dbd0af44b3b7f2c88422510014194ea7ae6287a13460e7"
     },
     "app/enroll/page.tsx": {
-      "bytes": 3545,
-      "sha256": "eed9e092286429624f21d2bdf3737ccb33739f56bfdd0e1a1c532426f3809f2a"
+      "bytes": 4203,
+      "sha256": "fe7958ca432bbc1c3ab396599c3c934217f4a606130ac1608e25b13dd01ef79d"
     },
     "app/error.tsx": {
       "bytes": 387,
       "sha256": "82218f497b759d9d8753190f751be1c654b4c328682d8e788e32f2b88816d6a1"
+    },
+    "app/ios/auth/confirm/route.ts": {
+      "bytes": 1101,
+      "sha256": "5d186d8ed755f8a2128247b6f15f46b4b00dcb1e444c7140679e9dca9d7f66b7"
+    },
+    "app/ios/auth/snapshot/route.ts": {
+      "bytes": 1185,
+      "sha256": "f9a6a8480c469e540d3c7a27258948fd984f0d366ac2221ef787d07df6e77249"
+    },
+    "app/ios/auth/start/page.tsx": {
+      "bytes": 1922,
+      "sha256": "7def6e5d4e1a1e82b9a39f583d429a7a0a58ed75920609a6febdd5fb1c9c0f83"
     },
     "app/layout.tsx": {
       "bytes": 1031,
@@ -91,8 +103,8 @@
       "sha256": "c505aed7a5c78539d5818734fca51c6382b94a35d28d37184e1fd7b1215c5015"
     },
     "auth.ts": {
-      "bytes": 2766,
-      "sha256": "f972b78de2448ab51be3f57f90683d9a6d607efaea60a66fb54954b9e98a4a0d"
+      "bytes": 3043,
+      "sha256": "8faa2ec87e49a3d90652846961840a3859f4a7d7fe1d229762853d1518a7e4ec"
     },
     "cloudflare-env.d.ts": {
       "bytes": 225,
@@ -115,8 +127,8 @@
       "sha256": "82eae2c3fcecbe261ed8cb0c12c5a261ec6be5988294bcec6f4a23f08a5fe610"
     },
     "docs/launch-acceptance.md": {
-      "bytes": 9264,
-      "sha256": "4e9d19a8d10205279d07e85d074e9d84275d8841e59e0975602e18b938e38a0b"
+      "bytes": 9357,
+      "sha256": "c5fd82dfb80e5c4a77c5063603f069c8d493b703396d3ccbcf844d34e711ab33"
     },
     "docs/licenses/drizzle-orm-0.45.2-LICENSE.txt": {
       "bytes": 11357,
@@ -131,8 +143,8 @@
       "sha256": "340d1a726d7c06f5d06003fa2ca2ed329905275e951387bf54276e089eb33d13"
     },
     "docs/provider-setup.md": {
-      "bytes": 6867,
-      "sha256": "d5962f5624c5d6dae1ee372d97e99d261d42dbf1d7b39a98c2f66229f53a292c"
+      "bytes": 7029,
+      "sha256": "6b1a7c02594ba570a91474feb8ef2a3c6ed57ce0539697f5bd49b96e97d0f757"
     },
     "docs/release-evidence.md": {
       "bytes": 41975,
@@ -151,8 +163,8 @@
       "sha256": "b7e7eba943f2efa902d5da42a89b9f0369a0ac5e875b5a95d5bf87ea56430645"
     },
     "docs/vercel-deployment.md": {
-      "bytes": 6852,
-      "sha256": "f17e31a62d745a89e9b204980dafd545a5d11c65b80bf84b45de76632f325c0a"
+      "bytes": 7404,
+      "sha256": "1621369d02157660e2928ba148e2f2816ae18c5d287e49712595b6d9da74eeee"
     },
     "drizzle/0000_tidy_infant_terrible.sql": {
       "bytes": 1142,
@@ -169,6 +181,10 @@
     "drizzle/0003_student_founder.sql": {
       "bytes": 75,
       "sha256": "180efb1b29d0613fc140c30e10ca7a9091a5c44e7408eeeab0ac1fffe5cffacc"
+    },
+    "drizzle/0004_native_auth_handoff.sql": {
+      "bytes": 651,
+      "sha256": "a2673769366ca304c04434424255a26275140e8044158e36fdabd21d8988573e"
     },
     "drizzle/meta/0000_snapshot.json": {
       "bytes": 6873,
@@ -215,8 +231,8 @@
       "sha256": "53f3d3d070f0a9082934da25b875f9499855c2b0693868dd28be8c23d8730f68"
     },
     "next.config.ts": {
-      "bytes": 1007,
-      "sha256": "d52740bc0cb006ed85300983ad2820befffe1de0fd53055e13f1ca540f4ff390"
+      "bytes": 1140,
+      "sha256": "eab970a47feedda8af16453e91e95fc1f7cd342e85a02a63e2d7ab4dbe986ca0"
     },
     "package-lock.json": {
       "bytes": 269962,
@@ -359,8 +375,8 @@
       "sha256": "673c0422eb3d372cc89822de7261846f9a49e51c947cfbd9bb7172fef85106e5"
     },
     "scripts/build-verified.sh": {
-      "bytes": 687,
-      "sha256": "61024a70b28a732585428398f58ca96331b6850642683bf4a35297974a0125f4"
+      "bytes": 661,
+      "sha256": "2ae5329ac860076070c9217a43106a15cb5ecf907a0f7baeb9ef903f76b53c68"
     },
     "scripts/check-readiness.mjs": {
       "bytes": 483,
@@ -399,12 +415,12 @@
       "sha256": "4a5a92d60a08d0ba54effd8373da2da06284312c55b767287c68a0bec7200da7"
     },
     "scripts/install-ci.sh": {
-      "bytes": 6976,
-      "sha256": "6d2252b4b08013828a2a44ba70ebcad0c3037b06cead346418eb1a5742b2fbf4"
+      "bytes": 6783,
+      "sha256": "10d8764a61be50351dc3496e13588270de7956f0aa5f1189c49cabb2d89fe5c0"
     },
     "scripts/install-pnpm.sh": {
-      "bytes": 9231,
-      "sha256": "f918db24f6809b8b4fba5f9c4aace90d515a5b78154f23108dcab2c773d08cdb"
+      "bytes": 9015,
+      "sha256": "a684c02c2b493dfbf262a66252a5cd36f81ca995a4024761728662ae63aa40c0"
     },
     "scripts/migration-rehearsal.mjs": {
       "bytes": 1680,
@@ -419,8 +435,8 @@
       "sha256": "a83164e344c1947053def83b546be8115deaa827314bbaead7afe6b6451c5cdf"
     },
     "scripts/release-fingerprint.mjs": {
-      "bytes": 3040,
-      "sha256": "6e1189cfb591bf95a75315579f393c4a5dcb7b67712c5d7fca028ff4ddb100e0"
+      "bytes": 3326,
+      "sha256": "dd99610df023111524725e2a06c7912002cec026bcfd37f82b1a124a49e6a75b"
     },
     "scripts/release-preflight.mjs": {
       "bytes": 10160,
@@ -439,8 +455,8 @@
       "sha256": "21d7bde6acb9f716287e652c1b0e43ae4803d79be367ca2192fcba14740b5338"
     },
     "scripts/sites-env.sh": {
-      "bytes": 1653,
-      "sha256": "cae036c0ccdee67accb7775f8e44fb8fa23aafda4f7403c5e8e9059662bdabf9"
+      "bytes": 1600,
+      "sha256": "d18af7b222db748c9de257d5955b9d7f77ec350dab6321f114f0bc44c20388ac"
     },
     "scripts/third-party-notices.mjs": {
       "bytes": 1777,
@@ -455,8 +471,8 @@
       "sha256": "a6a9fe2086e302f94a3f91e3c1a68a45bb3aa07d4a79faf01b14732191eb4e80"
     },
     "scripts/vite/sites-vite-plugin.LICENSE": {
-      "bytes": 1084,
-      "sha256": "3dd119f149df88296e82981a51e5131b1018ba2e2f2f6f4bbec2b83d58a43a45"
+      "bytes": 1063,
+      "sha256": "7de1e115d165f176e68f962acdb809b5ab8d8ae78d3981e0701392b2ac50c713"
     },
     "scripts/vite/sites-vite-plugin.ts": {
       "bytes": 7185,
@@ -467,8 +483,12 @@
       "sha256": "e42eef201385400019a3385435d7836bcccdfa39d0801aae544acf10157ef59d"
     },
     "server/auth-profile.ts": {
-      "bytes": 642,
-      "sha256": "bc21694ed3919063cf6c0b5a85a7fa0d917d782e9fe71be12a83286b9992bf60"
+      "bytes": 1049,
+      "sha256": "c9df9f709dae7f5511231b79e686ca2acbe4f3fb4073f3690b0526d5f2984563"
+    },
+    "server/auth-route-options.ts": {
+      "bytes": 1051,
+      "sha256": "fb47b669a5127970a11ce50a55ba4cd2349f9559ff72bbd64ce6730a90ee0b1d"
     },
     "server/chat.ts": {
       "bytes": 8924,
@@ -485,6 +505,26 @@
     "server/email-delivery.ts": {
       "bytes": 1858,
       "sha256": "97f0bb75d72f88184c43e3572878ebf229c8d70d2d8c0d04dd77f58bca006569"
+    },
+    "server/native-auth-confirm.ts": {
+      "bytes": 5001,
+      "sha256": "c01fefff79058c3fbcebc64c38efadb09d0bcc09535f35741f6c7c69503eeb19"
+    },
+    "server/native-auth-handoff.ts": {
+      "bytes": 8008,
+      "sha256": "ca524f5b2ebcdb5c3364988f5d2d2104bddba57ef20a2f12b8d4f747305a7c4b"
+    },
+    "server/native-auth-options.ts": {
+      "bytes": 1509,
+      "sha256": "5ce54f0358f88b9541e162b204ffea796c0328f3efd6b9824a8d4303c7122379"
+    },
+    "server/native-auth-origin.ts": {
+      "bytes": 917,
+      "sha256": "e5c5c1d0510a62d30777e679c2bb7e1a498e4abb86fcdb38ee2d0dbe01fdeacf"
+    },
+    "server/native-auth-provider.ts": {
+      "bytes": 1723,
+      "sha256": "da6692b7aa02d7857b93048b2818905bff9a114b316a9bdcfcda3faa604dfa99"
     },
     "server/platform-storage.ts": {
       "bytes": 5506,
@@ -503,8 +543,8 @@
       "sha256": "2018f3f5928d4cc3733dd318e106dd748d7ce71283d07b5908e9265aff00982d"
     },
     "server/retention.ts": {
-      "bytes": 2129,
-      "sha256": "6a556dac69fda4629aea7e8b0c7525bad833f5dda99346d14dc4e94145e554bf"
+      "bytes": 2534,
+      "sha256": "0173938fbf73e26d6a92b02116044fd7b1ca078d311ce7cd9ca85870787738d0"
     },
     "server/runtime.ts": {
       "bytes": 653,
@@ -582,9 +622,13 @@
       "bytes": 9764,
       "sha256": "02aa32de06d1c923732efd5d4e5182031df72a132c34684e444af5c40ebb165d"
     },
+    "src/components/NativeOAuthStart.tsx": {
+      "bytes": 698,
+      "sha256": "6846da8d23e43c27f2f351eb67180428143492e212f25f4266c92363f78d5488"
+    },
     "src/components/OAuthSignIn.tsx": {
-      "bytes": 1264,
-      "sha256": "8b8436db13d2da616941f5622e923d9f4fbcc3e5ddcc5363169266a3c279a30f"
+      "bytes": 1727,
+      "sha256": "6a9e43b0c767090b2630bc751af629ae074ba4a97820771c3862d8fe7ac5c0d3"
     },
     "src/components/PartsList.tsx": {
       "bytes": 3164,
@@ -961,26 +1005,32 @@
   },
   "sourceChanges": [
     ".env.example",
+    "app/api/auth/[...nextauth]/route.ts",
     "app/enroll/page.tsx",
-    "app/signin/page.tsx",
+    "auth.ts",
+    "docs/launch-acceptance.md",
+    "docs/provider-setup.md",
+    "docs/vercel-deployment.md",
+    "next.config.ts",
     "scripts/build-verified.sh",
     "scripts/install-ci.sh",
     "scripts/install-pnpm.sh",
+    "scripts/release-fingerprint.mjs",
     "scripts/sites-env.sh",
     "scripts/vite/sites-vite-plugin.LICENSE",
-    "src/components/entry.css",
-    "src/screens/robot-lab.css",
-    "src/surfaces.css",
-    "public/ui-exploration/01.html",
-    "public/ui-exploration/02.html",
-    "public/ui-exploration/03.html",
-    "public/ui-exploration/06.html",
-    "public/ui-exploration/07.html",
-    "public/ui-exploration/08.html",
-    "public/ui-exploration/09.html",
-    "public/ui-exploration/10.html",
-    "public/ui-exploration/11.html",
-    "public/ui-exploration/12.html",
-    "src/components/OAuthSignIn.tsx"
+    "server/auth-profile.ts",
+    "server/retention.ts",
+    "src/components/OAuthSignIn.tsx",
+    "app/ios/auth/confirm/route.ts",
+    "app/ios/auth/snapshot/route.ts",
+    "app/ios/auth/start/page.tsx",
+    "drizzle/0004_native_auth_handoff.sql",
+    "server/auth-route-options.ts",
+    "server/native-auth-confirm.ts",
+    "server/native-auth-handoff.ts",
+    "server/native-auth-options.ts",
+    "server/native-auth-origin.ts",
+    "server/native-auth-provider.ts",
+    "src/components/NativeOAuthStart.tsx"
   ]
 }

@@ -7,6 +7,7 @@ import { minimizeIdentityToken, privateSessionUser } from "./server/auth-profile
 import {d1AuthAdapter,normalizeLoginEmail} from "./server/auth-adapter";
 import {sendLoginEmail} from "./server/email-delivery";
 import {getPlatformD1,hasPlatformD1Config} from "./server/platform-storage";
+import {nativeHandoffProvider} from "./server/native-auth-provider";
 
 const configured = (name: string) => process.env[name]?.trim() || "";
 
@@ -21,6 +22,7 @@ if(configured("GOOGLE_CLIENT_ID")&&configured("GOOGLE_CLIENT_SECRET"))providers.
 if(configured("MICROSOFT_CLIENT_ID")&&configured("MICROSOFT_CLIENT_SECRET"))providers.push(AzureADProvider({clientId:configured("MICROSOFT_CLIENT_ID"),clientSecret:configured("MICROSOFT_CLIENT_SECRET"),tenantId:configured("MICROSOFT_TENANT_ID")||"common"}));
 if(configured("APPLE_CLIENT_ID")&&configured("APPLE_CLIENT_SECRET"))providers.push(AppleProvider({clientId:configured("APPLE_CLIENT_ID"),clientSecret:configured("APPLE_CLIENT_SECRET")}));
 if(emailEnabled())providers.push({id:"email",type:"email",name:"Email",server:{},from:configured("EMAIL_FROM"),maxAge:15*60,options:{},normalizeIdentifier:normalizeLoginEmail,sendVerificationRequest:async({identifier,url})=>sendLoginEmail(getPlatformD1(),{identifier,url},{apiKey:configured("RESEND_API_KEY"),from:configured("EMAIL_FROM")})} as EmailConfig);
+if(configured("NEXTAUTH_SECRET")&&configured("GOOGLE_CLIENT_ID")&&configured("GOOGLE_CLIENT_SECRET")&&hasPlatformD1Config())providers.push(nativeHandoffProvider(getPlatformD1,configured("NEXTAUTH_SECRET")));
 
 export const authOptions: NextAuthOptions = {
   secret: configured("NEXTAUTH_SECRET"),

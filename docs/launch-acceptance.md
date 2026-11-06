@@ -31,9 +31,9 @@ Use [provider setup](provider-setup.md) for the exact private Vercel variable na
 
 ## Production database migration
 
-The local rehearsal applies all three tracked migrations to a fresh in-memory SQLite database, checks integrity and reports hashes plus expected schema. It never contacts production. This is not evidence that the live D1 database has been migrated.
+The local rehearsal applies all tracked migrations to a fresh in-memory SQLite database, checks integrity and reports hashes plus expected schema. It never contacts production. This is not evidence that the live D1 database has been migrated.
 
-The database administrator must identify the correct Production database, verify its migration history and make a recoverable backup before applying missing migrations. For an existing database, never blindly rerun the three creation scripts. Apply only unapplied files in order through the approved Cloudflare workflow, including `0002_messaging_and_email.sql` for auth/chat. Record the database identifier privately, migration hashes, time, operator, backup reference and recovery procedure.
+The database administrator must identify the correct Production database, verify its migration history and make a recoverable backup before applying missing migrations. For an existing database, never blindly rerun the migration scripts. Apply only unapplied files in order through the approved Cloudflare workflow, including `0002_messaging_and_email.sql` for auth/chat, `0003_student_founder.sql` for student founders, and `0004_native_auth_handoff.sql` for iPhone sign-in. Record the database identifier privately, migration hashes, time, operator, backup reference and recovery procedure.
 
 The optional preflight database check reads `sqlite_master` and `PRAGMA table_info`, comparing expected tables/index names, column types, nullability and primary-key metadata. It does not read team rows or apply migrations. Schema introspection is supported by [Cloudflare's D1 SQL documentation](https://developers.cloudflare.com/d1/sql-api/sql-statements/), using the [D1 query API](https://developers.cloudflare.com/api/resources/d1/subresources/database/methods/query/). Index presence is not a full verification of index definitions, provider behavior or transactional workflows; retain live acceptance evidence.
 

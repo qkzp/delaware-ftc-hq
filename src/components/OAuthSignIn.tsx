@@ -9,14 +9,18 @@ export default function OAuthSignIn({provider,label,callbackUrl}:{provider:OAuth
   const [busy,setBusy]=useState(false),[error,setError]=useState(false);
   useEffect(()=>{
     const resetOnRestore=(event:PageTransitionEvent)=>{if(event.persisted)setBusy(false);};
+    const resetNative=()=>setBusy(false);
     window.addEventListener("pageshow",resetOnRestore);
-    return ()=>window.removeEventListener("pageshow",resetOnRestore);
+    window.addEventListener("myftc:native-auth-finished",resetNative);
+    return ()=>{window.removeEventListener("pageshow",resetOnRestore);window.removeEventListener("myftc:native-auth-finished",resetNative);};
   },[]);
   async function startSignIn(){
     if(busy)return;
     setBusy(true);
     setError(false);
     try{
+      const bridge=(window as typeof window & {webkit?:{messageHandlers?:{myftcNativeAuth?:{postMessage:(value:{provider:OAuthProvider;callbackUrl:string})=>void}}}}).webkit?.messageHandlers?.myftcNativeAuth;
+      if(bridge){bridge.postMessage({provider,callbackUrl});return;}
       // NextAuth obtains the CSRF token and POSTs to the provider endpoint.
       await signIn(provider,{callbackUrl});
     }catch{

@@ -25,7 +25,9 @@ Set these in the Vercel project's encrypted environment settings. Do not commit 
 | `CLOUDFLARE_D1_API_TOKEN` | Cloudflare API token scoped to the required D1 Read and D1 Write permissions |
 | `CLOUDFLARE_R2_BUCKET_NAME` | Existing private R2 bucket name |
 | `CLOUDFLARE_R2_ACCESS_KEY_ID`, `CLOUDFLARE_R2_SECRET_ACCESS_KEY` | R2 S3 credentials scoped to this bucket with object read/write access |
+| `CRON_SECRET` | Random secret for the scheduled retention endpoint |
 | `MYFTC_DATA_ENABLED` | Leave unset or `false` until the exact production release is approved |
+| `MYFTC_SELF_SERVICE_ENABLED` | Leave unset or `false` until self-service has separately been reviewed and approved |
 | `MYFTC_SERVICE_PAUSED` | Emergency operator control; use `true` to pause normal service |
 | `MYFTC_READINESS_RECORD` | Private JSON record after all human approvals and hosted checks are complete |
 
@@ -33,7 +35,7 @@ Google OAuth redirect URI: `https://<production-host>/api/auth/callback/google`.
 
 ## Additional providers and messaging migration
 
-Follow [provider setup](provider-setup.md) for Apple Developer credentials, Resend verified-domain authentication mail, the private `CRON_SECRET`, and exact callback URLs. Apply `drizzle/0002_messaging_and_email.sql` only after checking and backing up the intended D1 database. Vercel does not apply these migrations automatically. Verify the daily retention cron in the deployed project.
+Follow [provider setup](provider-setup.md) for Apple Developer credentials, Resend verified-domain authentication mail, the private `CRON_SECRET`, and exact callback URLs. Apply missing D1 migrations in order only after checking and backing up the intended database; `0002_messaging_and_email.sql` supports auth and chat, `0003_student_founder.sql` supports student founders, and `0004_native_auth_handoff.sql` supports iPhone sign-in. Vercel does not apply migrations automatically. Verify the daily retention cron in the deployed project.
 
 ## Safe activation sequence
 
@@ -42,8 +44,8 @@ Follow [provider setup](provider-setup.md) for Apple Developer credentials, Rese
 3. Sign in with the designated adult account and use `/enroll` to obtain its provider-scoped account ID for the private reviewer allowlist. Collect student IDs only through the organization's approved process; `/enroll` shows only each signed-in user their own ID. Confirm D1 migrations on the intended database and confirm R2 is private. Test team isolation, file authorization/deletion, exports, account changes and rollback using separate synthetic users and devices.
 4. Confirm whether existing Site account IDs and memberships need migration. Site identity IDs are not the same as Google/Microsoft provider IDs; existing users will not automatically map to the new identities. For an unused database, treat launch as a fresh account roster. For a used database, plan and rehearse a reviewed membership/data migration before exposing it.
 5. Complete the 43-row organization review for Vercel, Google, Microsoft, Cloudflare, actual contracts, intended jurisdictions, users, retention, accessibility and operations. Keep signed evidence outside Git.
-6. Deploy the approved source to Production. Record its exact commit, Vercel deployment URL, build fingerprint, database migration and access settings. Add the current provider-scoped account IDs, adult IDs and team IDs to the signed readiness record, set the exact HTTPS origin and expiry, and store the record as a private Vercel environment variable.
-7. Run the hosted acceptance checklist for that exact deployment. Enable `MYFTC_DATA_ENABLED=true` only after the owner has accepted the evidence, then redeploy so the new Vercel environment is active. Recheck the live hold/data gate and keep the pause procedure staffed.
+6. Deploy the approved source to Production. Record its exact commit, Vercel deployment URL, build fingerprint, database migration and access settings. Complete the private readiness record for the reviewed access model, including the exact HTTPS origin and expiry. For an allowlist release, include the approved provider-scoped account IDs, adult IDs and team IDs. For self-service, include the separate public multi-team review described in [provider setup](provider-setup.md).
+7. Run the hosted acceptance checklist for that exact deployment. Enable `MYFTC_DATA_ENABLED=true` only after the owner has accepted the evidence; also enable `MYFTC_SELF_SERVICE_ENABLED=true` only for an approved self-service release. Redeploy so the new Vercel environment is active. Recheck the live hold/data gate and keep the pause procedure staffed.
 
 The app does not self-certify legal compliance. The Vercel build can be ready before the adult owner, school/legal review, provider contracts, real contact rota, accessibility acceptance and hosted operational evidence are ready. Until those decisions are complete, Vercel deployments must remain closed to real student data.
 
